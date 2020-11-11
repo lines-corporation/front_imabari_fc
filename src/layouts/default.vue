@@ -36,10 +36,12 @@
     <v-app-bar :clipped-left="clipped" color="#1414A0" dense dark fixed app>
       <v-toolbar-title>
         <a href="/">
+          <!--
           <img
             src="@/assets/images/temp_icon.png"
             style="width: 133px; height: 107px; padding: 10px;"
           />
+        -->
         </a>
       </v-toolbar-title>
       <v-spacer />
@@ -74,10 +76,12 @@
           特定商取引法に基づく表示
         </v-btn>
         <v-col class="#1414A0 text-center white--text" cols="12">
+          <!--
           <img
             src="@/assets/images/logo.svg"
             style="height: 50px; padding: 10px;"
           />
+        -->
         </v-col>
         <v-col class="#1414A0 text-center white--text" cols="12">
           <span>Copyright NEC Corporation. All rights reserved.</span>
