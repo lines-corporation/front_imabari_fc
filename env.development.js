@@ -1,5 +1,5 @@
 module.exports = {
-  META_TITLE: "【開発】今治FC",
+  META_TITLE: "【開発】FC今治",
   ROBOTS: "noindex",
   BASE_URL: "https://dev-member-imabari.a.kuroco.app",
   PAYGENT_JS: "https://sandbox.paygent.co.jp/js/PaygentToken.js",

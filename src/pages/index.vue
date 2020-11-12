@@ -27,9 +27,6 @@
                   />入力してください。</strong>
                 </p>
                 <p class="fnt-s clr-red pm">
-                  ◆NECスポーツ後援会ログイン画面とは<br
-                    class="spbr"
-                  />異なりますのでご注意ください
                 </p>
                 <p>
                   <v-text-field
@@ -113,7 +110,7 @@
                 <h3>アップグレードのご案内</h3>
                 <p class="body-1 ug-p">
                   <NuxtLink to="/upgrade">
-                    スタ―会員への種別変更はこちら
+                    有料への種別変更はこちら
                   </NuxtLink>
                 </p>
               </v-card-text>

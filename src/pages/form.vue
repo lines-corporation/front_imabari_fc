@@ -2,7 +2,7 @@
   <div class="form-page">
     <header>
       <h2 class="form-ttl">
-        今治FC 会員登録
+        FC今治 会員登録
       </h2>
     </header>
     <v-stepper v-model="e1">
@@ -48,7 +48,7 @@
               >
                 <dt>第１条（名称）</dt>
                 <dd class="px-3 py-2">
-                  本会は、「今治FC」と称します。<br />
+                  本会は、「FC今治」と称します。<br />
                 </dd>
               </dl>
             </v-row>
@@ -100,7 +100,7 @@
         <v-stepper-content step="3">
           <header>
             <h2>
-              今治FC会員　情報登録
+              FC今治会員　情報登録
             </h2>
           </header>
           <p>

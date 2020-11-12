@@ -84,7 +84,7 @@
         -->
         </v-col>
         <v-col class="#1414A0 text-center white--text" cols="12">
-          <span>Copyright NEC Corporation. All rights reserved.</span>
+          <span>Copyright FC Imabari. All rights reserved.</span>
         </v-col>
       </v-row>
     </v-footer>

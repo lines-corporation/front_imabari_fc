@@ -2,10 +2,10 @@
   <div class="form-page">
     <header>
       <h2 v-if="!temp_user" class="form-ttl">
-        NECロケッツクラブ アップグレード
+        FC今治 有料会員 アップグレード
       </h2>
       <h2 v-if="temp_user" class="form-ttl">
-        NECロケッツクラブ 会員種別・支払い方法登録
+        FC今治 有料会員・支払い方法登録
       </h2>
     </header>
     <div class="theme--light v-stepper">
@@ -22,39 +22,7 @@
                 <v-subheader>料金プラン</v-subheader>
               </v-col>
               <v-col cols="8">
-                <v-radio-group v-model="product_id" :rules="[rules.required]">
-                  <img
-                    src="@/assets/images/RR.png"
-                    v-if="red_star || red_rockets"
-                    style="width: 240px; padding: 10px;"
-                  />
-                  <v-radio
-                    v-if="red_rockets"
-                    label="NECレッド・ロケッツ会員"
-                    value="41204"
-                  />
-                  <v-radio
-                    v-if="red_star"
-                    label="NECレッド・スター会員"
-                    value="41202"
-                  />
-                  <v-spacer />
-                  <img
-                    src="@/assets/images/GR.png"
-                    v-if="green_star || green_rockets"
-                    style="width: 240px; padding: 10px;"
-                  />
-                  <v-radio
-                    v-if="green_rockets"
-                    label="NECグリーン・ロケッツ会員"
-                    value="41201"
-                  />
-                  <v-radio
-                    v-if="green_star"
-                    label="NECグリーン・スター会員"
-                    value="41203"
-                  />
-                </v-radio-group>
+                <p> FC今治 有料会員</p>
               </v-col>
             </v-row>
             <v-row>
