@@ -97,6 +97,7 @@
                     <strong>会員種別</strong><span>{{ group_nm }}</span>
                   </p>
                 </div>
+                <v-img :src="require('@/assets/images/temp_member_card.jpg')"></v-img>
               </v-card-text>
               <v-card-actions>
                 <v-btn text color="deep-purple accent-4" to="/profile_edit">
