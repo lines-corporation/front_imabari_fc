@@ -9,7 +9,15 @@
           "member-necsports"
         ],
         "development": [
+          "kuroco-member-imabari",
           "stg-member-necsports"
+        ]
+      }
+    },
+    "kuroco-member-imabari": {
+      "hosting": {
+        "development": [
+          "kuroco-member-imabari"
         ]
       }
     }
