@@ -3,21 +3,18 @@
     <client-only>
       <div v-if="!auth.loggedIn">
         <form class="login-page" @submit.prevent="login">
-          <p>
-            <strong>今治FC<br />
+          <p class="fnt-w">
+            <strong>
               今シーズンは以前ご入会されていた方も改めて新規入会が必要になりますので、必ず新規入会のお手続きをお願い致します。<br />
               詳しくは下記をご確認ください。</strong><br />
             <br />
-            <a href="https://w-volley.necsports.net/topics_detail1/id=1919"
-              >今治FCのご案内</a
-            ><br />
             <a href="https://rugby.necsports.net/topics_detail1/id=1946"
-              >今治FCご案内</a
+              >FC今治ご案内</a
             ><br />
           </p>
           <div class="login-screen lgn-left">
             <h3 class="subtitle mb-3">
-              今治FC 会員ログイン
+              FC今治 会員ログイン
             </h3>
             <div class="inner">
               <form @submit.prevent="login">
@@ -66,12 +63,12 @@
           </div>
           <div class="login-screen lgn-right">
             <h3 class="subtitle mb-3">
-              今治FC新規入会はこちら
+              FC今治新規入会はこちら
             </h3>
             <div class="inner">
               <p class="body-1 new-btn">
                 <NuxtLink to="/form">
-                  今治FC会員新規入会登録
+                  FC今治会員新規入会登録
                 </NuxtLink>
               </p>
               <p class="body-1 nec-btn">
