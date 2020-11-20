@@ -31,7 +31,7 @@ export default {
       items: [
         {
           title: "今治FC会員規約",
-          to: "/kiyaku_nec",
+          to: "/kiyaku_imabari",
         },
         {
           title: "特定商取引法に基づく表示",
