@@ -11,6 +11,9 @@
             <a href="https://rugby.necsports.net/topics_detail1/id=1946"
               >FC今治ご案内</a
             ><br />
+            <NuxtLink to="/ec">
+              グッズ販売
+            </NuxtLink>
           </p>
           <div class="login-screen lgn-left">
             <h3 class="subtitle mb-3">
