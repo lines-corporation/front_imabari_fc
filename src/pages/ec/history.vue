@@ -1,6 +1,8 @@
 <template>
   <div class="container">
     <h2>EC 購入履歴</h2>
+    <v-container>
+    </v-container>
   </div>
 </template>
 

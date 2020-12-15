@@ -7,9 +7,9 @@
           <v-card color="grey" height="200">
             <v-row class="fill-height" align="center" justify="center">
               <v-img
-              class="white--text align-end"
-              width="100%"
-              :src="require('@/assets/images/temp_banner.jpg')"
+                class="white--text align-end"
+                width="100%"
+                :src="require('@/assets/images/temp_banner.jpg')"
               />
             </v-row>
           </v-card>
@@ -91,7 +91,7 @@
                   </v-card-text>
 
                   <v-card-actions>
-                    <v-btn color="orange" text>
+                    <v-btn @click="moveProductDetail(product.id)" color="orange" text>
                       商品詳細
                     </v-btn>
                   </v-card-actions>
@@ -203,6 +203,9 @@ export default {
     },
     moveCart() {
       this.$router.push("/ec/cart")
+    },
+    moveProductDetail(product_id) {
+      this.$router.push(`/ec/${product_id}`)
     }
   },
   computed: {
