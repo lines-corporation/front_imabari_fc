@@ -7,27 +7,30 @@
         </v-col>
       </v-row>
 
-      <!-- ここをループさせる -->
-      <div>
+      <div v-for="product in products">
         <v-row no-gutters>
           <v-col>
             <v-img
-              lazy-src="https://picsum.photos/id/11/10/6"
+              :lazy-src="product.image"
               max-width="400"
-              src="https://picsum.photos/id/11/500/300"
+              :src="product.image"
             ></v-img>
           </v-col>
           <v-col>
-            <h3>商品名</h3>
-            <p>¥ 3000</p>
-            <p>size : L</p>
+            <h3>{{ product.title }}</h3>
+            <p>¥ {{ product.price }}</p>
+            <p v-if="product.size">size : {{ product.size }}</p>
             <!-- select box -->
             <v-select
-              :items="quantities"
+              :items="product.items"
               label="個数"
               outlined
             ></v-select>
           </v-col>
+        </v-row>
+
+        <v-row class="d-flex flex-row-reverse" >
+          <v-btn @click="removeProduct">削除</v-btn>
         </v-row>
 
         <v-divider></v-divider>
@@ -161,6 +164,82 @@ export default {
     return {
       quantities: [1,2,3,4,5,6,7,8,9,10],
       ec_payment_id: "58",
+      cardName: "",
+      cardNumber: "",
+      cardMonth: "",
+      cardYear: "",
+      cardCvv: "",
+      loading: false,
+      products: [
+        {
+          id: 10,
+          title: "商品A",
+          price: 1000,
+          size: 'L',
+          items: [1,2,3,4,5,6,7,8,9,10],
+          image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
+        },
+        {
+          id: 11,
+          title: "商品B",
+          price: 2000,
+          items: [1,2,3],
+          image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
+        },
+        {
+          id: 12,
+          title: "商品C",
+          price: 3000,
+          size: 'M',
+          items: [1,2,3,4,5],
+          image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
+        },
+        {
+          id: 13,
+          title: "商品D",
+          price: 4000,
+          items: [1,2,3,4,5,6,7,8,9,10],
+          image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
+        },
+        {
+          id: 14,
+          title: "商品E",
+          price: 4000,
+          size: 'S',
+          items: [1,2,3,4,5,6,7,8,9,10],
+          image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
+        },
+        {
+          id: 15,
+          title: "商品F",
+          price: 1000,
+          items: [1,2,3,4,5,6,7,8,9,10],
+          image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
+        },
+        {
+          id: 16,
+          title: "商品G",
+          price: 1500,
+          size: 'LL',
+          items: [1,2,3,4,5,6,7,8,9,10],
+          image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
+        },
+        {
+          id: 17,
+          title: "商品H",
+          price: 1800,
+          items: [1,2,3,4,5,6,7,8,9,10],
+          image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
+        },
+        {
+          id: 18,
+          title: "商品I",
+          price: 1900,
+          size: 'S',
+          items: [1,2,3,4,5,6,7,8,9,10],
+          image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
+        },
+      ],
       rules: {
         required: (value) => !!value || "この項目は必須入力です",
         password_min: (v) => v.length >= 8 || "最低8文字以上を入力してください",
@@ -184,6 +263,13 @@ export default {
   methods: {
     moveConfirm() {
       this.$router.push("/ec/confirm")
+    },
+    removeProduct() {
+      this.$store.dispatch(
+        "snackbar/setMessage",
+        "商品を削除しました"
+      )
+      this.$store.dispatch("snackbar/snackOn")
     }
   }
 }

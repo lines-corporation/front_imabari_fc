@@ -83,7 +83,7 @@
                     class="white--text align-end"
                     height="200px"
                     width="300px"
-                    :src="product.src"
+                    :src="product.image"
                   />
                   <v-card-title>{{ product.title }}</v-card-title>
                   <v-card-text class="text--primary">
@@ -142,55 +142,55 @@ export default {
         id: 10,
         title: "商品A",
         price: 1000,
-        src: "https://cdn.vuetifyjs.com/images/cards/house.jpg",
+        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
       },
       {
         id: 11,
         title: "商品B",
         price: 2000,
-        src: "https://cdn.vuetifyjs.com/images/cards/road.jpg",
+        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
       },
       {
         id: 12,
         title: "商品C",
         price: 3000,
-        src: "https://cdn.vuetifyjs.com/images/cards/plane.jpg",
+        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
       },
       {
         id: 13,
         title: "商品D",
         price: 4000,
-        src: "https://cdn.vuetifyjs.com/images/cards/plane.jpg",
+        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
       },
       {
         id: 14,
         title: "商品E",
         price: 4000,
-        src: "https://cdn.vuetifyjs.com/images/cards/plane.jpg",
+        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
       },
       {
         id: 15,
         title: "商品F",
         price: 1000,
-        src: "https://cdn.vuetifyjs.com/images/cards/plane.jpg",
+        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
       },
       {
         id: 16,
         title: "商品G",
         price: 1500,
-        src: "https://cdn.vuetifyjs.com/images/cards/plane.jpg",
+        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
       },
       {
         id: 17,
         title: "商品H",
         price: 1800,
-        src: "https://cdn.vuetifyjs.com/images/cards/plane.jpg",
+        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
       },
       {
         id: 18,
         title: "商品I",
         price: 1900,
-        src: "https://cdn.vuetifyjs.com/images/cards/plane.jpg",
+        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
       },
     ],
   }),

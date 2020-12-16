@@ -1,23 +1,22 @@
 <template>
   <div class="container">
-    <h2>EC 購入確認</h2>
     <v-container>
 
       <!-- ここをループさせる -->
-      <div>
+      <div v-for="product in products">
         <v-row no-gutters>
           <v-col>
             <v-img
-              lazy-src="https://picsum.photos/id/11/10/6"
+              :lazy-src="product.image"
               max-width="400"
-              src="https://picsum.photos/id/11/500/300"
+              :src="product.image"
             ></v-img>
           </v-col>
           <v-col>
-            <h3>商品名</h3>
-            <p>¥ 3000</p>
-            <p>size : L</p>
-            <p>個数 1個</p>
+            <h3>{{ product.title }}</h3>
+            <p>¥ {{ product.price }}</p>
+            <p v-if="product.size">size : {{ product.size }}</p>
+            <p>個数 {{ product.num }}個</p>
           </v-col>
         </v-row>
 
@@ -63,23 +62,76 @@
 export default {
   auth: false,
   data: () => ({
-    cards: [
+    products: [
       {
-        title: "Pre-fab homes",
-        src: "https://cdn.vuetifyjs.com/images/cards/house.jpg",
-        flex: 6,
+        id: 10,
+        title: "商品A",
+        price: 1000,
+        size: 'L',
+        num: 1,
+        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
       },
       {
-        title: "Favorite road trips",
-        src: "https://cdn.vuetifyjs.com/images/cards/road.jpg",
-        flex: 6,
+        id: 11,
+        title: "商品B",
+        price: 2000,
+        num: 3,
+        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
       },
       {
-        title: "Best airlines",
-        src: "https://cdn.vuetifyjs.com/images/cards/plane.jpg",
-        flex: 6,
+        id: 12,
+        title: "商品C",
+        price: 3000,
+        size: 'M',
+        num: 4,
+        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
       },
-    ],
+      {
+        id: 13,
+        title: "商品D",
+        price: 4000,
+        num: 1,
+        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
+      },
+      {
+        id: 14,
+        title: "商品E",
+        price: 4000,
+        size: 'S',
+        num: 5,
+        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
+      },
+      {
+        id: 15,
+        title: "商品F",
+        price: 1000,
+        num: 2,
+        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
+      },
+      {
+        id: 16,
+        title: "商品G",
+        price: 1500,
+        size: 'LL',
+        num: 5,
+        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
+      },
+      {
+        id: 17,
+        title: "商品H",
+        price: 1800,
+        num: 3,
+        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
+      },
+      {
+        id: 18,
+        title: "商品I",
+        price: 1900,
+        size: 'S',
+        num: 2,
+        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
+      },
+    ]
   }),
   computed: {
     user() {
