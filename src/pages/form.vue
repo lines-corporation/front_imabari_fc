@@ -698,21 +698,28 @@
                     <v-col cols="4">
                       <v-checkbox
                         v-model="question_7"
+                        value="1"
                         label="TV 新聞"
+                        :disabled="is_question_7_limit(1)"
                         hide-details
                       />
                     </v-col>
                     <v-col cols="4">
                       <v-checkbox
                         v-model="question_7"
+                        value="2"
                         label="ラジオ"
+                        :disabled="is_question_7_limit(2)"
                         hide-details
                       />
                     </v-col>
                     <v-col cols="4">
                       <v-checkbox
                         v-model="question_7"
+                        value="3"
                         label="公式HP"
+                        :disabled="is_question_7_limit(3)"
+                        hide-details
                       />
                     </v-col>
                   </v-row>
@@ -720,25 +727,37 @@
                     <v-col cols="4">
                       <v-checkbox
                         v-model="question_7"
+                        value="4"
                         label="公式SNS"
+                        :disabled="is_question_7_limit(4)"
+                        hide-details
                       />
                     </v-col>
                     <v-col cols="4">
                       <v-checkbox
                         v-model="question_7"
+                        value="5"
                         label="口コミ"
+                        :disabled="is_question_7_limit(5)"
+                        hide-details
                       />
                     </v-col>
                     <v-col cols="4">
                       <v-checkbox
                         v-model="question_7"
+                        value="6"
                         label="チラシ・ポスター"
+                        :disabled="is_question_7_limit(6)"
+                        hide-details
                       />
                     </v-col>
                     <v-col cols="4">
                       <v-checkbox
                         v-model="question_7"
+                        value="7"
                         label="その他"
+                        :disabled="is_question_7_limit(7)"
+                        hide-details
                       />
                     </v-col>
                   </v-row>
@@ -752,33 +771,45 @@
                 </v-col>
                 <v-col cols="8">
                       <v-checkbox
-                        v-model="mailmaga_flg"
+                        v-model="question_8"
+                        value="1"
                         label="キッズ向けの特典"
+                        :disabled="is_question_8_limit(1)"
                         hide-details
                       />
                       <v-checkbox
-                        v-model="mailmaga_flg"
+                        v-model="question_8"
+                        value="2"
                         label="ありがとうサービス、夢スタジアム(R)の内覧ツアー"
+                        :disabled="is_question_8_limit(2)"
                         hide-details
                       />
                       <v-checkbox
-                        v-model="mailmaga_flg"
+                        v-model="question_8"
+                        value="3"
                         label="選手とのふれあいイベント"
+                        :disabled="is_question_8_limit(3)"
                         hide-details
                       />
                       <v-checkbox
-                        v-model="mailmaga_flg"
+                        v-model="question_8"
+                        value="4"
                         label="会員限定グッズ販売"
+                        :disabled="is_question_8_limit(4)"
                         hide-details
                       />
                       <v-checkbox
-                        v-model="mailmaga_flg"
+                        v-model="question_8"
+                        value="5"
                         label="限定ウェブサイトの開設"
+                        :disabled="is_question_8_limit(5)"
                         hide-details
                       />
                       <v-checkbox
-                        v-model="mailmaga_flg"
+                        v-model="question_8"
+                        value="6"
                         label="アウェイ観戦ツアーの割引"
+                        :disabled="is_question_8_limit(6)"
                         hide-details
                       />
                 </v-col>
@@ -818,10 +849,10 @@
         <v-stepper-content step="4">
           <header>
             <h2>
-              今治FC　登録完了
+              FC IMABARI Sailors'Club　会員登録完了
             </h2>
             <p class="mt-1 max-w-4xl text-sm leading-5 text-gray-500">
-              今治FC 無料会員登録しました。
+              FC IMABARI Sailors'Club 無料会員登録しました。
             </p>
           </header>
         </v-stepper-content>
@@ -838,7 +869,7 @@ export default {
   data() {
     return {
       valid: true,
-      e1: 3,
+      e1: 1,
       password_show: false,
       login_pwd: "",
       email: "",
@@ -926,8 +957,8 @@ export default {
       question_4: 0, // アウェイ戦
       question_5: 0, // ホームゲーム観戦
       question_6: 0, // 一緒に応援に行く人
-      question_7: 0, // 今治の情報
-      question_8: 0, // 一緒に応援に行く人
+      question_7: [], // 今治の情報
+      question_8: [], // 一緒に応援に行く人
       question_9: "",
       rules: {
         required: (value) => !!value || "この項目は必須入力です",
@@ -994,6 +1025,20 @@ export default {
     }
   },
   methods: {
+    // アンケート7問の選択制限
+    is_question_7_limit(num) {
+      if(this.question_7.find(value => value == num)) {
+        return false
+      }
+      return this.question_7.length > 2 && this.question_7.indexOf(num) === -1
+    },
+    // アンケート8問の選択制限
+    is_question_8_limit(num) {
+      if(this.question_8.find(value => value == num)) {
+        return false
+      }
+      return this.question_8.length > 2 && this.question_8.indexOf(num) === -1
+    },
     send_email() {
       this.loading1 = true
       if (this.$refs.form1.validate()) {
@@ -1042,11 +1087,19 @@ export default {
             address3: this.address3,
             tel: this.tel,
             m_tel: this.m_tel,
-            fax: this.fax,
             email: this.email,
             email2: this.subemail,
             email_send_ng_flg: this.mailmaga_flg ? 0 : 1,
             login_pwd: this.login_pwd,
+            q1: this.question_1,
+            q2: this.question_2,
+            q3: this.question_3,
+            q4: this.question_4,
+            q5: this.question_5,
+            q6: this.question_6,
+            q7: this.question_7,
+            q8: ["1"],
+            q9: this.question_9,
           })
           .then(function (response) {
             if (response.data.errors.length === 0) {
