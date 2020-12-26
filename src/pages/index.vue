@@ -294,8 +294,6 @@ export default {
     group_nm() {
       if (this.$store.$auth.loggedIn) {
         const group_ids = JSON.parse(JSON.stringify(this.$auth.user.group_ids))
-        console.warn("********* group_ids *********")
-        console.warn(group_ids)
         let group_idnms = ""
         Object.keys(group_ids).forEach(function (key) {
           if (key == 114 || key == 111) {
