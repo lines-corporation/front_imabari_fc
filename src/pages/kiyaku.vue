@@ -30,7 +30,7 @@ export default {
     return {
       items: [
         {
-          title: "今治FC会員規約",
+          title: "FC IMABARI Sailors'Club会員規約",
           to: "/kiyaku_imabari",
         },
         {

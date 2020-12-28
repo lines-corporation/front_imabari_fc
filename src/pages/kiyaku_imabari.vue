@@ -2,7 +2,7 @@
   <div class="form-page kiyaku_nec">
     <header class="bg-white shadow-sm">
       <h2 class="form-ttl">
-        NECロケッツクラブ個人会員会則
+        FC IMABARI Sailors'Club 個人会員会則
       </h2>
       <p style="text-align: right;">
         制定 ２００３年１２月 １日<br />

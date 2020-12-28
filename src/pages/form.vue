@@ -2,7 +2,7 @@
   <div class="form-page">
     <header>
       <h2 class="form-ttl">
-        FC今治 会員登録
+        FC IMABARI Sailors'Club 会員登録
       </h2>
     </header>
     <v-stepper v-model="e1">
@@ -301,7 +301,7 @@
         <v-stepper-content step="3">
           <header>
             <h2>
-              FC今治会員　情報登録
+              FC IMABARI Sailors' Club会員 情報登録
             </h2>
           </header>
           <p>
@@ -531,22 +531,6 @@
               </v-row>
               <v-row>
                 <v-col cols="4">
-                  <v-subheader>FAX番号</v-subheader>
-                </v-col>
-                <v-col cols="8">
-                  <v-text-field
-                    v-model="fax"
-                    label="FAX番号"
-                    type="tel"
-                    :rules="[rules.tel]"
-                    hint="ハイフンなしの半角数字をご入力ください"
-                    counter
-                    outlined
-                  />
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="4">
                   <v-subheader>
                     第１メールアドレス(ログイン時のIDになります)
                   </v-subheader>
@@ -607,6 +591,244 @@
                   />
                 </v-col>
               </v-row>
+              <!-- アンケート -->
+              <v-row>
+                <v-col cols="4">
+                  <v-subheader>
+                    <span style="color: red;">*</span>Q1.ご職業を教えてください
+                  </v-subheader>
+                </v-col>
+                <v-col cols="8">
+                  <v-radio-group v-model="question_1" row :rules="[rules.required]">
+                    <v-radio label="高校生以下" value="1" />
+                    <v-radio label="大学生" value="2" />
+                    <v-radio label="会社員" value="3" />
+                    <v-radio label="公務員" value="4" />
+                    <v-radio label="自営業" value="5" />
+                    <v-radio label="主婦" value="6" />
+                    <v-radio label="その他" value="7" />
+                  </v-radio-group>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <v-subheader>
+                    <span style="color: red;">*</span>Q2.FC今治を応援し始めたおおよその時期を教えてください
+                  </v-subheader>
+                </v-col>
+                <v-col cols="8">
+                  <v-radio-group v-model="question_2" row :rules="[rules.required]">
+                    <v-radio label="2014年以前" value="1" />
+                    <v-radio label="2015年から" value="2" />
+                    <v-radio label="2016年から" value="3" />
+                    <v-radio label="2017年から" value="4" />
+                    <v-radio label="2018年から" value="5" />
+                    <v-radio label="2019年から" value="6" />
+                    <v-radio label="2000年から" value="7" />
+                  </v-radio-group>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <v-subheader>
+                    <span style="color: red;">*</span>Q3.FC今治のユニフォーム（発売時期問わず）を持っていますか？
+                  </v-subheader>
+                </v-col>
+                <v-col cols="8">
+                  <v-radio-group v-model="question_3" row :rules="[rules.required]">
+                    <v-radio label="はい" value="1" />
+                    <v-radio label="いいえ" value="2" />
+                  </v-radio-group>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <v-subheader>
+                    <span style="color: red;">*</span>Q4.2000シーズン、何回程度FC今治のアウェイ戦を観戦しましたか？
+                  </v-subheader>
+                </v-col>
+                <v-col cols="8">
+                  <v-radio-group v-model="question_4" row :rules="[rules.required]">
+                    <v-radio label="1試合以下" value="1" />
+                    <v-radio label="2〜4試合" value="2" />
+                    <v-radio label="5〜10試合" value="3" />
+                    <v-radio label="11試合以上" value="4" />
+                  </v-radio-group>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <v-subheader>
+                    <span style="color: red;">*</span>Q5.2000シーズン、何回程度ありがとうサービス、夢スタジアム(R)でホームゲームを観戦しましたか？
+                  </v-subheader>
+                </v-col>
+                <v-col cols="8">
+                  <v-radio-group v-model="question_5" row :rules="[rules.required]">
+                    <v-radio label="1試合以下" value="0" />
+                    <v-radio label="2～4試合" value="1" />
+                    <v-radio label="5～10試合" value="2" />
+                    <v-radio label="11試合以上" value="3" />
+                  </v-radio-group>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <v-subheader>
+                    <span style="color: red;">*</span>Q6.試合には誰と一緒に応援に行くことが多いですか？
+                  </v-subheader>
+                </v-col>
+                <v-col cols="8">
+                  <v-radio-group v-model="question_6" row :rules="[rules.required]">
+                    <v-radio label="1人" value="1" />
+                    <v-radio label="家族" value="2" />
+                    <v-radio label="会社・学校等の友人" value="3" />
+                    <v-radio label="試合を通じて出会った友人" value="4" />
+                    <v-radio label="趣味仲間" value="5" />
+                  </v-radio-group>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <v-subheader>
+                    <span style="color: red;">*</span>Q7.普段主にどのような手段でFC今治の情報を収集しますか？（３つまで選択）
+                  </v-subheader>
+                </v-col>
+                <v-col cols="8">
+                  <v-row>
+                    <v-col cols="4">
+                      <v-checkbox
+                        v-model="question_7"
+                        value="1"
+                        label="TV 新聞"
+                        :disabled="is_question_7_limit(1)"
+                        hide-details
+                      />
+                    </v-col>
+                    <v-col cols="4">
+                      <v-checkbox
+                        v-model="question_7"
+                        value="2"
+                        label="ラジオ"
+                        :disabled="is_question_7_limit(2)"
+                        hide-details
+                      />
+                    </v-col>
+                    <v-col cols="4">
+                      <v-checkbox
+                        v-model="question_7"
+                        value="3"
+                        label="公式HP"
+                        :disabled="is_question_7_limit(3)"
+                        hide-details
+                      />
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="4">
+                      <v-checkbox
+                        v-model="question_7"
+                        value="4"
+                        label="公式SNS"
+                        :disabled="is_question_7_limit(4)"
+                        hide-details
+                      />
+                    </v-col>
+                    <v-col cols="4">
+                      <v-checkbox
+                        v-model="question_7"
+                        value="5"
+                        label="口コミ"
+                        :disabled="is_question_7_limit(5)"
+                        hide-details
+                      />
+                    </v-col>
+                    <v-col cols="4">
+                      <v-checkbox
+                        v-model="question_7"
+                        value="6"
+                        label="チラシ・ポスター"
+                        :disabled="is_question_7_limit(6)"
+                        hide-details
+                      />
+                    </v-col>
+                    <v-col cols="4">
+                      <v-checkbox
+                        v-model="question_7"
+                        value="7"
+                        label="その他"
+                        :disabled="is_question_7_limit(7)"
+                        hide-details
+                      />
+                    </v-col>
+                  </v-row>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <v-subheader>
+                    <span style="color: red;">*</span>Q8.今後セーラーズクラブの特典として期待するものを教えてください（３つまで選択）
+                  </v-subheader>
+                </v-col>
+                <v-col cols="8">
+                      <v-checkbox
+                        v-model="question_8"
+                        value="1"
+                        label="キッズ向けの特典"
+                        :disabled="is_question_8_limit(1)"
+                        hide-details
+                      />
+                      <v-checkbox
+                        v-model="question_8"
+                        value="2"
+                        label="ありがとうサービス、夢スタジアム(R)の内覧ツアー"
+                        :disabled="is_question_8_limit(2)"
+                        hide-details
+                      />
+                      <v-checkbox
+                        v-model="question_8"
+                        value="3"
+                        label="選手とのふれあいイベント"
+                        :disabled="is_question_8_limit(3)"
+                        hide-details
+                      />
+                      <v-checkbox
+                        v-model="question_8"
+                        value="4"
+                        label="会員限定グッズ販売"
+                        :disabled="is_question_8_limit(4)"
+                        hide-details
+                      />
+                      <v-checkbox
+                        v-model="question_8"
+                        value="5"
+                        label="限定ウェブサイトの開設"
+                        :disabled="is_question_8_limit(5)"
+                        hide-details
+                      />
+                      <v-checkbox
+                        v-model="question_8"
+                        value="6"
+                        label="アウェイ観戦ツアーの割引"
+                        :disabled="is_question_8_limit(6)"
+                        hide-details
+                      />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <v-subheader>Q9.その他応援メッセージやご意見があればぜひ教えてください</v-subheader>
+                </v-col>
+                <v-col cols="8">
+                  <v-text-field
+                    v-model="question_9"
+                    label=""
+                    type="text"
+                    counter
+                    outlined
+                  />
+                </v-col>
+              </v-row>
+              <!-- /アンケート -->
               <v-row>
                 <v-col cols="12">
                   <v-btn
@@ -627,10 +849,10 @@
         <v-stepper-content step="4">
           <header>
             <h2>
-              今治FC　登録完了
+              FC IMABARI Sailors'Club　会員登録完了
             </h2>
             <p class="mt-1 max-w-4xl text-sm leading-5 text-gray-500">
-              今治FC 無料会員登録しました。
+              FC IMABARI Sailors'Club 無料会員登録しました。
             </p>
           </header>
         </v-stepper-content>
@@ -728,6 +950,16 @@ export default {
       loading1: false,
       loading2: false,
       loading3: false,
+      // アンケート
+      question_1: 0, // 職業
+      question_2: 0, // 応援し始めた時期
+      question_3: 0, // ユニフォーム所持
+      question_4: 0, // アウェイ戦
+      question_5: 0, // ホームゲーム観戦
+      question_6: 0, // 一緒に応援に行く人
+      question_7: [], // 今治の情報
+      question_8: [], // 一緒に応援に行く人
+      question_9: "",
       rules: {
         required: (value) => !!value || "この項目は必須入力です",
         password_min: (v) => v.length >= 8 || "最低8文字以上を入力してください",
@@ -793,6 +1025,20 @@ export default {
     }
   },
   methods: {
+    // アンケート7問の選択制限
+    is_question_7_limit(num) {
+      if(this.question_7.find(value => value == num)) {
+        return false
+      }
+      return this.question_7.length > 2 && this.question_7.indexOf(num) === -1
+    },
+    // アンケート8問の選択制限
+    is_question_8_limit(num) {
+      if(this.question_8.find(value => value == num)) {
+        return false
+      }
+      return this.question_8.length > 2 && this.question_8.indexOf(num) === -1
+    },
     send_email() {
       this.loading1 = true
       if (this.$refs.form1.validate()) {
@@ -841,11 +1087,19 @@ export default {
             address3: this.address3,
             tel: this.tel,
             m_tel: this.m_tel,
-            fax: this.fax,
             email: this.email,
             email2: this.subemail,
             email_send_ng_flg: this.mailmaga_flg ? 0 : 1,
             login_pwd: this.login_pwd,
+            q1: this.question_1,
+            q2: this.question_2,
+            q3: this.question_3,
+            q4: this.question_4,
+            q5: this.question_5,
+            q6: this.question_6,
+            q7: this.question_7,
+            q8: ["1"],
+            q9: this.question_9,
           })
           .then(function (response) {
             if (response.data.errors.length === 0) {

@@ -2,10 +2,10 @@
   <div class="form-page">
     <header>
       <h2 v-if="!temp_user" class="form-ttl">
-        FC今治 有料会員 アップグレード
+        FC IMABARI Sailors'Club 有料会員 アップグレード
       </h2>
       <h2 v-if="temp_user" class="form-ttl">
-        FC今治 有料会員・支払い方法登録
+        FC IMABARI Sailors'Club 有料会員・支払い方法登録
       </h2>
     </header>
     <div class="theme--light v-stepper">
@@ -22,7 +22,19 @@
                 <v-subheader>料金プラン</v-subheader>
               </v-col>
               <v-col cols="8">
-                <p> FC今治 有料会員</p>
+                <v-radio-group v-model="product_id" :rules="[rules.required]">
+                  <!--
+                  <img
+                  src="@/assets/images/RR.png"
+                  v-if="red_star || red_rockets"
+                  style="width: 240px; padding: 10px;"
+                  />
+                -->
+                  <v-radio
+                  label="FC IMABARI Sailors'Club 有料会員(年会費: 3300円 (税込み) )"
+                  value="41249"
+                  />
+                </v-radio-group>
               </v-col>
             </v-row>
             <v-row>
@@ -151,7 +163,8 @@ export default {
       red_rockets: false,
       temp_user: false,
       success_message: "",
-      product_id: null,
+      //product_id: 41250, // とりあえずデフォルトで有料会員
+      product_id: 41249,
       product_id2: null,
       present: "1",
       ec_payment_id: "58",
@@ -180,6 +193,8 @@ export default {
   created() {
     let self = this
     const group_ids = JSON.parse(JSON.stringify(this.$auth.user.group_ids))
+
+    /*
     Object.keys(group_ids).forEach(function (key) {
       if (["113"].indexOf(key) !== -1) {
         self.green_star = true
@@ -195,7 +210,9 @@ export default {
         self.$router.push("/")
       }
     })
+    */
 
+/*
     if (!self.product_id && !self.green_rockets && !self.red_rockets) {
       self.green_star = true
       self.green_rockets = true
@@ -203,6 +220,7 @@ export default {
       self.red_rockets = true
       self.temp_user = true
     }
+  */
   },
   methods: {
     purchase() {
@@ -215,8 +233,10 @@ export default {
         } else {
           self.success_message = "アップグレードのお申し込みが完了しました"
         }
+        console.warn(`ec_payment_id: ${this.ec_payment_id}`)
 
         if (this.ec_payment_id == 58) {
+          console.warn("クレジット決済")
           // eslint-disable-next-line no-undef
           let paygentToken = new PaygentToken()
           paygentToken.createToken(
@@ -230,6 +250,8 @@ export default {
               name: self.cardName,
             },
             function (response) {
+              console.warn("クレジット決済 2")
+              console.warn(`product_id ${self.product_id}`)
               if (response.result == "0000") {
                 self.$auth.ctx.$axios
                   .post("/rcms-api/1/ec/purchase", {
@@ -271,21 +293,12 @@ export default {
             }
           )
         } else {
-          if (this.ec_payment_id != 58) {
-            if (self.product_id == "41201") {
-              self.product_id2 = "41209"
-            } else if (self.product_id == "41202") {
-              self.product_id2 = "41208"
-            } else if (self.product_id == "41203") {
-              self.product_id2 = "41210"
-            } else if (self.product_id == "41204") {
-              self.product_id2 = "41207"
-            }
-          }
+          console.warn(`ec_payment_id: ${self.ec_payment_id}`)
+          console.warn(`product_id: ${self.product_id}`)
           self.$auth.ctx.$axios
             .post("/rcms-api/1/ec/purchase", {
               ec_payment_id: parseInt(self.ec_payment_id),
-              product_id: parseInt(self.product_id2),
+              product_id: parseInt(self.product_id),
               quantity: 1,
             })
             .then(() => {
