@@ -56,7 +56,8 @@
                 </form>
                 <p>
                   <NuxtLink to="/reminder">
-                    パスワードを忘れた方はこちらから
+                    仮パスワード発行<br />
+                    (パスワードを忘れた場合もこちらからお手続きください)
                   </NuxtLink>
                 </p>
               </div>
@@ -95,7 +96,7 @@
                     <strong>会員種別</strong><span>{{ group_nm }}</span>
                   </p>
                 </div>
-                <v-img :src="require('@/assets/images/temp_member_card.jpg')"></v-img>
+                <v-img :src="require('@/assets/images/free_member_card.png')"></v-img>
               </v-card-text>
               <v-card-actions>
                 <v-btn text color="deep-purple accent-4" to="/profile_edit">
