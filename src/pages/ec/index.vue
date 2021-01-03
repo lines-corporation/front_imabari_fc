@@ -137,6 +137,7 @@ export default {
         title: "グッズ"
       },
     ],
+    goods: [],
     products: [
       {
         id: 10,
@@ -195,6 +196,63 @@ export default {
     ],
   }),
   methods: {
+    // 商品一覧の取得
+    getProduct() {
+      let self = this
+      this.$auth.ctx.$axios
+        .get("/rcms-api/1/shop/product/list")
+        .then(function (response) {
+          console.warn(response)
+          console.warn(self)
+          // エラー検知
+          if(response.errors) {
+            // TODO エラー表示
+          }
+          // 商品名 topics_name
+          // id topics_id => これは種類別でこれにまとめたい
+          // 価格 price_02
+          // 商品説明 product_data.ext_col_01
+          // 詳細説明 product_data.ext_col_02
+          // 画像 product_data.ext_columns.group[0].file_url
+          //     ext_columns.group[0].file_url
+          // サイズ subject
+
+          //self.topics_list1 = response.data.list
+
+          response.data.list.forEach((product, index) => {
+            // TODO 同じtopics_idの商品があるかどうか確認 goodは仮
+            let insertFlg = true
+            this.goods.forEach((good, index) => {
+              // すでに投稿されている場合にはバリデーションとして保存する
+              if(good.topics_id == product.topics_id) {
+                insertFlg = false
+              }
+            })
+            // 新規の追加
+            if(insertFlg) {
+              this.goods.push({
+                topics_id: product.topics_id,
+                price:     product.price_02,
+                description: product.product_data.ext_col_01,
+                // 注意書き?
+                note: product.product_data.ext_col_02,
+                images: this.pickupImages(product)
+              })
+            }
+          })
+        })
+    },
+    // 商品画像の抜き出し
+    pickupImages(data) {
+      let images = []
+      Object.keys(data.product_data.ext_columns.group).forEach((key, value) => {
+        if(value[0].file_url) {
+          images.push(value[0].file_url)
+        }
+      })
+
+      return images
+    },
     nextBanner() {
       this.onboarding = this.onboarding + 1 === this.length ? 0 : this.onboarding + 1
     },
@@ -216,5 +274,8 @@ export default {
       return this.$store.$auth
     },
   },
+  mounted() {
+    this.getProduct()
+  }
 }
 </script>
