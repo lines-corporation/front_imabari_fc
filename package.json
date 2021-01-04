@@ -34,6 +34,7 @@
     "nuxt": "^2.14.3",
     "vue": "^2.6.12",
     "vue-class-component": "^7.2.5",
+    "vue-photo-zoom-pro": "^1.4.3",
     "vue-property-decorator": "^9.0.0",
     "vue-snack": "^0.1.4"
   },
