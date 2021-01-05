@@ -39,8 +39,8 @@ export default {
     return {
       category_items: [
         {
-          action: "FC今治について",
-          title: "FC今治の会員組織についてのご質問はこちら",
+          action: "FC IMABARI Sailors'Club",
+          title: "FC IMABARI Sailors'Clubについてのご質問はこちら",
           active: false,
           items: [],
           category_id: 19,
@@ -59,6 +59,20 @@ export default {
           items: [],
           category_id: 28,
         },
+        {
+          action: "グッズ購入について",
+          title: "",
+          active: false,
+          items: [],
+          category_id: 32,
+        },
+        {
+          action: "チケット購入",
+          title: "",
+          active: false,
+          items: [],
+          category_id: 31,
+        }
       ],
     }
   },

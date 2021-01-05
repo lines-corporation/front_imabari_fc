@@ -624,7 +624,7 @@
                     <v-radio label="2017年から" value="4" />
                     <v-radio label="2018年から" value="5" />
                     <v-radio label="2019年から" value="6" />
-                    <v-radio label="2000年から" value="7" />
+                    <v-radio label="2020年から" value="7" />
                   </v-radio-group>
                 </v-col>
               </v-row>
