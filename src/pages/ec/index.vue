@@ -76,27 +76,34 @@
                 </v-icon>
               </v-col>
             </v-row>
-            <v-row>
-              <v-col v-for="product in products" :key="product.id" cols="4">
+            <v-row v-if="goods">
+              <p>hogehoge</p>
+              <p>{{ goods["960"] }}</p>
+              <v-col v-for="(product, topics_id, index) in goods" :key="topics_id" cols="4">
+                <p>{{ goods["960"] }}</p>
+                <p>fugafuga</p>
                 <v-card>
                   <v-img
                     class="white--text align-end"
                     height="200px"
                     width="300px"
-                    :src="product.image"
+                    :src="product.images[0]"
                   />
-                  <v-card-title>{{ product.title }}</v-card-title>
+                  <v-card-title>{{ product.name }}</v-card-title>
                   <v-card-text class="text--primary">
                     <div>価格： ¥{{ product.price }}</div>
                   </v-card-text>
 
                   <v-card-actions>
-                    <v-btn @click="moveProductDetail(product.id)" color="orange" text>
+                    <v-btn @click="moveProductDetail(product.topics_id)" color="orange" text>
                       商品詳細
                     </v-btn>
                   </v-card-actions>
                 </v-card>
               </v-col>
+            </v-row>
+            <v-row v-else>
+              <p>データがないよ</p>
             </v-row>
           </v-container>
         </v-col>
@@ -137,7 +144,7 @@ export default {
         title: "グッズ"
       },
     ],
-    goods: [],
+    goods: {},
     products: [
       {
         id: 10,
@@ -197,60 +204,45 @@ export default {
   }),
   methods: {
     // 商品一覧の取得
-    getProduct() {
-      let self = this
-      this.$auth.ctx.$axios
-        .get("/rcms-api/1/shop/product/list")
-        .then(function (response) {
-          console.warn(response)
-          console.warn(self)
-          // エラー検知
-          if(response.errors) {
-            // TODO エラー表示
+    async getProduct() {
+      let response = await this.$auth.ctx.$axios.get("/rcms-api/1/shop/product/list")
+      console.warn(response)
+      // エラー検知
+      if(response.errors) {
+        // TODO エラー表示
+      }
+      // 商品名 topics_name
+      // id topics_id => これは種類別でこれにまとめたい
+      // 価格 price_02
+      // 商品説明 product_data.ext_col_01
+      // 詳細説明 product_data.ext_col_02
+      // 画像 product_data.ext_columns.group[0].file_url
+      //     ext_columns.group[0].file_url
+      // サイズ subject
+      response.data.list.forEach((product, index) => {
+        if(this.goods[product.topics_id]) {
+          this.goods[product.topics_id].data.push(product)
+        } else {
+          this.goods[product.topics_id] = {
+            name:      product.topics_name,
+            price:     product.price_02,
+            description: product.product_data.ext_col_01,
+            // 注意書き?
+            note: product.product_data.ext_col_02,
+            images: this.pickupImages(product.product_data),
+            data: [product]
           }
-          // 商品名 topics_name
-          // id topics_id => これは種類別でこれにまとめたい
-          // 価格 price_02
-          // 商品説明 product_data.ext_col_01
-          // 詳細説明 product_data.ext_col_02
-          // 画像 product_data.ext_columns.group[0].file_url
-          //     ext_columns.group[0].file_url
-          // サイズ subject
-
-          //self.topics_list1 = response.data.list
-
-          response.data.list.forEach((product, index) => {
-            // TODO 同じtopics_idの商品があるかどうか確認 goodは仮
-            let insertFlg = true
-            this.goods.forEach((good, index) => {
-              // すでに投稿されている場合にはバリデーションとして保存する
-              if(good.topics_id == product.topics_id) {
-                insertFlg = false
-              }
-            })
-            // 新規の追加
-            if(insertFlg) {
-              this.goods.push({
-                topics_id: product.topics_id,
-                price:     product.price_02,
-                description: product.product_data.ext_col_01,
-                // 注意書き?
-                note: product.product_data.ext_col_02,
-                images: this.pickupImages(product)
-              })
-            }
-          })
-        })
+        }
+      })
+      console.warn("result***********")
+      console.warn(this.goods)
     },
     // 商品画像の抜き出し
     pickupImages(data) {
       let images = []
-      Object.keys(data.product_data.ext_columns.group).forEach((key, value) => {
-        if(value[0].file_url) {
-          images.push(value[0].file_url)
-        }
+      data.ext_columns.straight.forEach((info, index) => {
+        images.push(info.file_url)
       })
-
       return images
     },
     nextBanner() {
