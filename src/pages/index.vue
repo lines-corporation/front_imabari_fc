@@ -96,7 +96,10 @@
                     <strong>会員種別</strong><span>{{ group_nm }}</span>
                   </p>
                 </div>
-                <v-img :src="require('@/assets/images/free_member_card.png')"></v-img>
+                <!-- 無料会員 会員証 -->
+                <v-img v-if="can_upgrade" :src="require('@/assets/images/free_member_card.png')"></v-img>
+                <!-- 有料会員 会員証 -->
+                <v-img v-else :src="require('@/assets/images/member_card.png')"></v-img>
               </v-card-text>
               <v-card-actions>
                 <v-btn text color="deep-purple accent-4" to="/profile_edit">
@@ -267,6 +270,8 @@ export default {
       if (this.$auth.loggedIn) {
         self.can_upgrade = true
         const group_ids = JSON.parse(JSON.stringify(this.$auth.user.group_ids))
+        console.warn("************ group_ids *************")
+        console.warn(group_ids)
         Object.keys(group_ids).forEach(function (key) {
           if (["114", "111"].indexOf(key) !== -1) {
             self.can_upgrade = false
