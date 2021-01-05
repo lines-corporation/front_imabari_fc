@@ -664,10 +664,10 @@
                 </v-col>
                 <v-col cols="8">
                   <v-radio-group v-model="question_5" row :rules="[rules.required]">
-                    <v-radio label="1試合以下" value="0" />
-                    <v-radio label="2～4試合" value="1" />
-                    <v-radio label="5～10試合" value="2" />
-                    <v-radio label="11試合以上" value="3" />
+                    <v-radio label="1試合以下" value="1" />
+                    <v-radio label="2～4試合" value="2" />
+                    <v-radio label="5～10試合" value="3" />
+                    <v-radio label="11試合以上" value="4" />
                   </v-radio-group>
                 </v-col>
               </v-row>
