@@ -293,8 +293,12 @@ export default {
             }
           )
         } else {
+          // 銀行振り込み
+          // 銀行振り込みの場合にはproduct_idを差し替える
+          self.product_id = 41250
           console.warn(`ec_payment_id: ${self.ec_payment_id}`)
           console.warn(`product_id: ${self.product_id}`)
+
           self.$auth.ctx.$axios
             .post("/rcms-api/1/ec/purchase", {
               ec_payment_id: parseInt(self.ec_payment_id),
