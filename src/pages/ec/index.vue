@@ -1,5 +1,6 @@
 <template>
   <div>
+    <client-only>
     <!-- バナー -->
     <v-card flat tile>
       <v-window v-model="onboarding" reverse>
@@ -77,11 +78,7 @@
               </v-col>
             </v-row>
             <v-row v-if="goods">
-              <p>hogehoge</p>
-              <p>{{ goods["960"] }}</p>
-              <v-col v-for="(product, topics_id, index) in goods" :key="topics_id" cols="4">
-                <p>{{ goods["960"] }}</p>
-                <p>fugafuga</p>
+              <v-col v-for="(product, topics_id) in goods" :key="topics_id" cols="4">
                 <v-card>
                   <v-img
                     class="white--text align-end"
@@ -118,7 +115,7 @@
       :length="6"
       ></v-pagination>
     </div>
-
+  </client-only>
   </div>
 </template>
 
@@ -206,7 +203,6 @@ export default {
     // 商品一覧の取得
     async getProduct() {
       let response = await this.$auth.ctx.$axios.get("/rcms-api/1/shop/product/list")
-      console.warn(response)
       // エラー検知
       if(response.errors) {
         // TODO エラー表示
@@ -223,19 +219,19 @@ export default {
         if(this.goods[product.topics_id]) {
           this.goods[product.topics_id].data.push(product)
         } else {
-          this.goods[product.topics_id] = {
-            name:      product.topics_name,
-            price:     product.price_02,
-            description: product.product_data.ext_col_01,
-            // 注意書き?
-            note: product.product_data.ext_col_02,
-            images: this.pickupImages(product.product_data),
-            data: [product]
-          }
+          this.$set(this.goods, product.topics_id,
+            {
+              name:      product.topics_name,
+              price:     product.price_02,
+              description: product.product_data.ext_col_01,
+              // 注意書き?
+              note: product.product_data.ext_col_02,
+              images: this.pickupImages(product.product_data),
+              data: [product]
+            }
+          )
         }
       })
-      console.warn("result***********")
-      console.warn(this.goods)
     },
     // 商品画像の抜き出し
     pickupImages(data) {
