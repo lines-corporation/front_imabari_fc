@@ -8,7 +8,9 @@
               <strong>
                 FC IMABARI Sailors' Club 更新・新規入会方法の詳細は下記をご確認ください。<br />
               </strong><br />
-              <a href="https://rugby.necsports.net/topics_detail1/id=1946">FC IMABARI Sailors' Club 更新・新規入会方法</a>
+              <NuxtLink to="/form">
+                FC IMABARI Sailors' Club 更新・新規入会方法
+              </NuxtLink>
             </p>
           </v-row>
           <v-row>
