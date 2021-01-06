@@ -1,22 +1,24 @@
 <template>
-  <div class="container">
+  <div class="container shop-wrap shop-cart">
     <v-container>
-
+	  <h2 class="shop-ttl">ご注文内容の確認</h2>
       <!-- ここをループさせる -->
       <div v-for="product in products">
-        <v-row no-gutters>
-          <v-col>
+        <v-row no-gutters class="cart-list">
+          <v-col class="c-img">
             <v-img
               :lazy-src="product.image"
-              max-width="400"
+              max-width="200"
               :src="product.image"
             ></v-img>
           </v-col>
-          <v-col>
+          <v-col class="c-txt">
+          	<div>
             <h3>{{ product.title }}</h3>
             <p>¥ {{ product.price }}</p>
             <p v-if="product.size">size : {{ product.size }}</p>
             <p>個数 {{ product.num }}個</p>
+            </div>
           </v-col>
         </v-row>
 
@@ -24,28 +26,30 @@
       </div>
 
 
-      <v-row>
-        <v-col cols="4">
+      <v-row class="p-list">
+        <v-col cols="4" class="p-header">
           <v-subheader>支払方法</v-subheader>
         </v-col>
         <v-col cols="8">
-          <p>クレジット決済</p>
+          <p class="p-cell">クレジット決済</p>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col cols="4">
+      <v-row class="p-list">
+        <v-col cols="4" class="p-header">
           <v-subheader>合計金額</v-subheader>
         </v-col>
         <v-col cols="8">
-          <p>¥ 2500</p>
+          <p class="p-cell">¥ 2500</p>
         </v-col>
       </v-row>
 
       <v-row>
         <v-col cols="12">
-          <v-btn to="/ec/done" nuxt>決済する</v-btn>
+          <v-btn to="/ec/done" nuxt class="btn-done">決済する</v-btn>
         </v-col>
       </v-row>
+
+
 
       <v-row>
         <v-col cols="12">

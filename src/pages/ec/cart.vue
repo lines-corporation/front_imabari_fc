@@ -1,6 +1,7 @@
 <template>
-  <div class="container">
+  <div class="container shop-wrap shop-cart">
     <v-container>
+      <h2 class="shop-ttl">買い物カゴ</h2>
       <v-row>
         <v-col cols="12">
           <v-btn to="/ec" nuxt>買い物を続ける</v-btn>
@@ -8,37 +9,40 @@
       </v-row>
 
       <div v-for="product in products">
-        <v-row no-gutters>
-          <v-col>
+        <v-row no-gutters class="cart-list">
+          <v-col class="c-img">
             <v-img
               :lazy-src="product.image"
-              max-width="400"
+              max-width="200"
               :src="product.image"
             ></v-img>
           </v-col>
-          <v-col>
+          <v-col class="c-txt">
+          	<div>
             <h3>{{ product.title }}</h3>
             <p>¥ {{ product.price }}</p>
             <p v-if="product.size">size : {{ product.size }}</p>
+            </div>
             <!-- select box -->
-            <v-select
+            <v-select 
+              class="p-select"
               :items="product.items"
               label="個数"
               outlined
             ></v-select>
+            
           </v-col>
-        </v-row>
-
-        <v-row class="d-flex flex-row-reverse" >
-          <v-btn @click="removeProduct">削除</v-btn>
+		  <v-col class="d-flex flex-row-reverse c-del" >
+		    <v-btn @click="removeProduct">削除</v-btn>
+		  </v-col>
         </v-row>
 
         <v-divider></v-divider>
       </div>
 
     <!-- 支払い方法 TODO これはコンポーネント化する -->
-    <v-row>
-      <v-col cols="4">
+    <v-row class="p-list">
+      <v-col cols="4" class="p-header">
         <v-subheader>支払方法</v-subheader>
       </v-col>
       <v-col cols="8">

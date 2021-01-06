@@ -1,43 +1,23 @@
 <template>
-  <div>
+  <div class="shop-wrap">
     <!-- バナー -->
-    <v-card flat tile>
-      <v-window v-model="onboarding" reverse>
-        <v-window-item v-for="n in length" :key="`card-${n}`">
-          <v-card color="grey" height="200">
-            <v-row class="fill-height" align="center" justify="center">
-              <v-img
-                class="white--text align-end"
-                width="100%"
-                :src="require('@/assets/images/temp_banner.jpg')"
-              />
-            </v-row>
-          </v-card>
-        </v-window-item>
-      </v-window>
+  <v-carousel 
+  	cycle
+    hide-delimiter-background
+  >
+    <v-carousel-item
+      v-for="(item,i) in items"
+      :key="i"
+      :src="item.src"
 
-      <v-card-actions class="justify-space-between">
-        <v-btn text @click="prevBanner">
-          <v-icon>mdi-chevron-left</v-icon>
-        </v-btn>
-        <v-item-group v-model="onboarding" class="text-center" mandatory>
-          <v-item v-for="n in length" :key="`btn-${n}`" v-slot="{ active, toggle }">
-            <v-btn :input-value="active" icon @click="toggle">
-              <v-icon>mdi-record</v-icon>
-            </v-btn>
-          </v-item>
-        </v-item-group>
-        <v-btn text @click="nextBanner">
-          <v-icon>mdi-chevron-right</v-icon>
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+    ></v-carousel-item>
+  </v-carousel>
 
-    <v-container>
+    <v-container class="shop-top">
       <v-row no-gutters>
         <!-- カテゴリー一覧 -->
-        <v-col cols="4">
-          <v-card class="d-flex flex-row mb-2" max-width="400" height="800">
+        <v-col cols="4" class="brk" sm="12">
+          <v-card class="d-flex flex-row mb-2" max-width="300">
             <v-list flat subheader three-line>
               <v-subheader>商品カテゴリー</v-subheader>
               <v-list-item-group
@@ -64,9 +44,9 @@
         </v-col>
 
         <!-- 商品一覧 -->
-        <v-col cols="8">
+        <v-col cols="8" class="brk2">
           <v-container class="grey lighten-5 mb-3">
-            <v-row>
+            <v-row class="shoplist">
               <v-col cols="10" sm="6" md="4">
                 <v-text-field dense label="商品検索" prepend-icon="mdi-magnify"></v-text-field>
               </v-col>
@@ -77,8 +57,8 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col v-for="product in products" :key="product.id" cols="4">
-                <v-card>
+              <v-col v-for="product in products" :key="product.id" cols="4" sm="12">
+                <v-card class="p-card">
                   <v-img
                     class="white--text align-end"
                     height="200px"
@@ -123,6 +103,23 @@ export default {
     length: 3,
     page: 1,
     onboarding: 0,
+    
+
+
+    items: [
+      {
+        src: 'http://fcimabari.design-view.link:8120/_nuxt/src/assets/images/temp_banner.jpg',
+      },
+      {
+        src: 'http://fcimabari.design-view.link:8120/_nuxt/src/assets/images/temp_banner.jpg',
+      },
+      {
+        src: 'http://fcimabari.design-view.link:8120/_nuxt/src/assets/images/temp_banner.jpg',
+      },
+
+    ],
+
+
     categories: [
       {
         title: "全て",
