@@ -852,7 +852,7 @@
               FC IMABARI Sailors'Club　会員登録完了
             </h2>
             <p class="mt-1 max-w-4xl text-sm leading-5 text-gray-500">
-              FC IMABARI Sailors'Club 無料会員登録しました。
+              FC IMABARI Sailors'Club 無料会員登録を完了しました。
             </p>
           </header>
         </v-stepper-content>
