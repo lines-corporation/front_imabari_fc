@@ -1,8 +1,8 @@
 <template>
-  <div class="container">
+  <div class="container shop-wrap">
     <v-container>
-      <v-row class="d-flex flex-row-reverse" >
-        <v-col cols="2" @click="moveCart">
+      <v-row class="d-flex flex-row-reverse">
+        <v-col cols="2" class="cart-nvi" @click="moveCart">
           <v-icon large color="darken-2">
             mdi-cart-variant
           </v-icon>
@@ -18,6 +18,27 @@
           ></v-img>
         </v-col>
         <v-col>
+          <!-- サムネイル -->
+          <v-sheet class="mx-auto" elevation="8" max-width="800">
+            <v-slide-group class="pa-4" center-active show-arrows>
+              <v-slide-item v-for="n in 15" :key="n" v-slot="{ active, toggle }">
+              <v-card
+                :color="active ? 'primary' : 'grey lighten-1'"
+                class="ma-4"
+                width="101"
+                @click="toggle"
+              >
+                <v-row class="fill-height" ALIGN="CENTER" justify="center">
+                  <v-img
+                    :lazy-src="imageUrl"
+                    :src="imageUrl"
+                    max-width="101"
+                  ></v-img>
+                </v-row>
+              </v-card>
+            </v-slide-item>
+          </v-slide-group>
+        </v-sheet>
           <h3>商品名</h3>
           <p>¥ 3000</p>
           <!-- select box -->
@@ -26,27 +47,7 @@
             label="Size"
             outlined
           ></v-select>
-          <!-- サムネイル -->
-          <v-sheet class="mx-auto" elevation="8" max-width="800">
-            <v-slide-group class="pa-4" center-active show-arrows>
-              <v-slide-item v-for="n in 15" :key="n" v-slot="{ active, toggle }">
-              <v-card
-                :color="active ? 'primary' : 'grey lighten-1'"
-                class="ma-4"
-                width="200"
-                @click="toggle"
-              >
-                <v-row class="fill-height" ALIGN="CENTER" justify="center">
-                  <v-img
-                    :lazy-src="imageUrl"
-                    :src="imageUrl"
-                    max-width="200"
-                  ></v-img>
-                </v-row>
-              </v-card>
-            </v-slide-item>
-          </v-slide-group>
-        </v-sheet>
+
         </v-col>
       </v-row>
 
@@ -62,6 +63,8 @@
 
       <v-row class="spacing-playground pa-6">
         <v-btn @click="addCart" color="primary" elevation="2" large>カートに入れる</v-btn>
+      </v-row>
+      <v-row class="spacing-playground pa-6">      	  
         <v-btn to="/ec" nuxt>一覧に戻る</v-btn>
       </v-row>
     </v-container>

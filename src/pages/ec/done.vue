@@ -1,46 +1,52 @@
 <template>
-  <div class="container">
+  <div class="container shop-wrap shop-cart">
     <v-container>
-      <h3>購入完了しました。購入したものは履歴から確認可能です</h3>
 
-      <v-row>
-        <v-col cols="6">
+
+      <v-row class="d-msg">
+        <v-col cols="12">
+          <h3>購入完了しました！</h3>
+          <p>購入したものは履歴から確認可能です。</p>
           <v-btn to="/ec/history" nuxt>購入履歴へ</v-btn>
-        </v-col>
-        <v-col cols="6">
-          <v-btn to="/ec" nuxt>EC TOPへ</v-btn>
         </v-col>
       </v-row>
 
-      <v-row>
-        <v-col cols="4">
+      <v-row class="p-list">
+        <v-col cols="4" class="p-header">
           <v-subheader>合計金額</v-subheader>
         </v-col>
         <v-col cols="8">
-          <p>¥ 2500</p>
+          <p class="p-cell">¥ 2500</p>
         </v-col>
       </v-row>
 
       <div v-for="product in products">
-        <v-row no-gutters>
-          <v-col>
+        <v-row no-gutters class="cart-list">
+          <v-col class="c-img">
             <v-img
               :lazy-src="product.image"
               max-width="400"
               :src="product.image"
             ></v-img>
           </v-col>
-          <v-col>
+          <v-col class="c-txt">
+          	<div>
             <h3>{{ product.title }}</h3>
             <p>¥ {{ product.price }}</p>
             <p v-if="product.size">size : {{ product.size }}</p>
             <p>個数 {{ product.num }}個</p>
+            </div>
           </v-col>
         </v-row>
 
         <v-divider></v-divider>
-      </div>
 
+      </div>
+	  <v-row>
+        <v-col cols="12">
+          <v-btn to="/ec" nuxt>EC TOPへ</v-btn>
+        </v-col>
+	  </v-row>
     </v-container>
   </div>
 </template>
