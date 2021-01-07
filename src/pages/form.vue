@@ -293,7 +293,8 @@
 
         <v-stepper-content step="2">
           <p class="mt-1 max-w-4xl text-sm leading-5 text-gray-500">
-            メールボックスに届いたメールに記載されているリンクからアクセスをしてください。
+            <!-- メールボックスに届いたメールに記載されているリンクからアクセスをしてください。 -->
+            ご入力いただいたメールアドレス宛に、会員登録の手順が書かれた案内を送信しました。メールボックスをご確認のうえ会員登録に進んでください。(会員登録はまだ完了していません)
           </p>
           <v-container />
         </v-stepper-content>
@@ -539,7 +540,7 @@
                   <p v-html="email" />
                 </v-col>
               </v-row>
-              <v-row>
+              <!-- <v-row>
                 <v-col cols="4">
                   <v-subheader>第２メールアドレス</v-subheader>
                 </v-col>
@@ -552,7 +553,7 @@
                     autocomplete="off"
                   />
                 </v-col>
-              </v-row>
+              </v-row> -->
               <v-row>
                 <v-col cols="4">
                   <v-subheader>
@@ -577,7 +578,7 @@
                   />
                 </v-col>
               </v-row>
-              <v-row>
+              <!-- <v-row>
                 <v-col cols="4">
                   <v-subheader>
                     <span style="color: red;">*</span>メールマガジン配信
@@ -590,7 +591,7 @@
                     label="希望する"
                   />
                 </v-col>
-              </v-row>
+              </v-row> -->
               <!-- アンケート -->
               <v-row>
                 <v-col cols="4">
@@ -671,7 +672,7 @@
                   </v-radio-group>
                 </v-col>
               </v-row>
-              <v-row>
+              <!-- <v-row>
                 <v-col cols="4">
                   <v-subheader>
                     <span style="color: red;">*</span>Q6.試合には誰と一緒に応援に行くことが多いですか？
@@ -813,7 +814,7 @@
                         hide-details
                       />
                 </v-col>
-              </v-row>
+              </v-row> -->
               <v-row>
                 <v-col cols="4">
                   <v-subheader>Q9.その他応援メッセージやご意見があればぜひ教えてください</v-subheader>
@@ -876,7 +877,7 @@ export default {
       fax: "",
       tel: "",
       m_tel: "",
-      subemail: "",
+      // subemail: "",
       name1: "",
       name2: "",
       namekana1: "",
@@ -888,7 +889,7 @@ export default {
       address3: "",
       birth: "",
       sex: "",
-      mailmaga_flg: false,
+      // mailmaga_flg: false,
       menu: false,
       arrTdfk_cd: [
         { code: "01", name: "北海道" },
@@ -956,9 +957,9 @@ export default {
       question_3: 0, // ユニフォーム所持
       question_4: 0, // アウェイ戦
       question_5: 0, // ホームゲーム観戦
-      question_6: 0, // 一緒に応援に行く人
-      question_7: [], // 今治の情報
-      question_8: [], // 一緒に応援に行く人
+      // question_6: 0, // 一緒に応援に行く人
+      // question_7: [], // 今治の情報
+      // question_8: [], // 一緒に応援に行く人
       question_9: "",
       rules: {
         required: (value) => !!value || "この項目は必須入力です",
@@ -1025,20 +1026,20 @@ export default {
     }
   },
   methods: {
-    // アンケート7問の選択制限
-    is_question_7_limit(num) {
-      if(this.question_7.find(value => value == num)) {
-        return false
-      }
-      return this.question_7.length > 2 && this.question_7.indexOf(num) === -1
-    },
-    // アンケート8問の選択制限
-    is_question_8_limit(num) {
-      if(this.question_8.find(value => value == num)) {
-        return false
-      }
-      return this.question_8.length > 2 && this.question_8.indexOf(num) === -1
-    },
+    // // アンケート7問の選択制限
+    // is_question_7_limit(num) {
+    //   if(this.question_7.find(value => value == num)) {
+    //     return false
+    //   }
+    //   return this.question_7.length > 2 && this.question_7.indexOf(num) === -1
+    // },
+    // // アンケート8問の選択制限
+    // is_question_8_limit(num) {
+    //   if(this.question_8.find(value => value == num)) {
+    //     return false
+    //   }
+    //   return this.question_8.length > 2 && this.question_8.indexOf(num) === -1
+    // },
     send_email() {
       this.loading1 = true
       if (this.$refs.form1.validate()) {
@@ -1088,17 +1089,17 @@ export default {
             tel: this.tel,
             m_tel: this.m_tel,
             email: this.email,
-            email2: this.subemail,
-            email_send_ng_flg: this.mailmaga_flg ? 0 : 1,
+            // email2: this.subemail,
+            // email_send_ng_flg: this.mailmaga_flg ? 0 : 1,
             login_pwd: this.login_pwd,
             q1: this.question_1,
             q2: this.question_2,
             q3: this.question_3,
             q4: this.question_4,
             q5: this.question_5,
-            q6: this.question_6,
-            q7: this.question_7,
-            q8: ["1"],
+            // q6: this.question_6,
+            // q7: this.question_7,
+            // q8: ["1"],
             q9: this.question_9,
           })
           .then(function (response) {

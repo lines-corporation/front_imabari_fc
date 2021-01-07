@@ -4,7 +4,7 @@
       <h2 class="form-ttl">
         FC IMABARI Sailors'Club 個人会員会則
       </h2>
-      <p style="text-align: right;">
+      <p style="text-align: right; color: #fff;">
         制定 ２００３年１２月 １日<br />
         最近の改正 ２０２０年９月１８日<br />
       </p>
