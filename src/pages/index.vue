@@ -4,11 +4,13 @@
       <div v-if="!auth.loggedIn">
         <form class="login-page" @submit.prevent="login">
           <v-row>
-            <p class="fnt-w">
+            <p class="fnt-w col-xl-auto">
               <strong>
                 FC IMABARI Sailors' Club 更新・新規入会方法の詳細は下記をご確認ください。<br />
               </strong><br />
-              <a href="https://rugby.necsports.net/topics_detail1/id=1946">FC IMABARI Sailors' Club 更新・新規入会方法</a>
+              <NuxtLink to="/form">
+                FC IMABARI Sailors' Club 更新・新規入会方法
+              </NuxtLink>
             </p>
           </v-row>
           <v-row>
@@ -111,7 +113,7 @@
             <v-card v-if="can_upgrade" class="mx-auto" outlined>
               <v-card-text>
                 <h3>アップグレードのご案内</h3>
-                <p class="body-1 ug-p">
+                <p class="body-1 ug-p fnt-w">
                   <NuxtLink to="/upgrade">
                     有料への種別変更はこちら
                   </NuxtLink>
