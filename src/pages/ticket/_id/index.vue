@@ -446,11 +446,9 @@ export default {
     .then(function (res) {
       let seatOrderedData = res.data.data
       let seatOrdered
-      seatOrderedData && seatOrderedData.forEach(data => {
-        if (data.topic_id == topic_id) {
-          seatOrdered = data.ordered_order_note
-        }
-      })
+      if (seatOrderedData && seatOrderedData.topics_id == topic_id) {
+        seatOrdered = seatOrderedData.ordered_order_note
+      }
       seatOrdered && seatOrdered.forEach(oerdered => {
         let s = {
           topic_id: topic_id,
