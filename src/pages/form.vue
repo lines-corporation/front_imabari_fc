@@ -645,7 +645,7 @@
               <v-row>
                 <v-col cols="4">
                   <v-subheader>
-                    <span style="color: red;">*</span>Q4.2000シーズン、何回程度FC今治のアウェイ戦を観戦しましたか？
+                    <span style="color: red;">*</span>Q4.2020シーズン、何回程度FC今治のアウェイ戦を観戦しましたか？
                   </v-subheader>
                 </v-col>
                 <v-col cols="8">
@@ -660,7 +660,7 @@
               <v-row>
                 <v-col cols="4">
                   <v-subheader>
-                    <span style="color: red;">*</span>Q5.2000シーズン、何回程度ありがとうサービス．夢スタジアム(R)でホームゲームを観戦しましたか？
+                    <span style="color: red;">*</span>Q5.2020シーズン、何回程度ありがとうサービス．夢スタジアム(R)でホームゲームを観戦しましたか？
                   </v-subheader>
                 </v-col>
                 <v-col cols="8">
