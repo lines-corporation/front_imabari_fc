@@ -50,7 +50,16 @@
                 <v-text-field dense label="商品検索" prepend-icon="mdi-magnify"></v-text-field>
               </v-col>
               <v-col cols="2" @click="moveCart">
-                <v-icon large color="darken-2">
+                <v-badge
+                  v-if="$store.state.products.cartList.length > 0"
+                  color="green"
+                  :content="$store.state.products.cartList.length"
+                >
+                  <v-icon large color="darken-2">
+                    mdi-cart-variant
+                  </v-icon>
+                </v-badge>
+                <v-icon v-else large color="darken-2">
                   mdi-cart-variant
                 </v-icon>
               </v-col>
@@ -70,7 +79,7 @@
                   </v-card-text>
 
                   <v-card-actions>
-                    <v-btn @click="moveProductDetail(product.topics_id)" color="orange" text>
+                    <v-btn @click="moveProductDetail(topics_id)" color="orange" text>
                       商品詳細
                     </v-btn>
                   </v-card-actions>
@@ -86,13 +95,15 @@
       </v-row>
     </v-container>
 
-    <!-- ページネーション -->
+    <!-- ページネーション 一旦OFF -->
+    <!--
     <div class="text-center">
       <v-pagination
       v-model="page"
       :length="6"
       ></v-pagination>
     </div>
+  -->
   </div>
 </template>
 
@@ -120,26 +131,17 @@ export default {
 
     ],
 
-
     categories: [
       {
+        id: 0,
         title: "全て",
-      },
-      {
-        title: "新着商品"
-      },
-      {
-        title: "ウェア"
-      },
-      {
-        title: "グッズ"
       },
     ],
     products: {},
   }),
   methods: {
     // 商品一覧の取得
-    async getProduct() {
+    async getProducts() {
       let response = await this.$auth.ctx.$axios.get("/rcms-api/1/shop/product/list")
       // エラー検知
       if(response.errors) {
@@ -160,7 +162,7 @@ export default {
           this.$set(this.products, product.topics_id,
             {
               name:      product.topics_name,
-              price:     product.price_02,
+              price:     product.product_data.ext_col_04,
               description: product.product_data.ext_col_01,
               // 注意書き?
               note: product.product_data.ext_col_02,
@@ -170,6 +172,20 @@ export default {
           )
         }
       })
+      console.warn(this.products)
+    },
+    async getCategories() {
+      console.warn("getCategories!!!!")
+      let response = await this.$auth.ctx.$axios.get("/rcms-api/1/shop/categories")
+      console.warn("category object")
+      console.warn(response)
+      response.data.list.forEach((category, index) => {
+        this.categories.push({
+          id:    category.topics_category_id,
+          title: category.category_nm
+        })
+      })
+      console.warn(this.categories)
     },
     // 商品画像の抜き出し
     pickupImages(data) {
@@ -201,7 +217,10 @@ export default {
     },
   },
   mounted() {
-    this.getProduct()
+    console.warn("ec top")
+    console.warn(this.$auth.loggedIn)
+    this.getProducts()
+    this.getCategories()
   }
 }
 </script>

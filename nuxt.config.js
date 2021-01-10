@@ -62,7 +62,7 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/axios", "@nuxtjs/auth", "@nuxtjs/pwa"],
+  modules: ["@nuxtjs/axios", "@nuxtjs/auth", "@nuxtjs/pwa", 'nuxt-client-init-module'],
   /*
    ** vuetify module configuration
    ** https://github.com/nuxt-community/vuetify-module

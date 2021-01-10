@@ -1,12 +1,22 @@
 export const state = () => ({
-  list: []
+  comfirmlist: [],
+  cartList: []
 })
 
 export const mutations = {
-  add(state, product) {
-    state.list.push(product)
+  addCart(state, product) {
+    state.cartList.push(product)
+    localStorage.setItem("imabari-shop", state.cartList)
   },
-  remove(state, { product }) {
-    state.list.splice(state.list.indexOf(product), 1)
+  removeCart(state, { product }) {
+    state.cartList.splice(state.cartList.indexOf(product), 1)
   },
+  // 購入確認への追加
+  addConfirmList(state, product) {
+    state.comfirmlist.push(product)
+  },
+  // 購入確認のリセット
+  clearConfirmList(state) {
+    state.comfirmlist.splice(-state.comfirmlist.length)
+  }
 }

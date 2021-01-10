@@ -3,7 +3,16 @@
     <v-container>
       <v-row class="d-flex flex-row-reverse">
         <v-col cols="2" class="cart-nvi" @click="moveCart">
-          <v-icon large color="darken-2">
+          <v-badge
+            v-if="$store.state.products.cartList.length > 0"
+            color="green"
+            :content="$store.state.products.cartList.length"
+          >
+            <v-icon large color="darken-2">
+              mdi-cart-variant
+            </v-icon>
+          </v-badge>
+          <v-icon v-else large color="darken-2">
             mdi-cart-variant
           </v-icon>
         </v-col>
@@ -39,8 +48,8 @@
             </v-slide-item>
           </v-slide-group>
         </v-sheet>
-          <h3>商品名</h3>
-          <p>¥ 3000</p>
+          <h3>{{ productName }}</h3>
+          <p>¥ {{ price }}</p>
           <!-- select box -->
           <v-select
             :items="sizes"
@@ -64,7 +73,7 @@
       <v-row class="spacing-playground pa-6">
         <v-btn @click="addCart" color="primary" elevation="2" large>カートに入れる</v-btn>
       </v-row>
-      <v-row class="spacing-playground pa-6">      	  
+      <v-row class="spacing-playground pa-6">
         <v-btn to="/ec" nuxt>一覧に戻る</v-btn>
       </v-row>
     </v-container>
@@ -75,15 +84,12 @@
 export default {
   auth: false,
   data: () => ({
-    sizes: ['S', 'M', 'L', 'LL'],
+    productName: '',
+    price: 0,
+    sizes: [],
     imageUrl: 'https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg',
-    description: `
-      商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明
-      商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明
-      商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明
-      商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明
-      商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明
-    `
+    images: [],
+    description: ``
   }),
   computed: {
     user() {
@@ -94,9 +100,46 @@ export default {
     },
   },
   methods: {
+    // 商品情報の取得
+    async getProducts(topics_id) {
+      let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/topic/${topics_id}`)
+      console.warn("check!")
+      console.warn(response)
+      // id
+      // 商品名 : subject
+      // カテゴリー : contents_type_nm
+      // 価格 : data.details.ext_col_04
+      // 商品詳細 : ext_col_03
+      // 注意書き? : ext_col_02
+      this.description = response.data.details.ext_col_03
+      this.price = response.data.details.ext_col_04
+      this.productName = response.data.details.subject
+
+      // サイズや写真などの複数商品データの取得
+      let response2 = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list?topics_id=${topics_id}`)
+      console.warn("list api")
+      console.warn(response2)
+      this.sizes = []
+      response2.data.list.forEach((product, index) => {
+        this.sizes.push(product.product_name)
+        this.pickupImages(product.product_data)
+        this.productId = product.product_id
+      })
+      // TODO とりあえず初めの商品を入れる
+      // カートの情報整理
+      console.warn("cart")
+      console.warn(this.$store.state.products.cartList)
+    },
     addCart() {
+      // 未ログインユーザーは購入できない
+      if(!this.$auth.loggedIn) {
+        this.$store.dispatch("snackbar/setError", "購入するには会員登録が必要です")
+        this.$store.dispatch("snackbar/snackOn")
+        return
+      }
+
       // 商品をカートに保存する
-      //this.$store.commit('products/add', { id: 10, title: 'hoge' })
+      this.$store.commit('products/addCart', this.productId)
       this.$store.dispatch(
         "snackbar/setMessage",
         "商品を追加しました"
@@ -106,6 +149,16 @@ export default {
     moveCart() {
       this.$router.push("/ec/cart")
     },
+    // 商品画像の抜き出し TODO 共通化したい
+    pickupImages(data) {
+      this.images = []
+      data.ext_columns.straight.forEach((info, index) => {
+        this.images.push(info.file_url)
+      })
+    },
+  },
+  mounted() {
+    this.getProducts(this.$route.params.id)
   }
 }
 </script>
