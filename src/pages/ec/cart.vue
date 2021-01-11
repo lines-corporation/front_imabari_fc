@@ -35,7 +35,7 @@
 
           </v-col>
 		  <v-col class="d-flex flex-row-reverse c-del" >
-		    <v-btn @click="removeProduct">削除</v-btn>
+		    <v-btn @click="removeProduct(product.id)">削除</v-btn>
 		  </v-col>
         </v-row>
 
@@ -129,12 +129,14 @@ export default {
       })
       this.$router.push("/ec/confirm")
     },
-    removeProduct() {
+    removeProduct(productId) {
+      this.$store.commit('products/removeCart', productId)
       this.$store.dispatch(
         "snackbar/setMessage",
         "商品を削除しました"
       )
       this.$store.dispatch("snackbar/snackOn")
+      this.getProductInfo()
     }
   },
   mounted() {

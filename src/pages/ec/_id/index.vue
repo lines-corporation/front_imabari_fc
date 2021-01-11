@@ -50,8 +50,16 @@
         </v-sheet>
           <h3>{{ productName }}</h3>
           <p>¥ {{ price }}</p>
+          <v-textarea
+            v-if="seasonPassFlg"
+            name="input-7-1"
+            filled
+            label="シーズンパスのご希望の席を誤入力ください"
+            v-model="seasonPassRemarks"
+          ></v-textarea>
           <!-- select box -->
           <v-select
+            v-else
             :items="sizes"
             label="Size"
             outlined
@@ -87,9 +95,11 @@ export default {
     productName: '',
     price: 0,
     sizes: [],
+    seasonPassFlg: false, // シーズンパスの場合には入力項目が少し変わる
     imageUrl: 'https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg',
     images: [],
-    description: ``
+    description: ``,
+    seasonPassRemarks: ""
   }),
   computed: {
     user() {
@@ -103,7 +113,6 @@ export default {
     // 商品情報の取得
     async getProducts(topics_id) {
       let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/topic/${topics_id}`)
-      console.warn("check!")
       console.warn(response)
       // id
       // 商品名 : subject
@@ -114,11 +123,14 @@ export default {
       this.description = response.data.details.ext_col_03
       this.price = response.data.details.ext_col_04
       this.productName = response.data.details.subject
+      this.category = response.data.details.contents_type
+      // シーズンパス稼働波の判定
+      if(response.data.details.contents_type == 33) {
+        this.seasonPassFlg = true
+      }
 
       // サイズや写真などの複数商品データの取得
       let response2 = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list?topics_id=${topics_id}`)
-      console.warn("list api")
-      console.warn(response2)
       this.sizes = []
       response2.data.list.forEach((product, index) => {
         this.sizes.push(product.product_name)
@@ -127,8 +139,6 @@ export default {
       })
       // TODO とりあえず初めの商品を入れる
       // カートの情報整理
-      console.warn("cart")
-      console.warn(this.$store.state.products.cartList)
     },
     addCart() {
       // 未ログインユーザーは購入できない

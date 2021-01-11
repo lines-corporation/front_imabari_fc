@@ -20,11 +20,12 @@
             <v-list flat subheader three-line>
               <v-subheader>商品カテゴリー</v-subheader>
               <v-list-item-group
-                v-model="settings"
+                v-model="selectedCategory"
                 multiple
                 active-class=""
+                @change="getProducts"
               >
-                <v-list-item v-for="category in categories">
+                <v-list-item v-for="category in categories" :key="`category-${ category.id }`" :value="category.id">
                   <template v-slot:default="{ active }">
                     <v-list-item-action>
                       <v-checkbox :input-value="active"></v-checkbox>
@@ -115,9 +116,6 @@ export default {
     length: 3,
     page: 1,
     onboarding: 0,
-
-
-
     items: [
       {
         src: 'http://fcimabari.design-view.link:8120/_nuxt/src/assets/images/temp_banner.jpg',
@@ -128,21 +126,24 @@ export default {
       {
         src: 'http://fcimabari.design-view.link:8120/_nuxt/src/assets/images/temp_banner.jpg',
       },
-
     ],
-
-    categories: [
-      {
-        id: 0,
-        title: "全て",
-      },
-    ],
+    selectedCategory: [],
+    categories: [],
     products: {},
   }),
   methods: {
     // 商品一覧の取得
     async getProducts() {
-      let response = await this.$auth.ctx.$axios.get("/rcms-api/1/shop/product/list")
+      // cnt 表示商品数
+      this.products = {}
+      let paramStr = '?cnt=12'
+      if(this.selectedCategory.length > 0) {
+        this.selectedCategory.forEach((categoryId, index) => {
+          paramStr += `&contents_type[]=${categoryId}`
+        })
+      }
+      //let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list?contents_type[]=33&contents_type[]=32&cnt=12`)
+      let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list${paramStr}`)
       // エラー検知
       if(response.errors) {
         // TODO エラー表示
@@ -155,6 +156,9 @@ export default {
       // 画像 product_data.ext_columns.group[0].file_url
       //     ext_columns.group[0].file_url
       // サイズ subject
+      // 最初のページ response.data.pageInfo.firstIndex
+      // 最後のページ response.data.pageInfo.lastIndex
+      // 現在のページ response.data.pageInfo.pageNo
       response.data.list.forEach((product, index) => {
         if(this.products[product.topics_id]) {
           this.products[product.topics_id].data.push(product)
@@ -175,17 +179,14 @@ export default {
       console.warn(this.products)
     },
     async getCategories() {
-      console.warn("getCategories!!!!")
       let response = await this.$auth.ctx.$axios.get("/rcms-api/1/shop/categories")
-      console.warn("category object")
-      console.warn(response)
       response.data.list.forEach((category, index) => {
         this.categories.push({
-          id:    category.topics_category_id,
-          title: category.category_nm
+          id:    parseInt(category.topics_category_id),
+          title: category.category_nm,
+          selected: false
         })
       })
-      console.warn(this.categories)
     },
     // 商品画像の抜き出し
     pickupImages(data) {
@@ -217,10 +218,8 @@ export default {
     },
   },
   mounted() {
-    console.warn("ec top")
-    console.warn(this.$auth.loggedIn)
     this.getProducts()
     this.getCategories()
-  }
+  },
 }
 </script>

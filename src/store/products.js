@@ -10,6 +10,7 @@ export const mutations = {
   },
   removeCart(state, { product }) {
     state.cartList.splice(state.cartList.indexOf(product), 1)
+    localStorage.setItem("imabari-shop", state.cartList)
   },
   // 購入確認への追加
   addConfirmList(state, product) {
