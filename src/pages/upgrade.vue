@@ -164,7 +164,7 @@ export default {
       temp_user: false,
       success_message: "",
       //product_id: 41250, // とりあえずデフォルトで有料会員
-      product_id: 41249,
+      product_id: "41249",
       product_id2: null,
       present: "1",
       ec_payment_id: "58",
