@@ -18,6 +18,18 @@
         >
           <v-container fluid>
             <v-row>
+              <v-col cols="12" align="center">
+                <div class="center">
+                    <v-img :src="require('@/assets/images/20210111_tokuten.png')" width=70%></v-img>
+                </div>
+              </v-col>
+              <v-col cols="12" align="center">
+                 <p class="v-label theme--light">
+                  有料会員は無料会員の特典に加え継続年数にあわせたギフト、チケットの先行購入、グッズ10%OFF、限定グッズの購入権などの特典が付与されます。
+                 </p>
+              </v-col>
+            </v-row>
+            <v-row>
               <v-col cols="4">
                 <v-subheader>料金プラン</v-subheader>
               </v-col>
