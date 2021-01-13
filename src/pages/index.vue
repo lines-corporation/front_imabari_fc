@@ -8,9 +8,12 @@
               <strong>
                 FC IMABARI Sailors' Club 更新・新規入会方法の詳細は下記をご確認ください。<br />
               </strong><br />
-              <NuxtLink to="/form">
+              <!-- <NuxtLink to="/form">
                 FC IMABARI Sailors' Club 更新・新規入会方法
-              </NuxtLink>
+              </NuxtLink> -->
+              <a :href="join_renew_url">
+                FC IMABARI Sailors' Club 更新・新規入会方法
+              </a>
             </p>
           </v-row>
           <v-row>
@@ -112,7 +115,7 @@
 
             <v-card v-if="can_upgrade" class="mx-auto" outlined>
               <v-card-text>
-                <h3>アップグレードのご案内</h3>
+                <h4>アップグレードのご案内</h4>
                 <p class="body-1 ug-p fnt-w">
                   <NuxtLink to="/upgrade">
                     有料への種別変更はこちら
@@ -124,7 +127,7 @@
           <v-col cols="12" sm="6">
             <v-card class="mx-auto" outlined>
               <v-card-text>
-                <h3>お知らせ</h3>
+                <h4>お知らせ</h4>
 
                 <v-simple-table :fixed-header="false">
                   <template v-slot:default>
@@ -260,6 +263,7 @@ export default {
       email: "",
       password: "",
     },
+    join_renew_url:"https://www.fcimabari.com/support/FISC.html",
   }),
   computed: {
     user() {

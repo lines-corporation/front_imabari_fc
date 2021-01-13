@@ -75,14 +75,14 @@
         <v-btn color="white" text rounded class="my-2" to="/tokutei">
           特定商取引法に基づく表示
         </v-btn>
-        <v-col class="#171C61 text-center white--text" cols="12">
+        <!-- <v-col class="#171C61 text-center white--text" cols="12">
 
           <img
             src="@/assets/images/temp_icon.png"
             style="height: 100px; padding: 5px;"
           />
 
-        </v-col>
+        </v-col> -->
         <v-col class="#171C61 text-center white--text" cols="12">
           <span>Copyright FC Imabari. All rights reserved.</span>
         </v-col>
