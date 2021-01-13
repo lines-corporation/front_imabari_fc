@@ -149,13 +149,23 @@
                       cols="12"
                       md="6"
                     >
-                      <vue-photo-zoom-pro :url="zoneImg" :mask="false" :width="250"></vue-photo-zoom-pro>
+                      <!-- <vue-photo-zoom-pro :url="zoneImg" :mask="false" :width="250"></vue-photo-zoom-pro> -->
+                      <div align="center" class="resize-logo">
+                        <section>
+                          <img :src="zoneImg.url" :preview="zoneImg.preview" width=100%>
+                        </section>
+                      </div>
                     </v-col>
                     <v-col
                       cols="12"
                       md="6"
                     >
-                      <vue-photo-zoom-pro :url="seatImg" :mask="false" :width="250"></vue-photo-zoom-pro>
+                      <!-- <vue-photo-zoom-pro :url="seatImg" :mask="false" :width="250"></vue-photo-zoom-pro> -->
+                      <div align="center" class="resize-logo">
+                        <section>
+                          <img :src="seatImg.url" :preview="seatImg.preview" width=100%>
+                        </section>
+                      </div>
                     </v-col>
                   </v-row>
                   </v-card-text>
@@ -366,17 +376,28 @@
 <script>
 import Vue from 'vue'
 import VueQrcode from "@chenfengyuan/vue-qrcode"
-import VuePhotoZoomPro from 'vue-photo-zoom-pro'
+// import VuePhotoZoomPro from 'vue-photo-zoom-pro'
+import preview from 'vue-photo-preview'
+import 'vue-photo-preview/dist/skin.css'
+Vue.use(preview)
 
-Vue.use(VuePhotoZoomPro)
+// Vue.use(VuePhotoZoomPro)
 
 export default {
   components: {
     VueQrcode
   },
   data: () => ({
-    zoneImg: require('@/assets/images/zone.png'),
-    seatImg: require('@/assets/images/seat.png'),
+    // zoneImg: require('@/assets/images/zone.png'),
+    // seatImg: require('@/assets/images/seat.png'),
+    zoneImg: {
+          url: require('@/assets/images/zone.png'),
+          preview: '1'
+        },
+    seatImg: {
+          url: require('@/assets/images/seat.png'),
+          preview: '2'
+        },
     item: [],
     product_list: [],
     seat_reserved_product: new Set(),
@@ -736,5 +757,8 @@ export default {
 }
 .center_text{
   display: inline-block;
+}
+.resize-logo {
+  cursor: zoom-in; 
 }
 </style>
