@@ -821,7 +821,7 @@
                 </v-col>
                 <v-col cols="8">
                   <v-text-field
-                    v-model="question_6"
+                    v-model="question_9"
                     label=""
                     type="text"
                     counter
@@ -1100,7 +1100,7 @@ export default {
             // q6: this.question_6,
             // q7: this.question_7,
             // q8: ["1"],
-            q6: this.question_6,
+            q9: this.question_9,
           })
           .then(function (response) {
             if (response.data.errors.length === 0) {
