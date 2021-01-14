@@ -817,6 +817,7 @@
               </v-row> -->
               <v-row>
                 <v-col cols="4">
+                  <!-- Q9をQ6に変更 -->
                   <v-subheader>Q6.その他応援メッセージやご意見があればぜひ教えてください</v-subheader>
                 </v-col>
                 <v-col cols="8">
@@ -960,7 +961,7 @@ export default {
       // question_6: 0, // 一緒に応援に行く人
       // question_7: [], // 今治の情報
       // question_8: [], // 一緒に応援に行く人
-      question_6: "",
+      question_9: "",
       rules: {
         required: (value) => !!value || "この項目は必須入力です",
         password_min: (v) => v.length >= 8 || "最低8文字以上を入力してください",
