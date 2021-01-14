@@ -201,8 +201,8 @@ export default {
         price: response.data.details.product_data.ext_col_04,
         size:  response.data.details.product_name,
         num:   num,
-        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
-        // response.data.details.product_data.ext_columns.straight[0].file_url
+        image: response.data.details.product_data.ext_columns.straight[0].file_url,
+        //image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
       })
     },
     async executePayment() {

@@ -30,7 +30,7 @@
           <!-- サムネイル -->
           <v-sheet class="mx-auto" elevation="8" max-width="800">
             <v-slide-group class="pa-4" center-active show-arrows>
-              <v-slide-item v-for="n in 15" :key="n" v-slot="{ active, toggle }">
+              <v-slide-item v-for="(image, index) in images" :key="`image-${index}`" v-slot="{ active, toggle }">
               <v-card
                 :color="active ? 'primary' : 'grey lighten-1'"
                 class="ma-4"
@@ -39,9 +39,10 @@
               >
                 <v-row class="fill-height" ALIGN="CENTER" justify="center">
                   <v-img
-                    :lazy-src="imageUrl"
-                    :src="imageUrl"
+                    :lazy-src="image"
+                    :src="image"
                     max-width="101"
+                    @click="changeImage(image)"
                   ></v-img>
                 </v-row>
               </v-card>
@@ -96,7 +97,8 @@ export default {
     price: 0,
     sizes: [],
     seasonPassFlg: false, // シーズンパスの場合には入力項目が少し変わる
-    imageUrl: 'https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg',
+    //imageUrl: 'https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg',
+    imageUrl: null,
     images: [],
     description: ``,
     seasonPassRemarks: ""
@@ -140,7 +142,7 @@ export default {
       // TODO とりあえず初めの商品を入れる
       // カートの情報整理
     },
-    addCart() {
+    async addCart() {
       // 未ログインユーザーは購入できない
       if(!this.$auth.loggedIn) {
         this.$store.dispatch("snackbar/setError", "購入するには会員登録が必要です")
@@ -150,6 +152,17 @@ export default {
 
       // 商品をカートに保存する
       this.$store.commit('products/addCart', this.productId)
+      /*
+      console.warn("shop cart add")
+      let response = await this.$auth.ctx.$axios.post(`/rcms-api/1/shop/cart`, {
+        item: {
+          product_id: this.productId,
+          quantity: 1
+        }
+      })
+      console.warn(response)
+      */
+
       this.$store.dispatch(
         "snackbar/setMessage",
         "商品を追加しました"
@@ -159,12 +172,22 @@ export default {
     moveCart() {
       this.$router.push("/ec/cart")
     },
+    changeImage(image) {
+      this.imageUrl = image
+    },
     // 商品画像の抜き出し TODO 共通化したい
     pickupImages(data) {
       this.images = []
       data.ext_columns.straight.forEach((info, index) => {
-        this.images.push(info.file_url)
+        // とりあえず今表示される画像データがなけれrば入れる
+        if(info.file_url) {
+          if(!this.imageUrl) {
+            this.imageUrl = info.file_url
+          }
+          this.images.push(info.file_url)
+        }
       })
+      console.warn(this.images)
     },
   },
   mounted() {
