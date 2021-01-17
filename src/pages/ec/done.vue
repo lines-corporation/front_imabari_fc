@@ -20,6 +20,8 @@
         </v-col>
       </v-row>
 
+      <!-- TODO kurocoから買ったもの一覧がとれたら実装 -->
+      <!--
       <div v-for="product in products">
         <v-row no-gutters class="cart-list">
           <v-col class="c-img">
@@ -42,11 +44,12 @@
         <v-divider></v-divider>
 
       </div>
-	  <v-row>
-        <v-col cols="12">
-          <v-btn to="/ec" nuxt>EC TOPへ</v-btn>
-        </v-col>
-	  </v-row>
+    -->
+    <v-row>
+      <v-col cols="12">
+        <v-btn to="/ec" nuxt>EC TOPへ</v-btn>
+      </v-col>
+    </v-row>
     </v-container>
   </div>
 </template>

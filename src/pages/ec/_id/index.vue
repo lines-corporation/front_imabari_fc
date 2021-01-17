@@ -4,9 +4,9 @@
       <v-row class="d-flex flex-row-reverse">
         <v-col cols="2" class="cart-nvi" @click="moveCart">
           <v-badge
-            v-if="$store.state.products.cartList.length > 0"
+            v-if="cartItems.length > 0"
             color="green"
-            :content="$store.state.products.cartList.length"
+            :content="cartItems.length"
           >
             <v-icon large color="darken-2">
               mdi-cart-variant
@@ -55,16 +55,38 @@
             v-if="seasonPassFlg"
             name="input-7-1"
             filled
-            label="シーズンパスのご希望の席を誤入力ください"
+            label="シーズンパスのご希望の席を入力してください"
             v-model="seasonPassRemarks"
           ></v-textarea>
-          <!-- select box -->
+          <!-- サイズ設定 -->
           <v-select
             v-else
             :items="sizes"
             label="Size"
             outlined
           ></v-select>
+          <!-- /サイズ設定 -->
+          <!-- シーズンパスの場合には種別を選択させる -->
+          <v-select
+            v-if="seasonPassFlg"
+            v-model="seasonPassKind"
+            class="p-select"
+            :ref="`${productId}_num`"
+            :items="passCategories"
+            label="種別"
+            outlined
+          ></v-select>
+          <!-- 個数設定 -->
+          <v-select
+            v-if="productId"
+            v-model="quantity"
+            class="p-select"
+            :ref="`${productId}_num`"
+            :items="items"
+            label="個数"
+            outlined
+          ></v-select>
+          <!-- /個数設定 -->
 
         </v-col>
       </v-row>
@@ -93,13 +115,19 @@
 export default {
   auth: false,
   data: () => ({
+    productId: '',
     productName: '',
     price: 0,
     sizes: [],
+    quantity: 1,
+    items: [1,2,3,4,5,6,7,8,9,10], // 個数選択
     seasonPassFlg: false, // シーズンパスの場合には入力項目が少し変わる
+    passCategories: [],
+    seasonPassKind: 1,
     //imageUrl: 'https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg',
     imageUrl: null,
     images: [],
+    cartItems: [],
     description: ``,
     seasonPassRemarks: ""
   }),
@@ -133,12 +161,25 @@ export default {
 
       // サイズや写真などの複数商品データの取得
       let response2 = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list?topics_id=${topics_id}`)
+      console.warn("data2")
+      console.warn(response2)
       this.sizes = []
-      response2.data.list.forEach((product, index) => {
-        this.sizes.push(product.product_name)
-        this.pickupImages(product.product_data)
-        this.productId = product.product_id
-      })
+      this.passCategories = []
+      if(this.seasonPassFlg) {
+        // シーズンパスの場合
+        response2.data.list.forEach((product, index) => {
+          this.passCategories.push(product.product_name)
+          this.productId = product.product_id
+        })
+      } else {
+        // それ以外の場合
+        response2.data.list.forEach((product, index) => {
+          this.sizes.push(product.product_name)
+          this.pickupImages(product.product_data)
+          this.productId = product.product_id
+        })
+
+      }
       // TODO とりあえず初めの商品を入れる
       // カートの情報整理
     },
@@ -151,23 +192,33 @@ export default {
       }
 
       // 商品をカートに保存する
-      this.$store.commit('products/addCart', this.productId)
-      /*
-      console.warn("shop cart add")
+      //this.$store.commit('products/addCart', this.productId)
       let response = await this.$auth.ctx.$axios.post(`/rcms-api/1/shop/cart`, {
+        ec_cart_id: this.$auth.user.ec_cart_id,
         item: {
           product_id: this.productId,
-          quantity: 1
+          quantity: 1 // 個数を指定できるがUIの関係で一旦1個ずつ登録する
         }
       })
       console.warn(response)
-      */
 
       this.$store.dispatch(
         "snackbar/setMessage",
         "商品を追加しました"
       )
       this.$store.dispatch("snackbar/snackOn")
+    },
+    async getCartItems() {
+      if(!this.$auth.user || !this.$auth.user.ec_cart_id) {
+        return
+      }
+      this.cartItems = []
+      let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
+      if(response.data.details.items) {
+        response.data.details.items.forEach((item, index) => {
+          this.cartItems.push(item)
+        })
+      }
     },
     moveCart() {
       this.$router.push("/ec/cart")
@@ -192,6 +243,7 @@ export default {
   },
   mounted() {
     this.getProducts(this.$route.params.id)
+    this.getCartItems()
   }
 }
 </script>

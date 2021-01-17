@@ -52,9 +52,9 @@
               </v-col>
               <v-col cols="2" @click="moveCart">
                 <v-badge
-                  v-if="$store.state.products.cartList.length > 0"
+                  v-if="cartItems.length > 0"
                   color="green"
-                  :content="$store.state.products.cartList.length"
+                  :content="cartItems.length"
                 >
                   <v-icon large color="darken-2">
                     mdi-cart-variant
@@ -113,18 +113,19 @@ export default {
   auth: false,
   data: () => ({
     settings: [],
+    cartItems: [],
     length: 3,
     page: 1,
     onboarding: 0,
     items: [
       {
-        src: 'http://fcimabari.design-view.link:8120/_nuxt/src/assets/images/temp_banner.jpg',
+        src: 'https://cheer-fund.s3-ap-northeast-1.amazonaws.com/temp_banner.jpg',
       },
       {
-        src: 'http://fcimabari.design-view.link:8120/_nuxt/src/assets/images/temp_banner.jpg',
+        src: 'https://cheer-fund.s3-ap-northeast-1.amazonaws.com/temp_banner.jpg',
       },
       {
-        src: 'http://fcimabari.design-view.link:8120/_nuxt/src/assets/images/temp_banner.jpg',
+        src: 'https://cheer-fund.s3-ap-northeast-1.amazonaws.com/temp_banner.jpg',
       },
     ],
     selectedCategory: [],
@@ -188,6 +189,19 @@ export default {
         })
       })
     },
+    // TODO 商品詳細とかぶっているのでどこかで共通化したい
+    async getCartItems() {
+      if(!this.$auth.user || !this.$auth.user.ec_cart_id) {
+        return
+      }
+      this.cartItems = []
+      let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
+      if(response.data.details.items) {
+        response.data.details.items.forEach((item, index) => {
+          this.cartItems.push(item)
+        })
+      }
+    },
     // 商品画像の抜き出し
     pickupImages(data) {
       let images = []
@@ -220,6 +234,7 @@ export default {
   mounted() {
     this.getProducts()
     this.getCategories()
+    this.getCartItems()
   },
 }
 </script>
