@@ -120,26 +120,6 @@
                           { value: '28', text: '2028年' },
                           { value: '29', text: '2029年' },
                           { value: '30', text: '2030年' },
-                          { value: '31', text: '2031年' },
-                          { value: '32', text: '2032年' },
-                          { value: '33', text: '2033年' },
-                          { value: '34', text: '2034年' },
-                          { value: '35', text: '2035年' },
-                          { value: '36', text: '2036年' },
-                          { value: '37', text: '2037年' },
-                          { value: '38', text: '2038年' },
-                          { value: '39', text: '2039年' },
-                          { value: '40', text: '2040年' },
-                          { value: '41', text: '2041年' },
-                          { value: '42', text: '2042年' },
-                          { value: '43', text: '2043年' },
-                          { value: '44', text: '2044年' },
-                          { value: '45', text: '2045年' },
-                          { value: '46', text: '2046年' },
-                          { value: '47', text: '2047年' },
-                          { value: '48', text: '2048年' },
-                          { value: '49', text: '2049年' },
-                          { value: '50', text: '2050年' },
                         ]"
                         menu-props="auto"
                         label="年"
@@ -291,6 +271,7 @@ export default {
                     product_id: parseInt(self.product_id),
                     quantity: 1,
                     card_token: response.tokenizedCardObject.token,
+                    validate_only: true,
                   })
                   .then(() => {
                     self.$store.dispatch(
