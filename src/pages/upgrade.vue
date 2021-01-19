@@ -271,7 +271,6 @@ export default {
                     product_id: parseInt(self.product_id),
                     quantity: 1,
                     card_token: response.tokenizedCardObject.token,
-                    validate_only: true,
                   })
                   .then(() => {
                     self.$store.dispatch(
