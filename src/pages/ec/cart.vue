@@ -196,14 +196,12 @@ export default {
     async getProductInfo() {
       // TODO loading 入れたい
       // kurocoからデータを取得してみる
+      this.products = []
       let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
       if(response.data.details.items) {
         response.data.details.items.forEach((item, index) => {
-          //this.productIds.push(item.product_id)
-          console.warn(` product_id : ${item.product_id}`)
           let self = this
           this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/${item.product_id}`).then((productInfoResponse) => {
-            console.warn(productInfoResponse)
             self.products.push({
               id:       item.product_id,
               quantity: item.quantity,
@@ -220,7 +218,6 @@ export default {
       // 商品データの取得
     },
     async executePayment() {
-      console.warn("executePayment")
       let self = this
       self.loading = true
       // TODO 複数リクエストできるのか？
@@ -286,8 +283,15 @@ export default {
         }
       })
     },
-    removeProduct(productId) {
-      this.$store.commit('products/removeCart', productId)
+    async removeProduct(productId) {
+      let response = await this.$auth.ctx.$axios.post(`/rcms-api/1/shop/cart/delete`, {
+        ec_cart_id: this.$auth.user.ec_cart_id,
+        item: {
+          product_id: productId,
+          quantity: 0 // 個数を指定できるがUIの関係で一旦1個ずつ登録する
+        }
+      })
+
       this.$store.dispatch(
         "snackbar/setMessage",
         "商品を削除しました"

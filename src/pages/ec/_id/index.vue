@@ -143,7 +143,6 @@ export default {
     // 商品情報の取得
     async getProducts(topics_id) {
       let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/topic/${topics_id}`)
-      console.warn(response)
       // id
       // 商品名 : subject
       // カテゴリー : contents_type_nm
@@ -161,8 +160,6 @@ export default {
 
       // サイズや写真などの複数商品データの取得
       let response2 = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list?topics_id=${topics_id}`)
-      console.warn("data2")
-      console.warn(response2)
       this.sizes = []
       this.passCategories = []
       if(this.seasonPassFlg) {
@@ -192,7 +189,6 @@ export default {
       }
 
       // 商品をカートに保存する
-      //this.$store.commit('products/addCart', this.productId)
       let response = await this.$auth.ctx.$axios.post(`/rcms-api/1/shop/cart`, {
         ec_cart_id: this.$auth.user.ec_cart_id,
         item: {
@@ -200,13 +196,13 @@ export default {
           quantity: 1 // 個数を指定できるがUIの関係で一旦1個ずつ登録する
         }
       })
-      console.warn(response)
 
       this.$store.dispatch(
         "snackbar/setMessage",
         "商品を追加しました"
       )
       this.$store.dispatch("snackbar/snackOn")
+      this.getCartItems()
     },
     async getCartItems() {
       if(!this.$auth.user || !this.$auth.user.ec_cart_id) {
@@ -238,7 +234,6 @@ export default {
           this.images.push(info.file_url)
         }
       })
-      console.warn(this.images)
     },
   },
   mounted() {
