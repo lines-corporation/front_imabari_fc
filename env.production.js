@@ -5,4 +5,6 @@ module.exports = {
   PAYGENT_JS: "https://token.paygent.co.jp/js/PaygentToken.js",
   PAYGENT_MERCHANT_ID: "49117",
   PAYGENT_TOKEN: "live_zcVWRwRdcjZXqdDHt2yfOEl2",
+  APPAREL_CATEGORY_ID: 32,
+  SEASON_PASS_CATEGORY_ID: 33
 }

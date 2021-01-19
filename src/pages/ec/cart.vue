@@ -35,6 +35,15 @@
       </div>
 
     <!-- 支払い方法 TODO これはコンポーネント化する -->
+    <v-row>
+      <v-textarea
+        v-if="seasonPassFlg"
+        name="input-7-1"
+        filled
+        label="シーズンパスのご希望の席を入力してください"
+        v-model="seasonPassRemarks"
+      ></v-textarea>
+    </v-row>
     <v-row class="p-list">
       <v-col cols="4" class="p-header">
         <v-subheader>支払方法</v-subheader>
@@ -54,6 +63,7 @@
           <v-text-field
             id="cardNumber"
             v-model="cardNumber"
+            type="number"
             label="クレジットカード番号"
             outlined
             :rules="[rules.required]"
@@ -172,6 +182,8 @@ export default {
       cardYear: "",
       cardCvv: "",
       totalPrice: 0,
+      seasonPassFlg: false, // シーズンパスの場合には入力項目が少し変わる
+      seasonPassRemarks: "",
       rules: {
         required: (value) => !!value || "この項目は必須入力です",
         password_min: (v) => v.length >= 8 || "最低8文字以上を入力してください",
@@ -197,11 +209,16 @@ export default {
       // TODO loading 入れたい
       // kurocoからデータを取得してみる
       this.products = []
+      this.seasonPassFlg = false
       let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
       if(response.data.details.items) {
         response.data.details.items.forEach((item, index) => {
           let self = this
           this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/${item.product_id}`).then((productInfoResponse) => {
+            // シーズンパス稼働波の判定
+            if(productInfoResponse.data.details.product_data.contents_type == process.env.SEASON_PASS_CATEGORY_ID) {
+              self.seasonPassFlg = true
+            }
             self.products.push({
               id:       item.product_id,
               quantity: item.quantity,
@@ -210,7 +227,7 @@ export default {
               size:     productInfoResponse.data.details.product_name,
               image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
             })
-            this.totalPrice += parseInt(productInfoResponse.data.details.product_data.ext_col_04)
+            this.totalPrice += parseInt(productInfoResponse.data.details.product_data.ext_col_04) * parseInt(item.quantity)
           })
         })
       }

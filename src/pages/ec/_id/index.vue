@@ -51,18 +51,14 @@
         </v-sheet>
           <h3>{{ productName }}</h3>
           <p>¥ {{ price }}</p>
-          <v-textarea
-            v-if="seasonPassFlg"
-            name="input-7-1"
-            filled
-            label="シーズンパスのご希望の席を入力してください"
-            v-model="seasonPassRemarks"
-          ></v-textarea>
           <!-- サイズ設定 -->
           <v-select
-            v-else
+            v-if="apparelFlg"
+            v-model="productId"
             :items="sizes"
             label="Size"
+            item-text="name"
+            item-value="id"
             outlined
           ></v-select>
           <!-- /サイズ設定 -->
@@ -73,6 +69,8 @@
             class="p-select"
             :ref="`${productId}_num`"
             :items="passCategories"
+            item-text="name"
+            item-value="id"
             label="種別"
             outlined
           ></v-select>
@@ -122,14 +120,14 @@ export default {
     quantity: 1,
     items: [1,2,3,4,5,6,7,8,9,10], // 個数選択
     seasonPassFlg: false, // シーズンパスの場合には入力項目が少し変わる
+    apparelFlg: false,
     passCategories: [],
-    seasonPassKind: 1,
+    seasonPassKind: null,
     //imageUrl: 'https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg',
     imageUrl: null,
     images: [],
     cartItems: [],
     description: ``,
-    seasonPassRemarks: ""
   }),
   computed: {
     user() {
@@ -154,31 +152,37 @@ export default {
       this.productName = response.data.details.subject
       this.category = response.data.details.contents_type
       // シーズンパス稼働波の判定
-      if(response.data.details.contents_type == 33) {
+      if(this.category == process.env.SEASON_PASS_CATEGORY_ID) {
         this.seasonPassFlg = true
+      }
+      if(this.category == process.env.APPAREL_CATEGORY_ID) {
+        this.apparelFlg = true
       }
 
       // サイズや写真などの複数商品データの取得
       let response2 = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list?topics_id=${topics_id}`)
       this.sizes = []
       this.passCategories = []
-      if(this.seasonPassFlg) {
-        // シーズンパスの場合
-        response2.data.list.forEach((product, index) => {
-          this.passCategories.push(product.product_name)
-          this.productId = product.product_id
-        })
-      } else {
-        // それ以外の場合
-        response2.data.list.forEach((product, index) => {
-          this.sizes.push(product.product_name)
-          this.pickupImages(product.product_data)
-          this.productId = product.product_id
-        })
 
-      }
-      // TODO とりあえず初めの商品を入れる
-      // カートの情報整理
+      response2.data.list.forEach((product, index) => {
+        if(!this.productId) {
+          this.productId = product.product_id
+        }
+        if(this.seasonPassFlg) {
+        // シーズンパスの場合
+          this.passCategories.push({
+            id:   product.product_id,
+            name: product.product_name
+          })
+        }
+        if(this.apparelFlg) {
+          this.sizes.push({
+            id:   product.product_id,
+            name: product.product_name,
+          })
+        }
+        this.pickupImages(product.product_data)
+      })
     },
     async addCart() {
       // 未ログインユーザーは購入できない
@@ -188,12 +192,22 @@ export default {
         return
       }
 
+      // シーズンパスの場合には種別を選択しているのを確認する (アパレル)
+      if(this.seasonPassFlg) {
+        if(!this.seasonPassKind) {
+          this.$store.dispatch("snackbar/setError", "種別を選択してください")
+          this.$store.dispatch("snackbar/snackOn")
+          return
+        }
+        this.productId = this.seasonPassKind
+      }
+
       // 商品をカートに保存する
       let response = await this.$auth.ctx.$axios.post(`/rcms-api/1/shop/cart`, {
         ec_cart_id: this.$auth.user.ec_cart_id,
         item: {
           product_id: this.productId,
-          quantity: 1 // 個数を指定できるがUIの関係で一旦1個ずつ登録する
+          quantity: this.quantity
         }
       })
 
