@@ -28,7 +28,7 @@
     "@vimeo/player": "^2.12.2",
     "axios": "^0.19.2",
     "cross-env": "^7.0.2",
-    "firebase": "^7.17.1",
+    "firebase": "^7.24.0",
     "firebase-admin": "^8.10.0",
     "firebase-functions": "^3.6.1",
     "nuxt": "^2.14.3",

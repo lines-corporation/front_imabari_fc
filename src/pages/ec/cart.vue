@@ -166,6 +166,8 @@
 </template>
 
 <script>
+import firebase from '@/plugins/firebase'
+
 export default {
   auth: false,
   data() {
@@ -231,12 +233,21 @@ export default {
           })
         })
       }
-
       // 商品データの取得
     },
     async executePayment() {
       let self = this
       self.loading = true
+
+      // firestoreに備考を保存する
+      const db = firebase.firestore()
+      let collection = db.collection(process.env.FIREBASE_COLLECTION)
+      collection.add({
+         member_id: this.$auth.user.member_id,
+         remarks:   this.seasonPassRemarks,
+       }).then(ref => {
+         // 書き込み完了
+       })
       // TODO 複数リクエストできるのか？
       self.products.forEach((product, index) => {
         // カード払い
@@ -281,6 +292,7 @@ export default {
             product_id: parseInt(product.id),
             quantity: parseInt(product.quantity),
           }).then(() => {
+            console.warn("成功!!")
             self.$store.dispatch(
               "snackbar/setMessage",
               self.success_message +
@@ -290,6 +302,8 @@ export default {
             self.$router.push("/ec/done")
             self.loading = false
           }).catch(function (error) {
+            console.warn("!!! error !!!!!!")
+            console.warn(error)
             self.$store.dispatch(
               "snackbar/setError",
               error.response.data.errors?.[0]
