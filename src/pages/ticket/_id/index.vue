@@ -122,18 +122,15 @@
                                     {{ order_detail.price }}円<br />
                                     {{ order_detail.quantity }}枚
                                   </td><td>
-                                    <vue-qrcode :value="order_detail.ticket_hash" :options="qr_option" tag="img" />
+                                    <vue-qrcode :value="order_detail.ticket_hash" tag="img" />
                                   </td>
                                 </tr>
                               </table>
                             </td>
                           </tr>
                         </tbody>
-                        </table>
                       </template>
                     </v-simple-table>
-                    </v-col>
-                    </v-row>
                   </v-card-text>
                 </v-card>
               </v-container>
@@ -192,7 +189,7 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <template v-for="(t,index) in product_list">
+                          <template v-for="t in product_list">
                             <tr>
                               <td>{{ t.subject }}</td>
                               <td>{{ t.price_02 }}円</td>
@@ -212,7 +209,7 @@
                                 </p>
                               </td>
                             </tr>
-                            <template v-if="order_products[t.product_id] > 0 && seat_reserved_product.has(t.product_id+'')">
+                            <template v-if="order_products[t.product_id] > 0 && seat_reserved_product.has(t.combination_id+'')">
                               <tr style="background-color: #EEEEEE" v-for="i in order_products[t.product_id]" :key="t.product_id+''+i">
                                 <td style="vertical-align:top" v-if="$vuetify.breakpoint.xs ? false : true">
                                   <div>座席選択{{i}}</div>
@@ -220,7 +217,6 @@
                                 <td style="vertical-align:top" :colspan="$vuetify.breakpoint.xs ? 2 : 1">
                                   <div style="height:50%;">▼ゾーン選択</div>
                                   <div>▼座席選択</div>
-                                </td>
                                 </td>
                                 <td style="vertical-align:top">
                                   <div>
@@ -484,7 +480,7 @@ export default {
       let seatReserved = res.data.list
       seatReserved && seatReserved.forEach(reserved => {
         let s = {
-          product_id: reserved[0],
+          combination_id: reserved[0],
           seat: reserved[1]
         }
         self.seat_reserved_list.push(s)
@@ -511,7 +507,7 @@ export default {
               self.product_list.push(p_list)   
               p_list.zone_list = []
               for(const reserved of self.seat_reserved_list) {
-                if (p_list.product_id == reserved.product_id) {
+                if (p_list.combination_id == reserved.combination_id) {
                   let zone = reserved.seat.split('-')[0]
                   let obj = {
                     text: 'ゾーン' + self.switchZoneNo(zone),
@@ -550,7 +546,7 @@ export default {
       this.seat_reserved_list.forEach(reserved => {
         let reservedZone = reserved.seat.split('-')[0]
         let seat = reserved.seat.split('-')[1]
-        if (reserved.product_id == product.product_id && reservedZone == zone) {
+        if (reserved.combination_id == product.combination_id && reservedZone == zone) {
           let obj = {
               text: seat,
               value: reserved.seat,
