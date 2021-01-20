@@ -58,21 +58,21 @@ export default {
           active: false,
           items: [],
           category_id: 28,
-        },
-        {
-          action: "チケット購入",
-          title: "",
-          active: false,
-          items: [],
-          category_id: 31,
-        },
-        {
-          action: "グッズ購入について",
-          title: "",
-          active: false,
-          items: [],
-          category_id: 32,
         }
+        // {
+        //   action: "チケット購入",
+        //   title: "",
+        //   active: false,
+        //   items: [],
+        //   category_id: 31,
+        // },
+        // {
+        //   action: "グッズ購入について",
+        //   title: "",
+        //   active: false,
+        //   items: [],
+        //   category_id: 32,
+        // }
       ],
     }
   },

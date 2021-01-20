@@ -34,3 +34,13 @@ export default {
   },
 }
 </script>
+<style scoped>
+ /deep/ .image img {
+    max-width: 100%;
+    height: auto;
+  }
+  /deep/ .table {
+    max-width: 100%;
+    height: auto;
+  }
+</style>

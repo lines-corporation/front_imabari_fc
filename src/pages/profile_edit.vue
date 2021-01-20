@@ -176,7 +176,7 @@
                 />
               </v-col>
             </v-row>
-            <v-row>
+            <!-- <v-row>
               <v-col cols="4">
                 <v-subheader>FAX番号</v-subheader>
               </v-col>
@@ -191,7 +191,7 @@
                   outlined
                 />
               </v-col>
-            </v-row>
+            </v-row> -->
             <v-row>
               <v-col cols="4">
                 <v-subheader>
@@ -202,7 +202,7 @@
                 <p v-text="email" />
               </v-col>
             </v-row>
-            <v-row>
+            <!-- <v-row>
               <v-col cols="4">
                 <v-subheader>第２メールアドレス</v-subheader>
               </v-col>
@@ -215,7 +215,7 @@
                   outlined
                 />
               </v-col>
-            </v-row>
+            </v-row> -->
             <v-row>
               <v-col cols="4">
                 <v-subheader>パスワード</v-subheader>
@@ -282,10 +282,10 @@ export default {
       password_show: false,
       password: "",
       email: "",
-      fax: "",
+      // fax: "",
       tel: "",
       m_tel: "",
-      subemail: "",
+      // subemail: "",
       name1: "",
       name2: "",
       namekana1: "",
@@ -407,14 +407,14 @@ export default {
           self.sex = response.data.details.sex.label
           self.birth = response.data.details.birth
           self.email = response.data.details.email
-          self.subemail = response.data.details.email2
+          // self.subemail = response.data.details.email2
           self.zip_code = response.data.details.zip_code
           self.tdfk_cd = response.data.details.tdfk_cd
           self.address1 = response.data.details.address1
           self.address2 = response.data.details.address2
           self.address3 = response.data.details.address3
           self.tel = response.data.details.tel
-          self.fax = response.data.details.fax
+          // self.fax = response.data.details.fax
           self.m_tel = response.data.details.m_tel
           self.mailmaga_flg = !response.data.details.email_send_ng_flg
         })
@@ -435,8 +435,8 @@ export default {
             address3: this.address3,
             tel: this.tel,
             m_tel: this.m_tel,
-            fax: this.fax,
-            email2: this.subemail,
+            // fax: this.fax,
+            // email2: this.subemail,
             login_pwd: this.login_pwd,
             email_send_ng_flg: this.mailmaga_flg ? 0 : 1,
           })
