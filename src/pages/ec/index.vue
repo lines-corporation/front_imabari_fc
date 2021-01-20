@@ -47,9 +47,11 @@
         <v-col cols="8" class="brk2">
           <v-container class="grey lighten-5 mb-3">
             <v-row class="shoplist">
+              <!--
               <v-col cols="10" sm="6" md="4">
                 <v-text-field dense label="商品検索" prepend-icon="mdi-magnify"></v-text-field>
               </v-col>
+            -->
               <v-col cols="2" @click="moveCart">
                 <v-badge
                   v-if="cartItems.length > 0"

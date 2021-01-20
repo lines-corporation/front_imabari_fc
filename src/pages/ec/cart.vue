@@ -268,6 +268,7 @@ export default {
                 ec_payment_id: parseInt(self.ecPaymentId),
                 product_id: parseInt(product.id),
                 quantity: parseInt(product.quantity),
+                card_token: response.tokenizedCardObject.token,
               }).then((response) => {
                 console.warn("成功!!!!!")
                 console.warn(response)
