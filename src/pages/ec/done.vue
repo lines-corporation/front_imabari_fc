@@ -59,66 +59,7 @@ export default {
   auth: false,
   data: () => ({
     products: [
-      {
-        id: 10,
-        title: "商品A",
-        price: 1000,
-        size: 'L',
-        num: 1,
-        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
-      },
-      {
-        id: 11,
-        title: "商品B",
-        price: 2000,
-        num: 3,
-        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
-      },
-      {
-        id: 12,
-        title: "商品C",
-        price: 3000,
-        size: 'M',
-        num: 4,
-        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
-      },
-      {
-        id: 13,
-        title: "商品D",
-        price: 4000,
-        num: 1,
-        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
-      },
-      {
-        id: 14,
-        title: "商品E",
-        price: 4000,
-        size: 'S',
-        num: 5,
-        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
-      },
-      {
-        id: 15,
-        title: "商品F",
-        price: 1000,
-        num: 2,
-        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
-      },
-      {
-        id: 16,
-        title: "商品G",
-        price: 1500,
-        size: 'LL',
-        num: 5,
-        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
-      },
-      {
-        id: 17,
-        title: "商品H",
-        price: 1800,
-        num: 3,
-        image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
-      },
+      /*
       {
         id: 18,
         title: "商品I",
@@ -127,15 +68,12 @@ export default {
         num: 2,
         image: "https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg",
       },
+      */
     ]
   }),
-  computed: {
-    user() {
-      return this.$auth.user
-    },
-    auth() {
-      return this.$store.$auth
-    },
-  },
+  mounted() {
+    // cart_idを更新するためにprofileデータを取り直す
+    this.$auth.fetchUser()
+  }
 }
 </script>

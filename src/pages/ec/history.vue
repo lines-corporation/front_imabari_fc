@@ -4,7 +4,7 @@
     <v-container>
       <h2 class="shop-ttl">購入履歴</h2>
 
-        <v-col cols="12" class="time-ttl"><h3>2021年 1月4日 13:26:51</h3></v-col>
+        <v-col cols="12" class="time-ttl" v-for="history in histories"><h3>{{ history.date }}</h3></v-col>
         <!-- TODO 購入履歴ノーデータを確認できたらここを入れ替える(histories) -->
         <!--
         <div>
@@ -118,9 +118,32 @@ export default {
   },
   methods: {
     async getPurchaseHistories() {
+
       console.warn(`getPurchaseHistories: ${this.$auth.user.ec_cart_id}`)
       const response = await this.$auth.ctx.$axios.get("/rcms-api/1/order_list")
+      let self = this
       console.warn(response)
+      response.data.list.forEach((history, index) => {
+        let products = []
+        history.order_details.forEach((order) => {
+          self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/${order.product_id}`).then((productInfoResponse) => {
+            products.push({
+              id:       order.product_id,
+              quantity: order.quantity,
+              title:    productInfoResponse.data.details.topics_name,
+              price:    productInfoResponse.data.details.product_data.ext_col_04,
+              size:     productInfoResponse.data.details.product_name,
+              image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
+            })
+          })
+        })
+        console.warn(history)
+        // 商品情報を取得する
+        self.histories.push({
+          date: history.inst_ymdhi.replace(" +0900", ""),
+          products: products
+        })
+      })
     }
   },
   mounted() {
