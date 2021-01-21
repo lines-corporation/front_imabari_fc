@@ -49,7 +49,7 @@ export default {
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
    */
-  plugins: [],
+  plugins: ['@/plugins/firebase'],
   /*
    ** Auto import components
    ** See https://nuxtjs.org/api/configuration-components
@@ -62,7 +62,7 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/axios", "@nuxtjs/auth", "@nuxtjs/pwa"],
+  modules: ["@nuxtjs/axios", "@nuxtjs/auth", "@nuxtjs/pwa", 'nuxt-client-init-module'],
   /*
    ** vuetify module configuration
    ** https://github.com/nuxt-community/vuetify-module
