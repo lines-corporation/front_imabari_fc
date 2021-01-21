@@ -120,9 +120,11 @@
                   <NuxtLink to="/upgrade">
                     有料への種別変更はこちら
                   </NuxtLink>
+                  <!--
                   <NuxtLink to="/ec">
                     グッズ販売はこちら
                   </NuxtLink>
+                -->
                 </p>
               </v-card-text>
             </v-card>
