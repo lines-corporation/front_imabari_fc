@@ -214,11 +214,11 @@
                                 <td style="vertical-align:top" v-if="$vuetify.breakpoint.xs ? false : true">
                                   <div>座席選択{{i}}</div>
                                 </td>
-                                <td style="vertical-align:top" :colspan="$vuetify.breakpoint.xs ? 2 : 1">
+                                <td style="vertical-align:top" colspan="1">
                                   <div style="height:50%;">▼ゾーン選択</div>
                                   <div>▼座席選択</div>
                                 </td>
-                                <td style="vertical-align:top">
+                                <td style="vertical-align:top" colspan="2">
                                   <div>
                                     <v-select
                                       style="padding-bottom: 10px;"
