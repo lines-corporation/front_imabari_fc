@@ -168,8 +168,8 @@
                 <v-text-field
                   v-model="m_tel"
                   label="携帯電話番号"
-                  type="tel"
-                  :rules="[rules.tel]"
+                  type="m_tel"
+                  :rules="[rules.m_tel]"
                   hint="ハイフンなしの半角数字をご入力ください"
                   counter
                   outlined
@@ -282,10 +282,10 @@ export default {
       password_show: false,
       password: "",
       email: "",
-      // fax: "",
+      fax: "",
       tel: "",
       m_tel: "",
-      // subemail: "",
+      subemail: "",
       name1: "",
       name2: "",
       namekana1: "",
@@ -363,6 +363,11 @@ export default {
           v.length == 0 ||
           /^0[0-9]{9,10}$/.test(v) ||
           "ハイフンなしの半角数字をご入力ください",
+        m_tel: (v) =>
+        v == undefined ||
+        v.length == 0 ||
+        /^0[0-9]{9,10}$/.test(v) ||
+        "ハイフンなしの半角数字をご入力ください",
       },
     }
   },
@@ -407,14 +412,14 @@ export default {
           self.sex = response.data.details.sex.label
           self.birth = response.data.details.birth
           self.email = response.data.details.email
-          // self.subemail = response.data.details.email2
+          self.subemail = response.data.details.email2
           self.zip_code = response.data.details.zip_code
           self.tdfk_cd = response.data.details.tdfk_cd
           self.address1 = response.data.details.address1
           self.address2 = response.data.details.address2
           self.address3 = response.data.details.address3
           self.tel = response.data.details.tel
-          // self.fax = response.data.details.fax
+          self.fax = response.data.details.fax
           self.m_tel = response.data.details.m_tel
           self.mailmaga_flg = !response.data.details.email_send_ng_flg
         })
@@ -435,8 +440,8 @@ export default {
             address3: this.address3,
             tel: this.tel,
             m_tel: this.m_tel,
-            // fax: this.fax,
-            // email2: this.subemail,
+            fax: this.fax,
+            email2: this.subemail,
             login_pwd: this.login_pwd,
             email_send_ng_flg: this.mailmaga_flg ? 0 : 1,
           })
