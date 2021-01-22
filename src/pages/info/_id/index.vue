@@ -35,5 +35,5 @@ export default {
 }
 </script>
 <style scoped>
-p{ line-height:10px} 
+p{ line-height:22px} 
 </style>
