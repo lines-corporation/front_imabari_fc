@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="article-page">
+    <div class="article-page ck ck-content ck-editor__editable ck-rounded-corners ck-editor__editable_inline ck-blurred">
       <header>
         <h2 class="form-ttl">
           {{ item.subject }}
@@ -35,12 +35,5 @@ export default {
 }
 </script>
 <style scoped>
- /deep/ .image img {
-    max-width: 100%;
-    height: auto;
-  }
-  /deep/ .table {
-    max-width: 100%;
-    height: auto;
-  }
+p{ line-height:10px} 
 </style>
