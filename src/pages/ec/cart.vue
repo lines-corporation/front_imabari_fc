@@ -150,7 +150,15 @@
 
     <v-row>
       <v-col cols="12">
-        <v-btn @click="executePayment" nuxt class="btn-done">決済する</v-btn>
+        <v-btn
+          @click="executePayment"
+          :loading="loading"
+          :disabled="loading"
+          nuxt
+          class="btn-done"
+        >
+        決済する
+      </v-btn>
       </v-col>
     </v-row>
 
@@ -208,7 +216,6 @@ export default {
   },
   methods: {
     async getProductInfo() {
-      // TODO loading 入れたい
       // kurocoからデータを取得してみる
       this.products = []
       this.seasonPassFlg = false
