@@ -155,7 +155,7 @@ export default {
       if(this.category == process.env.SEASON_PASS_CATEGORY_ID) {
         this.seasonPassFlg = true
       }
-      if(this.category == process.env.APPAREL_CATEGORY_ID) {
+      if(process.env.APPAREL_CATEGORY_IDS.includes(this.category)) {
         this.apparelFlg = true
       }
 
