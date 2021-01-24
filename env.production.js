@@ -6,7 +6,7 @@ module.exports = {
   PAYGENT_MERCHANT_ID: "49117",
   PAYGENT_TOKEN: "live_zcVWRwRdcjZXqdDHt2yfOEl2",
   APPAREL_CATEGORY_IDS: [33,38],
-  SEASON_PASS_CATEGORY_ID: 33,
+  SEASON_PASS_CATEGORY_ID: 34,
   FIREBASE_API_KEY: "AIzaSyDYSxu-2l4jI9Odqp1TC-fVUqpRGTABv8w",
   FIREBASE_AUTH_ADMIN: "kuroco-member-imabari.firebaseapp.com",
   FIREBASE_DATABASE_URL: "https://kuroco-member-imabari.firebaseio.com",
