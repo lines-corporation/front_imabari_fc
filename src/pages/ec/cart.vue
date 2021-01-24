@@ -144,7 +144,7 @@
         <v-subheader>合計金額</v-subheader>
       </v-col>
       <v-col cols="8">
-        <p class="p-cell">¥ {{ totalPrice }}</p>
+        <p class="p-cell">¥ {{ totalPrice + deliv_fee }} (送料 ¥{{ deliv_fee }} )</p>
       </v-col>
     </v-row>
 
@@ -192,6 +192,7 @@ export default {
       cardYear: "",
       cardCvv: "",
       totalPrice: 0,
+      deliv_fee: 0, // 送料
       seasonPassFlg: false, // シーズンパスの場合には入力項目が少し変わる
       seasonPassRemarks: "",
       rules: {
@@ -228,6 +229,8 @@ export default {
             if(productInfoResponse.data.details.product_data.contents_type == process.env.SEASON_PASS_CATEGORY_ID) {
               self.seasonPassFlg = true
             }
+            // 送料の設定
+            self.deliv_fee += parseInt(productInfoResponse.data.details.deliv_fee)
             self.products.push({
               id:       item.product_id,
               quantity: item.quantity,
