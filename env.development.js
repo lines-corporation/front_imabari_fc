@@ -5,7 +5,7 @@ module.exports = {
   PAYGENT_JS: "https://sandbox.paygent.co.jp/js/PaygentToken.js",
   PAYGENT_MERCHANT_ID: "41062",
   PAYGENT_TOKEN: "test_u5keaO2clpFst1PDoN5idRGF",
-  APPAREL_CATEGORY_ID: 32,
+  APPAREL_CATEGORY_IDS: [32],
   SEASON_PASS_CATEGORY_ID: 33,
   FIREBASE_API_KEY: "AIzaSyDYSxu-2l4jI9Odqp1TC-fVUqpRGTABv8w",
   FIREBASE_AUTH_ADMIN: "kuroco-member-imabari.firebaseapp.com",
