@@ -40,7 +40,7 @@
         v-if="seasonPassFlg"
         name="input-7-1"
         filled
-        label="シーズンパスのご希望の席を入力してください"
+        label="シーズンパスのご希望の席を入力してください。（指定席を選択の場合）"
         v-model="seasonPassRemarks"
       ></v-textarea>
     </v-row>
@@ -246,8 +246,8 @@ export default {
       // 商品データの取得
     },
     async executePayment() {
+      this.loading = true
       let self = this
-      self.loading = true
 
       // firestoreに備考を保存する
       const db = firebase.firestore()
