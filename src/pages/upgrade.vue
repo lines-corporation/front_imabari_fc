@@ -70,7 +70,7 @@
                     v-model="cardNumber"
                     label="クレジットカード番号"
                     outlined
-                    :rules="[rules.required]"
+                    :rules="[rules.required, rules.cardNumber]"
                   />
                   <v-text-field
                     id="cardName"
@@ -190,6 +190,8 @@ export default {
         is_card_number: (v) =>
           (v.length >= 14 && v.length <= 16) ||
           "16桁から18桁の数字で入力してください",
+        cardNumber:(v) =>
+          !!v.match(/^[ｦ-ﾟ 0-9]*$/) || "半角英数字で入力してください",
       },
       cardName: "",
       cardNumber: "",
