@@ -437,7 +437,7 @@ export default {
             tdfk_cd: this.tdfk_cd,
             address1: this.address1,
             address2: this.address2,
-            address3: this.address3,
+            address3: this.address3 == null ? "" : this.address3,
             tel: this.tel,
             m_tel: this.m_tel,
             fax: this.fax,
