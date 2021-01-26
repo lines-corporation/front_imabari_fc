@@ -7,7 +7,7 @@
         <v-col cols="12">
           <h3>購入完了しました！</h3>
           <p>購入したものは履歴から確認可能です。</p>
-          <v-btn to="/ec/history" nuxt>購入履歴へ</v-btn>
+          <v-btn to="/ec/histories" nuxt>購入履歴へ</v-btn>
         </v-col>
       </v-row>
 
