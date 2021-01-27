@@ -139,7 +139,7 @@ export default {
     async getProducts() {
       // cnt 表示商品数
       this.products = {}
-      let paramStr = '?cnt=12'
+      let paramStr = '?cnt=999'
       if(this.selectedCategory.length > 0) {
         this.selectedCategory.forEach((categoryId, index) => {
           paramStr += `&contents_type[]=${categoryId}`
@@ -147,6 +147,7 @@ export default {
       }
       //let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list?contents_type[]=33&contents_type[]=32&cnt=12`)
       let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list${paramStr}`)
+      console.warn(response)
       // エラー検知
       if(response.errors) {
         // TODO エラー表示
