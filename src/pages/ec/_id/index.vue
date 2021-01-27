@@ -209,6 +209,14 @@ export default {
           product_id: this.productId,
           quantity: this.quantity
         }
+      }).catch((error) => {
+        console.warn(error)
+        this.$store.dispatch(
+          "snackbar/setMessage",
+          "この商品はご購入いただけません。運営にお問い合わせください"
+        )
+        this.$store.dispatch("snackbar/snackOn")
+        return
       })
 
       this.$store.dispatch(

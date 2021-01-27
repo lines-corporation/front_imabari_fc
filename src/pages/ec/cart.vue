@@ -144,7 +144,7 @@
         <v-subheader>合計金額</v-subheader>
       </v-col>
       <v-col cols="8">
-        <p class="p-cell">¥ {{ totalPrice + deliv_fee }} (送料 ¥{{ deliv_fee }} )</p>
+        <p class="p-cell">¥ {{ totalPrice }} (送料 ¥{{ deliv_fee }} )</p>
       </v-col>
     </v-row>
 
@@ -221,6 +221,9 @@ export default {
       this.products = []
       this.seasonPassFlg = false
       let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
+      this.totalPrice = parseInt(response.data.details.total)
+      // 送料の設定
+      this.deliv_fee = parseInt(response.data.details.deliv_fee)
       if(response.data.details.items) {
         response.data.details.items.forEach((item, index) => {
           let self = this
@@ -229,8 +232,6 @@ export default {
             if(productInfoResponse.data.details.product_data.contents_type == process.env.SEASON_PASS_CATEGORY_ID) {
               self.seasonPassFlg = true
             }
-            // 送料の設定
-            self.deliv_fee += parseInt(productInfoResponse.data.details.deliv_fee)
             self.products.push({
               id:       item.product_id,
               quantity: item.quantity,
@@ -239,7 +240,6 @@ export default {
               size:     productInfoResponse.data.details.product_name,
               image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
             })
-            this.totalPrice += parseInt(productInfoResponse.data.details.product_data.ext_col_04) * parseInt(item.quantity)
           })
         })
       }
@@ -274,6 +274,16 @@ export default {
               name:         self.cardName,
             },
             function(response) {
+              if(response.result != "0000") {
+                // paygentのエラーコードの種類が判明したらハンドリングする
+                self.$store.dispatch(
+                  "snackbar/setMessage",
+                  "クレジットカード情報に誤りがあります。ご確認ください"
+                )
+                self.$store.dispatch("snackbar/snackOn")
+                self.loading = false
+                return
+              }
               self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
                 ec_payment_id: parseInt(self.ecPaymentId),
                 product_id: parseInt(product.id),
