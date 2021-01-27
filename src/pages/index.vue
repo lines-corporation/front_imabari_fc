@@ -105,6 +105,9 @@
                 <v-img v-if="can_upgrade" :src="require('@/assets/images/free_member_card.png')"></v-img>
                 <!-- 有料会員 会員証 -->
                 <v-img v-else :src="require('@/assets/images/member_card.png')"></v-img>
+                <td>
+                  <vue-qrcode v-if="user.member_no.length > 0" :value="user.member_no" tag="img" class="qr" />
+                </td>
               </v-card-text>
               <v-card-actions>
                 <v-btn text color="deep-purple accent-4" to="/profile_edit">
@@ -253,7 +256,11 @@
 </template>
 
 <script>
+import VueQrcode from "@chenfengyuan/vue-qrcode"
 export default {
+  components: {
+   VueQrcode
+  },
   middleware: "auth",
   auth: false,
   data: () => ({
@@ -395,3 +402,9 @@ export default {
   },
 }
 </script>
+<style scoped>
+.qr{
+   margin-left:70%;
+   display: block;    
+ }
+</style>
