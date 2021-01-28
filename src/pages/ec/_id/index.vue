@@ -203,28 +203,27 @@ export default {
       }
 
       // 商品をカートに保存する
-      let response = await this.$auth.ctx.$axios.post(`/rcms-api/1/shop/cart`, {
+      await this.$auth.ctx.$axios.post(`/rcms-api/1/shop/cart`, {
         ec_cart_id: this.$auth.user.ec_cart_id,
         item: {
           product_id: this.productId,
           quantity: this.quantity
         }
-      }).catch((error) => {
-        console.warn(error)
+      }).then((value) =>{
         this.$store.dispatch(
-          "snackbar/setMessage",
-          "この商品はご購入いただけません。運営にお問い合わせください"
-        )
-        this.$store.dispatch("snackbar/snackOn")
-        return
-      })
-
-      this.$store.dispatch(
         "snackbar/setMessage",
         "商品を追加しました"
-      )
-      this.$store.dispatch("snackbar/snackOn")
-      this.getCartItems()
+        )
+        this.$store.dispatch("snackbar/snackOn")
+        this.getCartItems()
+      }).catch((error) => {
+        if(error.response.status === 422){
+          console.log(this.$store)
+          this.$store.dispatch("snackbar/setError", "在庫がありません")
+          this.$store.dispatch("snackbar/snackOn")
+          return
+        }
+      })
     },
     async getCartItems() {
       if(!this.$auth.user || !this.$auth.user.ec_cart_id) {
