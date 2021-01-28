@@ -3,10 +3,25 @@
 
     <v-container>
       <h2 class="shop-ttl">購入履歴</h2>
-
-        <v-col cols="12" class="time-ttl" v-for="history in histories" @click="moveHistoryPage(history.ec_order_id)">
-          <h3>{{ history.date }}</h3>
-        </v-col>
+      <v-list>
+        <v-list-item-group
+          v-model="histories"
+          color="primary"
+        >
+          <v-list-item
+            v-for="history in histories"
+            :key="history.ec_cart_id"
+            @click="moveHistoryPage(history.ec_order_id)"
+          >
+            <v-list-item-icon>
+              <v-icon>mdi-cart</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title v-text="history.date"></v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
 
       <v-row>
         <v-col cols="12">
