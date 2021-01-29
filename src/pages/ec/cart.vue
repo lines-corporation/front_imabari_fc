@@ -258,81 +258,76 @@ export default {
        }).then(ref => {
          // 書き込み完了
        })
-      // TODO 複数リクエストできるのか？
-      self.products.forEach((product, index) => {
-        // カード払い
-        if(self.ecPaymentId == 61) {
-          let paygentToken = new PaygentToken()
-          paygentToken.createToken(
-            process.env.PAYGENT_MERCHANT_ID,
-            process.env.PAYGENT_TOKEN,
-            {
-              card_number:  self.cardNumber,
-              expire_year:  self.cardYear,
-              expire_month: self.cardMonth,
-              cvc:          self.cardCvv,
-              name:         self.cardName,
-            },
-            function(response) {
-              if(response.result != "0000") {
-                // paygentのエラーコードの種類が判明したらハンドリングする
-                self.$store.dispatch(
-                  "snackbar/setMessage",
-                  "クレジットカード情報に誤りがあります。ご確認ください"
-                )
-                self.$store.dispatch("snackbar/snackOn")
-                self.loading = false
-                return
-              }
-              self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
-                ec_payment_id: parseInt(self.ecPaymentId),
-                product_id: parseInt(product.id),
-                quantity: parseInt(product.quantity),
-                card_token: response.tokenizedCardObject.token,
-              }).then((response) => {
-                console.warn("成功!!!!!")
-                console.warn(response)
-                self.$store.dispatch("snackbar/snackOn")
-                self.$router.push("/ec/done")
-                self.loading = false
-              }).catch(function (error) {
-                self.$store.dispatch(
-                  "snackbar/setError",
-                  error.response.data.errors?.[0]
-                )
-                self.$store.dispatch("snackbar/snackOn")
-                self.loading = false
-                return
-              })
-            }
-          )
-        } else {
-          // 銀行振り込み
-          self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
-            ec_payment_id: parseInt(self.ecPaymentId),
-            product_id: parseInt(product.id),
-            quantity: parseInt(product.quantity),
-          }).then(() => {
-            console.warn("成功!!")
-            self.$store.dispatch(
-              "snackbar/setMessage",
-              "購入完了メールをご確認の上、決済手続きをお願いいたします。"
-            )
-            self.$store.dispatch("snackbar/snackOn")
-            self.$router.push("/ec/done")
-            self.loading = false
-          }).catch(function (error) {
-            console.warn("!!! error !!!!!!")
-            console.warn(error)
-            self.$store.dispatch(
-              "snackbar/setError",
-              error.response.data.errors?.[0]
-            )
-            self.$store.dispatch("snackbar/snackOn")
-            self.loading = false
-          })
-        }
-      })
+       // カード払い
+       if(self.ecPaymentId == 61) {
+         let paygentToken = new PaygentToken()
+         paygentToken.createToken(
+           process.env.PAYGENT_MERCHANT_ID,
+           process.env.PAYGENT_TOKEN,
+           {
+             card_number:  self.cardNumber,
+             expire_year:  self.cardYear,
+             expire_month: self.cardMonth,
+             cvc:          self.cardCvv,
+             name:         self.cardName,
+           },
+           function(response) {
+             if(response.result != "0000") {
+               // paygentのエラーコードの種類が判明したらハンドリングする
+               self.$store.dispatch(
+                 "snackbar/setMessage",
+                 "クレジットカード情報に誤りがあります。ご確認ください"
+               )
+               self.$store.dispatch("snackbar/snackOn")
+               self.loading = false
+               return
+             }
+             self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
+               ec_payment_id: parseInt(self.ecPaymentId),
+               ec_cart_id:    self.$auth.user.ec_cart_id,
+               card_token:    response.tokenizedCardObject.token,
+             }).then((response) => {
+               console.warn("成功!!!!!")
+               console.warn(response)
+               self.$store.dispatch("snackbar/snackOn")
+               self.$router.push("/ec/done")
+               self.loading = false
+             }).catch(function (error) {
+               self.$store.dispatch(
+                 "snackbar/setError",
+                 error.response.data.errors?.[0]
+               )
+               self.$store.dispatch("snackbar/snackOn")
+               self.loading = false
+               return
+             })
+           }
+         )
+       } else {
+         // 銀行振り込み
+         self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
+           ec_payment_id: parseInt(self.ecPaymentId),
+           ec_cart_id:    self.$auth.user.ec_cart_id,
+         }).then(() => {
+           console.warn("成功!!")
+           self.$store.dispatch(
+             "snackbar/setMessage",
+             "購入完了メールをご確認の上、決済手続きをお願いいたします。"
+           )
+           self.$store.dispatch("snackbar/snackOn")
+           self.$router.push("/ec/done")
+           self.loading = false
+         }).catch(function (error) {
+           console.warn("!!! error !!!!!!")
+           console.warn(error)
+           self.$store.dispatch(
+             "snackbar/setError",
+             error.response.data.errors?.[0]
+           )
+           self.$store.dispatch("snackbar/snackOn")
+           self.loading = false
+         })
+       }
     },
     async removeProduct(productId) {
       let response = await this.$auth.ctx.$axios.post(`/rcms-api/1/shop/cart/delete`, {

@@ -60,19 +60,22 @@ export default {
   },
   methods: {
     async getHistory() {
-      const response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/history/${this.$route.params.id}`)
-      this.purchaseDate = response.data.details.inst_ymdhi.replace(" +0900", "")
-      this.totalPaymentPrice = parseInt(response.data.details.total)
+      const ids = this.$route.params.id.split(',')
       let self = this
-      response.data.details.order_details.forEach((order) => {
-        self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/${order.product_id}`).then((productInfoResponse) => {
-          self.products.push({
-            id:       order.product_id,
-            quantity: order.quantity,
-            title:    productInfoResponse.data.details.topics_name,
-            price:    productInfoResponse.data.details.product_data.ext_col_04,
-            size:     productInfoResponse.data.details.product_name,
-            image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
+      ids.forEach(async (id) => {
+        const response = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/history/${id}`)
+        self.purchaseDate = response.data.details.inst_ymdhi.replace(" +0900", "")
+        self.totalPaymentPrice = parseInt(response.data.details.total)
+        response.data.details.order_details.forEach((order) => {
+          self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/${order.product_id}`).then((productInfoResponse) => {
+            self.products.push({
+              id:       order.product_id,
+              quantity: order.quantity,
+              title:    productInfoResponse.data.details.topics_name,
+              price:    productInfoResponse.data.details.product_data.ext_col_04,
+              size:     productInfoResponse.data.details.product_name,
+              image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
+            })
           })
         })
       })

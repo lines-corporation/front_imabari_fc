@@ -9,15 +9,15 @@
           color="primary"
         >
           <v-list-item
-            v-for="history in histories"
-            :key="history.ec_cart_id"
-            @click="moveHistoryPage(history.ec_order_id)"
+            v-for="(history, date) in histories"
+            :key="date"
+            @click="moveHistoryPage(history.ids)"
           >
             <v-list-item-icon>
               <v-icon>mdi-cart</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title v-text="history.date"></v-list-item-title>
+              <v-list-item-title v-text="date"></v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
@@ -37,7 +37,7 @@
 export default {
   auth: false,
   data: () => ({
-    histories: []
+    histories: {}
   }),
   computed: {
     user() {
@@ -51,15 +51,20 @@ export default {
     async getPurchaseHistories() {
       const response = await this.$auth.ctx.$axios.get("/rcms-api/1/order_list")
       let self = this
+      self.histories = {}
       response.data.list.forEach((history, index) => {
-        self.histories.push({
-          ec_order_id: history.ec_order_id,
-          date:        history.inst_ymdhi.replace(" +0900", ""),
-        })
+        const date = history.inst_ymdhi.replace(" +0900", "")
+        if(self.histories[date]) {
+          self.histories[date].ids.push(history.ec_order_id)
+        } else {
+          self.$set(self.histories, date, {
+            ids: [history.ec_order_id]
+          })
+        }
       })
     },
-    moveHistoryPage(ec_order_id) {
-      this.$router.push(`/ec/history/${ec_order_id}`)
+    moveHistoryPage(ecOrderIds) {
+      this.$router.push(`/ec/history/${ecOrderIds.join(',')}`)
     }
   },
   mounted() {
