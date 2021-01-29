@@ -71,7 +71,7 @@
             :items="passCategories"
             item-text="name"
             item-value="id"
-            label="種別"
+            label="選択"
             outlined
           ></v-select>
           <!-- 個数設定 -->

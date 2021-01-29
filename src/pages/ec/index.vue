@@ -5,11 +5,11 @@
       cycle
       hide-delimiter-background
     >
-      <v-carousel-item
+      <v-carousel-item 
         v-for="(item,i) in items"
         :key="i"
-        :src="item.src"
-      ></v-carousel-item>
+        :src="item.url"
+      ></v-carousel-item >
     </v-carousel>
 
     <v-container class="shop-top">
@@ -121,13 +121,13 @@ export default {
     onboarding: 0,
     items: [
       {
-        src: 'https://cheer-fund.s3-ap-northeast-1.amazonaws.com/temp_banner.jpg',
+        url: require('@/assets/images/temp_banner.jpg'),
       },
       {
-        src: 'https://cheer-fund.s3-ap-northeast-1.amazonaws.com/temp_banner.jpg',
+        url: require('@/assets/images/temp_banner.jpg'),
       },
       {
-        src: 'https://cheer-fund.s3-ap-northeast-1.amazonaws.com/temp_banner.jpg',
+        url: require('@/assets/images/temp_banner.jpg'),
       },
     ],
     selectedCategory: [],
