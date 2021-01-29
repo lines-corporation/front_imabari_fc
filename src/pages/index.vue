@@ -107,7 +107,7 @@
                 <v-img v-else :src="require('@/assets/images/member_card.png')"></v-img>
                 <h4>会員番号QR</h4>
                 <v-img class="qr">
-                  <vue-qrcode v-if="user.member_no.length > 0" :value="user.member_no" tag="img" />
+                  <vue-qrcode v-if="user.member_no != null && user.member_no.length > 0" :value="user.member_no" tag="img" />
                 </v-img>
               </v-card-text>
               <v-card-actions>
