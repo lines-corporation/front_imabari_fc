@@ -56,7 +56,7 @@
             v-if="apparelFlg"
             v-model="productId"
             :items="sizes"
-            label="Size"
+            label="選択"
             item-text="name"
             item-value="id"
             outlined
