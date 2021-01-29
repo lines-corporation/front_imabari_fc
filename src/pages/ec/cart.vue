@@ -316,8 +316,7 @@ export default {
             console.warn("成功!!")
             self.$store.dispatch(
               "snackbar/setMessage",
-              self.success_message +
-              "メールをご確認の上、決済手続きをお願いいたします。"
+              "購入完了メールをご確認の上、決済手続きをお願いいたします。"
             )
             self.$store.dispatch("snackbar/snackOn")
             self.$router.push("/ec/done")
