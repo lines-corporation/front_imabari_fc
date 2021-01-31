@@ -35,12 +35,14 @@
       </div>
 
     <!-- 支払い方法 TODO これはコンポーネント化する -->
+    <v-row v-if="seasonPassFlg">
+      <span>シーズンパスのご希望の席を入力してください。（指定席を選択の場合）<br> 購入者様以外の方の分をご購入の場合は、ご利用される方の①お名前②年齢③性別④電話番号をご記入ください。</span>
+    </v-row>
     <v-row>
       <v-textarea
         v-if="seasonPassFlg"
         name="input-7-1"
         filled
-        :label="'シーズンパスのご希望の席を入力してください。（指定席を選択の場合）\n 購入者様以外の方の分をご購入の場合は、ご利用される方の①お名前②年齢③性別④電話番号をご記入ください。'"
         v-model="seasonPassRemarks"
       ></v-textarea>
     </v-row>
