@@ -121,10 +121,7 @@ export default {
     onboarding: 0,
     items: [
       {
-        url: require('@/assets/images/temp_banner.jpg'),
-      },
-      {
-        url: require('@/assets/images/temp_banner.jpg'),
+        url: require('@/assets/images/uniform_img.jpg'),
       },
       {
         url: require('@/assets/images/temp_banner.jpg'),

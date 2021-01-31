@@ -138,6 +138,9 @@
                         :rules="[rules.required]"
                       />
                     </v-col>
+                    <p>
+                      ※裏面の署名欄横に記載の3桁もしくは4桁の番号（AMEXカードは表面にある4桁の番号）
+                    </p>
                   </v-row>
                 </div>
               </v-col>

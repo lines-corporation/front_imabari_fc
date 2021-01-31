@@ -132,6 +132,13 @@
                 </p>
               </v-card-text>
             </v-card>
+            <v-card class="mx-auto" outlined>
+              <v-card-text>
+                <NuxtLink to="/ec">
+                  <v-img :src="require('@/assets/images/btn-ecpage.png')"></v-img>
+                </NuxtLink>
+              </v-card-text>
+            </v-card>
           </v-col>
           <v-col cols="12" sm="6">
             <v-card class="mx-auto" outlined>
