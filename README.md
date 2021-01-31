@@ -24,6 +24,7 @@ $ npm run build-prod
 $ npm run export-prod
 
 # deploy to Firebase hosting
+$ firebase use kuroco-member-imabari
 $ firebase target:apply hosting production kuroco-member-imabari
 $ firebase deploy --only hosting:production
 $ firebase target:apply hosting development dev-imabari-fc
