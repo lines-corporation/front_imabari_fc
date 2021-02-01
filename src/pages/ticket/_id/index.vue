@@ -209,7 +209,7 @@
                                 </p>
                               </td>
                             </tr>
-                            <template v-if="order_products[t.product_id] > 0 && seat_reserved_product.has(t.combination_id+'')">
+                            <template v-if="order_products[t.product_id] > 0 && seat_reserved_product.has(t.class_options[19].ec_class_option_id+'')">
                               <tr style="background-color: #EEEEEE" v-for="i in order_products[t.product_id]" :key="t.product_id+''+i">
                                 <td style="vertical-align:top" v-if="$vuetify.breakpoint.xs ? false : true">
                                   <div>座席選択{{i}}</div>
@@ -480,7 +480,7 @@ export default {
       let seatReserved = res.data.list
       seatReserved && seatReserved.forEach(reserved => {
         let s = {
-          combination_id: reserved[0],
+          ec_class_option_id: reserved[0],
           seat: reserved[1]
         }
         self.seat_reserved_list.push(s)
@@ -507,7 +507,7 @@ export default {
               self.product_list.push(p_list)   
               p_list.zone_list = []
               for(const reserved of self.seat_reserved_list) {
-                if (p_list.combination_id == reserved.combination_id) {
+                if (p_list.class_options[19].ec_class_option_id == reserved.ec_class_option_id) {
                   let zone = reserved.seat.split('-')[0]
                   let obj = {
                     text: 'ゾーン' + self.switchZoneNo(zone),
@@ -546,7 +546,7 @@ export default {
       this.seat_reserved_list.forEach(reserved => {
         let reservedZone = reserved.seat.split('-')[0]
         let seat = reserved.seat.split('-')[1]
-        if (reserved.combination_id == product.combination_id && reservedZone == zone) {
+        if (reserved.ec_class_option_id == product.class_options[19].ec_class_option_id && reservedZone == zone) {
           let obj = {
               text: seat,
               value: reserved.seat,
