@@ -11,6 +11,12 @@
         :src="item.url"
       ></v-carousel-item >
     </v-carousel>
+   <!-- 購入履歴へ -->
+    <v-row class="d-msg float-sm-right">
+      <v-col cols="12">
+        <v-btn to="/ec/histories" nuxt>購入履歴へ</v-btn>
+      </v-col>
+    </v-row>
 
     <v-container class="shop-top">
       <v-row no-gutters>
