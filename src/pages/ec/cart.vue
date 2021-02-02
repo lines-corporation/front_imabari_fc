@@ -143,6 +143,23 @@
         </div>
       </v-col>
     </v-row>
+    
+    <v-row class="p-list">
+      <v-col cols="4" class="p-header">
+        <v-subheader>住所</v-subheader>
+      </v-col>
+      <v-col cols="8">
+        <div class="p-cell address">
+          <v-text-field
+            id="address"
+            v-model="address"
+            type="number"
+            label="住所"
+            outlined
+          />
+        </div>
+      </v-col>
+    </v-row>
 
     <v-row class="p-list">
       <v-col cols="4" class="p-header">
@@ -188,6 +205,7 @@ export default {
       loading: false,
       //productIds: [],
       products: [],
+      address: "",
       selectedBox: [],
       ecPaymentId: "61",
       quantities: [1,2,3,4,5,6,7,8,9,10],
@@ -358,3 +376,8 @@ export default {
 
 }
 </script>
+<style scoped>
+.address{
+  transform:translateY(30%);
+}
+</style>
