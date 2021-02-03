@@ -6,7 +6,7 @@
           <v-badge
             v-if="cartItems.length > 0"
             color="green"
-            :content="cartItems.length"
+            :content="total_quantity"
           >
             <v-icon large color="darken-2">
               mdi-cart-variant
@@ -113,6 +113,7 @@
 export default {
   auth: false,
   data: () => ({
+    total_quantity: 0,
     productId: '',
     productName: '',
     price: 0,
@@ -231,6 +232,7 @@ export default {
       }
       this.cartItems = []
       let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
+      this.total_quantity = response.data.details.total_quantity
       if(response.data.details.items) {
         response.data.details.items.forEach((item, index) => {
           this.cartItems.push(item)

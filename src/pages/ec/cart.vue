@@ -144,7 +144,7 @@
       </v-col>
     </v-row>
     
-    <v-row class="p-list">
+    <!-- <v-row class="p-list">
       <v-col cols="4" class="p-header">
         <v-subheader>住所</v-subheader>
       </v-col>
@@ -159,7 +159,7 @@
           />
         </div>
       </v-col>
-    </v-row>
+    </v-row> -->
 
     <v-row class="p-list">
       <v-col cols="4" class="p-header">
@@ -205,7 +205,7 @@ export default {
       loading: false,
       //productIds: [],
       products: [],
-      address: "",
+      // address: "",
       selectedBox: [],
       ecPaymentId: "61",
       quantities: [1,2,3,4,5,6,7,8,9,10],
