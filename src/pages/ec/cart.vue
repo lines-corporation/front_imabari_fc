@@ -43,7 +43,7 @@
         v-if="seasonPassFlg"
         name="input-7-1"
         filled
-        v-model="seasonPassRemarks"
+        v-model="order_note"
       ></v-textarea>
     </v-row>
     <v-row class="p-list">
@@ -225,7 +225,8 @@ export default {
       totalPrice: 0,
       deliv_fee: 0, // 送料
       seasonPassFlg: false, // シーズンパスの場合には入力項目が少し変わる
-      seasonPassRemarks: "",
+      // seasonPassRemarks: "",
+      order_note: "",
       rules: {
         required: (value) => !!value || "この項目は必須入力です",
         password_min: (v) => v.length >= 8 || "最低8文字以上を入力してください",
@@ -269,6 +270,7 @@ export default {
               title:    productInfoResponse.data.details.topics_name,
               price:    productInfoResponse.data.details.product_data.ext_col_04,
               size:     productInfoResponse.data.details.product_name,
+              note:    productInfoResponse.data.details.note,
               image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
             })
           })
@@ -281,14 +283,14 @@ export default {
       let self = this
 
       // firestoreに備考を保存する
-      const db = firebase.firestore()
-      let collection = db.collection(process.env.FIREBASE_COLLECTION)
-      collection.add({
-         member_id: this.$auth.user.member_id,
-         remarks:   this.seasonPassRemarks,
-       }).then(ref => {
-         // 書き込み完了
-       })
+      // const db = firebase.firestore()
+      // let collection = db.collection(process.env.FIREBASE_COLLECTION)
+      // collection.add({
+      //    member_id: this.$auth.user.member_id,
+      //    remarks:   this.seasonPassRemarks,
+      //  }).then(ref => {
+      //    // 書き込み完了
+      //  })
        // カード払い
        if(self.ecPaymentId == 61) {
          let paygentToken = new PaygentToken()
@@ -317,6 +319,7 @@ export default {
                ec_payment_id: parseInt(self.ecPaymentId),
                ec_cart_id:    self.$auth.user.ec_cart_id,
                card_token:    response.tokenizedCardObject.token,
+               order_note:    self.order_note,
              }).then((response) => {
                console.warn("成功!!!!!")
                console.warn(response)
@@ -339,6 +342,7 @@ export default {
          self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
            ec_payment_id: parseInt(self.ecPaymentId),
            ec_cart_id:    self.$auth.user.ec_cart_id,
+           order_note:    self.order_note,
          }).then(() => {
            console.warn("成功!!")
            self.$store.dispatch(
