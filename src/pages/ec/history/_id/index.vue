@@ -23,7 +23,7 @@
               <p>¥ {{ product.price }}</p>
               <p>{{ product.size }}</p>
               <p>個数 {{ product.quantity }}個</p>
-              <p>remarks: {{ note }}</p>
+              <!-- <p>remarks: {{ note }}</p> -->
               </div>
             </v-col>
           </v-row>
@@ -49,7 +49,7 @@ export default {
   data: () => ({
     purchaseDate: "",
     totalPaymentPrice: 0,
-    note: "",
+    // note: "",
     products: []
   }),
   computed: {
@@ -67,7 +67,7 @@ export default {
       ids.forEach(async (id) => {
         const response = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/history/${id}`)
         self.purchaseDate = response.data.details.inst_ymdhi.replace(" +0900", "")
-        self.note = response.data.details.note
+        // self.note = response.data.details.note
         self.totalPaymentPrice = parseInt(response.data.details.total)
         response.data.details.order_details.forEach((order) => {
           self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/${order.product_id}`).then((productInfoResponse) => {
