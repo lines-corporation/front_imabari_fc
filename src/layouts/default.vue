@@ -13,9 +13,10 @@
       <v-list>
         <v-list-item
           v-for="(item, i) in items"
-          :key="i"
           :to="item.to"
-          :href="inquiry_url"
+          :href="item.link"
+          :key="i"
+          target="item.target"
           router
           exact
         >
@@ -67,7 +68,7 @@
 
     <v-footer color="#171C61" padless app absolute inset>
       <v-row justify="center" no-gutters>
-        <v-btn color="white" text rounded class="my-2" :href="inquiry_url">
+        <v-btn color="white" text rounded class="my-2" :href="inquiry_url" target="_blank">
           お問い合わせ
         </v-btn>
         <!-- <v-btn color="white" text rounded class="my-2" to="/inquiry">
@@ -133,7 +134,8 @@ export default {
         {
           icon: "mdi-send",
           title: "お問い合わせ",
-          // to: "/inquiry",
+          link: "https://docs.google.com/forms/d/e/1FAIpQLSdYPh3YEm5fzrCxBVnEd64xvSVpHBwpaeKan0ODSa8thr6Gtw/viewform",
+          target: "_blank",
         },
         {
           icon: "mdi-information",
