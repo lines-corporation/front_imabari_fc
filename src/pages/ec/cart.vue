@@ -56,15 +56,16 @@
           <v-radio label="銀行振り込み" value="60" />
         </v-radio-group>
         <p v-if="ecPaymentId == '60'" class="body-1">
-          ■振込口座 <br>
-           伊予銀行　今治支店 <br>
-           普通預金口座　3907025　<br>
-           名義：株式会社今治．夢スポーツ <br>
-           <br>
-           ※振込手数料はご本人負担でお願いいたします。 <br>
-           ※お振り込みの際は、振込人名義にご本人様のお名前(フ<br>ルネーム)・注文IDをご入力ください。
-           <br><br>
-           振込先はメールでも送信されますのでご確認ください。
+          ■振込先 <br>
+          伊予銀行　今治支店 <br>
+          普通預金口座　3907025<br>
+          名義：株式会社今治．夢スポーツ <br>
+          <br>
+          ※本日より1週間以内にお振込みいただきますようお願いいたします。 <br>
+          ※振込手数料はご本人負担でお願いいたします。 <br>
+          ※お振り込みの際は、振込人名義にご本人様のお名前(フルネーム)・注文番号をご入力ください。 <br>
+          <br>
+          振込先はメールでも送信されますのでご確認ください。
         </p>
         <p v-if="ecPaymentId == '59'" class="body-1">
           コンビニ決済用のメールが送信されますので、そちらの案内にそってお支払いをお願いいたします。
@@ -226,7 +227,6 @@ export default {
       deliv_fee: 0, // 送料
       seasonPassFlg: false, // シーズンパスの場合には入力項目が少し変わる
       seasonPassRemarks: "",
-      // order_note: "",
       rules: {
         required: (value) => !!value || "この項目は必須入力です",
         password_min: (v) => v.length >= 8 || "最低8文字以上を入力してください",
@@ -270,7 +270,6 @@ export default {
               title:    productInfoResponse.data.details.topics_name,
               price:    productInfoResponse.data.details.product_data.ext_col_04,
               size:     productInfoResponse.data.details.product_name,
-              // note:    productInfoResponse.data.details.note,
               image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
             })
           })
@@ -319,7 +318,6 @@ export default {
                ec_payment_id: parseInt(self.ecPaymentId),
                ec_cart_id:    self.$auth.user.ec_cart_id,
                card_token:    response.tokenizedCardObject.token,
-              //  order_note:    self.order_note,
              }).then((response) => {
                console.warn("成功!!!!!")
                console.warn(response)
