@@ -15,6 +15,7 @@
           v-for="(item, i) in items"
           :key="i"
           :to="item.to"
+          :href="inquiry_url"
           router
           exact
         >
@@ -132,7 +133,7 @@ export default {
         {
           icon: "mdi-send",
           title: "お問い合わせ",
-          to: "/inquiry",
+          // to: "/inquiry",
         },
         {
           icon: "mdi-information",
