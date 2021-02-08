@@ -253,10 +253,14 @@ export default {
       // kurocoからデータを取得してみる
       this.products = []
       this.seasonPassFlg = false
-      let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
-      this.totalPrice = parseInt(response.data.details.total)
+      let tdfk_cd = this.$auth.user.tdfk_cd
+      let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}?tdfk_cd=${tdfk_cd}`)
       // 送料の設定
       this.deliv_fee = parseInt(response.data.details.deliv_fee)
+      this.totalPrice = parseInt(response.data.details.total)
+      // let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
+      // 送料の設定
+      // this.deliv_fee = parseInt(response.data.details.deliv_fee)
       if(response.data.details.items) {
         response.data.details.items.forEach((item, index) => {
           let self = this
