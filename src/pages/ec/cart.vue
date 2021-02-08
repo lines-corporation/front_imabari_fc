@@ -71,6 +71,21 @@
           コンビニ決済用のメールが送信されますので、そちらの案内にそってお支払いをお願いいたします。
         </p>
         <div v-if="ecPaymentId == '61'" class="card-wrapper">
+          <p>クレジットカードの情報例</p>
+          <v-row>
+            <v-col cols="12" sm="6">
+            <p>表面</p>
+              <v-img :src="require('@/assets/images/img_card_f.png')" width=100%></v-img>
+            </v-col>
+            <v-col cols="12" sm="6">
+            <p>裏面</p>
+              <v-img :src="require('@/assets/images/img_cvv.png')" width=100%></v-img>
+            </v-col>
+          </v-row>
+          <p>
+            ※American ExpressのCVVはカード前面に4桁の数字で記載されています。<br/>
+            <br>
+          </p>
           <v-text-field
             id="cardNumber"
             v-model="cardNumber"
@@ -146,9 +161,6 @@
               />
             </v-col>
           </v-row>
-          <p>
-            ※CVV：裏面の署名欄横に記載の3桁もしくは4桁の番号（AMEXカードは表面にある4桁の番号）
-          </p>
         </div>
       </v-col>
     </v-row>
