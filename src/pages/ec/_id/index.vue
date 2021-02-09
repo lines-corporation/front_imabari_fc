@@ -64,7 +64,7 @@
           <!-- /サイズ設定 -->
           <!-- シーズンパスの場合には種別を選択させる -->
           <v-select
-            v-if="seasonPassFlg"
+            v-if="seasonPassFlg && stock != 0"
             v-model="seasonPassKind"
             class="p-select"
             :ref="`${productId}_num`"
@@ -76,7 +76,7 @@
           ></v-select>
           <!-- 個数設定 -->
           <v-select
-            v-if="productId"
+            v-if="productId && stock != 0"
             v-model="quantity"
             class="p-select"
             :ref="`${productId}_num`"
@@ -85,6 +85,15 @@
             outlined
           ></v-select>
           <!-- /個数設定 -->
+          <v-btn
+            v-if="getStock(productId) && stock == 0"
+            depressed
+            text="red"
+            color="red lighten-1"
+            class="error"
+          >
+            売り切れ
+          </v-btn>
 
         </v-col>
       </v-row>
@@ -113,6 +122,7 @@
 export default {
   auth: false,
   data: () => ({
+    stock: 0,
     total_quantity: 0,
     productId: '',
     productName: '',
@@ -139,6 +149,14 @@ export default {
     },
   },
   methods: {
+    async getStock(productId) {
+      let result = await this.$auth.ctx.$axios.get(`rcms-api/1/shop/product/list?topics_id=${this.$route.params.id}`)
+      let stamp = result.data.list.filter(item =>
+        productId == item.product_id
+      )
+      console.log(stamp[0].stock)
+      this.stock = stamp[0].stock
+    },
     // 商品情報の取得
     async getProducts(topics_id) {
       let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/topic/${topics_id}`)
