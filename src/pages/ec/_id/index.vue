@@ -90,7 +90,7 @@
             depressed
             text="red"
             color="red lighten-1"
-            class="error"
+            class="sell-out"
           >
             売り切れ
           </v-btn>
@@ -283,3 +283,9 @@ export default {
   }
 }
 </script>
+<style scoped>
+.sell-out{
+  font-weight: 800;
+  border-color: crimson !important;
+}
+</style>
