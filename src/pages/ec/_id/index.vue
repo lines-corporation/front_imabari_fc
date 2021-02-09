@@ -64,8 +64,9 @@
           <!-- /サイズ設定 -->
           <!-- シーズンパスの場合には種別を選択させる -->
           <v-select
-            v-if="seasonPassFlg && stock != 0"
+            v-if="seasonPassFlg"
             v-model="seasonPassKind"
+            :productId="productId"
             class="p-select"
             :ref="`${productId}_num`"
             :items="passCategories"
@@ -76,7 +77,7 @@
           ></v-select>
           <!-- 個数設定 -->
           <v-select
-            v-if="productId && stock != 0"
+            v-if="productId != null && stock != 0 && productId != seasonPassKind"
             v-model="quantity"
             class="p-select"
             :ref="`${productId}_num`"
@@ -84,9 +85,19 @@
             label="個数"
             outlined
           ></v-select>
-          <!-- /個数設定 -->
+          <!-- /シーズンパスの場合には売り切れ -->
           <v-btn
-            v-if="getStock(productId) && stock == 0"
+            v-if="getStock(seasonPassKind) && stock == 0 && productId == seasonPassKind"
+            depressed
+            text
+            color="red lighten-1"
+            class="sell-out"
+          >
+            売り切れ
+          </v-btn>
+           <!-- /売り切れ -->
+          <v-btn
+            v-if="getStock(productId) && stock == 0 && seasonPassKind == null"
             depressed
             text
             color="red lighten-1"
@@ -153,6 +164,15 @@ export default {
       let result = await this.$auth.ctx.$axios.get(`rcms-api/1/shop/product/list?topics_id=${this.$route.params.id}`)
       let stamp = result.data.list.filter(item =>
         productId == item.product_id
+      )
+      if (stamp[0] != "" && stamp[0] != null ){
+        this.stock = stamp[0].stock
+      }
+    },
+    async getStock(seasonPassKind) {
+      let result = await this.$auth.ctx.$axios.get(`rcms-api/1/shop/product/list?topics_id=${this.$route.params.id}`)
+      let stamp = result.data.list.filter(item =>
+        seasonPassKind == item.product_id
       )
       if (stamp[0] != "" && stamp[0] != null ){
         this.stock = stamp[0].stock
