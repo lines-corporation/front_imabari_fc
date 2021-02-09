@@ -88,7 +88,7 @@
           <v-btn
             v-if="getStock(productId) && stock == 0"
             depressed
-            text="red"
+            text
             color="red lighten-1"
             class="sell-out"
           >
@@ -154,8 +154,9 @@ export default {
       let stamp = result.data.list.filter(item =>
         productId == item.product_id
       )
-      console.log(stamp[0].stock)
-      this.stock = stamp[0].stock
+      if (stamp[0] != "" && stamp[0] != null ){
+        this.stock = stamp[0].stock
+      }
     },
     // 商品情報の取得
     async getProducts(topics_id) {
