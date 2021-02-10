@@ -66,7 +66,6 @@
           <v-select
             v-if="seasonPassFlg"
             v-model="seasonPassKind"
-            :productId="productId"
             class="p-select"
             :ref="`${productId}_num`"
             :items="passCategories"
@@ -95,9 +94,19 @@
             label="個数"
             outlined
           ></v-select>
+          <!-- シーズンパスのデフォルト場合には個数設定 -->
+          <v-select
+            v-if="seasonPassFlg && seasonPassKind == 0"
+            v-model="quantity"
+            class="p-select"
+            :ref="`${productId}_num`"
+            :items="items"
+            label="個数"
+            outlined
+          ></v-select>
           <!-- /シーズンパスの場合には売り切れ -->
           <v-btn
-            v-if="seasonPassFlg && getStock(seasonPassKind) && stock == 0"
+            v-if="seasonPassFlg && getStock(seasonPassKind) && stock == 0 && seasonPassKind != 0"
             depressed
             text
             color="red lighten-1"
@@ -154,7 +163,7 @@ export default {
     seasonPassFlg: false, // シーズンパスの場合には入力項目が少し変わる
     apparelFlg: false,
     passCategories: [],
-    seasonPassKind: null,
+    seasonPassKind: '',
     //imageUrl: 'https://cheer-fund.s3-ap-northeast-1.amazonaws.com/product_image/12/product-1506865076.jpeg',
     imageUrl: null,
     images: [],
@@ -269,8 +278,8 @@ export default {
       }).catch((error) => {
         if(error.response.status === 422){
           console.log(this.$store)
-          this.$store.dispatch("snackbar/setError", "在庫がありません")
-          this.$store.dispatch("snackbar/snackOn")
+          // this.$store.dispatch("snackbar/setError", "在庫がありません")
+          // this.$store.dispatch("snackbar/snackOn")
           return
         }
       })
