@@ -32,9 +32,9 @@
                 @change="getProducts"
               >
                 <v-list-item v-for="category in categories" :key="`category-${ category.id }`" :value="category.id">
-                  <template v-slot:default="{ active }">
+                  <template>
                     <v-list-item-action>
-                      <v-checkbox :input-value="active"></v-checkbox>
+                      <v-checkbox :readonly="flag" ></v-checkbox>
                     </v-list-item-action>
 
                     <v-list-item-content>
@@ -120,6 +120,7 @@
 export default {
   auth: false,
   data: () => ({
+    flag: true,
     settings: [],
     cartItems: [],
     total_quantity: 0,
@@ -141,6 +142,7 @@ export default {
   methods: {
     // 商品一覧の取得
     async getProducts() {
+      this.flag = true
       // cnt 表示商品数
       this.products = {}
       let paramStr = '?cnt=999'
@@ -151,6 +153,7 @@ export default {
       }
       //let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list?contents_type[]=33&contents_type[]=32&cnt=12`)
       let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list${paramStr}`)
+      this.flag = false
       console.warn(response)
       // エラー検知
       if(response.errors) {
