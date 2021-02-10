@@ -77,7 +77,17 @@
           ></v-select>
           <!-- 個数設定 -->
           <v-select
-            v-if="productId != null && stock != 0 && productId != seasonPassKind"
+            v-if="apparelFlg && stock != 0"
+            v-model="quantity"
+            class="p-select"
+            :ref="`${productId}_num`"
+            :items="items"
+            label="個数"
+            outlined
+          ></v-select>
+          <!-- シーズンパスの場合には個数設定 -->
+          <v-select
+            v-if="seasonPassFlg && stock != 0"
             v-model="quantity"
             class="p-select"
             :ref="`${productId}_num`"
@@ -87,7 +97,7 @@
           ></v-select>
           <!-- /シーズンパスの場合には売り切れ -->
           <v-btn
-            v-if="getStock(seasonPassKind) && stock == 0 && productId == seasonPassKind"
+            v-if="seasonPassFlg && getStock(seasonPassKind) && stock == 0"
             depressed
             text
             color="red lighten-1"
@@ -97,7 +107,7 @@
           </v-btn>
            <!-- /売り切れ -->
           <v-btn
-            v-if="getStock(productId) && stock == 0 && seasonPassKind == null"
+            v-if="apparelFlg && getStock(productId) && stock == 0"
             depressed
             text
             color="red lighten-1"
