@@ -34,7 +34,7 @@
                 <v-list-item v-for="category in categories" :key="`category-${ category.id }`" :value="category.id">
                   <template>
                     <v-list-item-action>
-                      <v-checkbox :readonly="flag" ></v-checkbox>
+                      <v-checkbox :disabled="flag" ></v-checkbox>
                     </v-list-item-action>
 
                     <v-list-item-content>
