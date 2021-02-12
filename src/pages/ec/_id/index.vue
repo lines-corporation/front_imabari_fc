@@ -76,7 +76,7 @@
           ></v-select>
           <!-- 個数設定 -->
           <v-select
-            v-if="apparelFlg && stock != 0"
+            v-if="apparelFlg && stock != 0 && stock != null"
             v-model="quantity"
             class="p-select"
             :ref="`${productId}_num`"
@@ -86,7 +86,7 @@
           ></v-select>
           <!-- シーズンパスの場合には個数設定 -->
           <v-select
-            v-if="seasonPassFlg && stock != 0"
+            v-if="seasonPassFlg && stock != 0 && stock != null"
             v-model="quantity"
             class="p-select"
             :ref="`${productId}_num`"
@@ -106,7 +106,7 @@
           ></v-select>
           <!-- /シーズンパスの場合には売り切れ -->
           <v-btn
-            v-if="seasonPassFlg && getStock(seasonPassKind) && stock == 0 && seasonPassKind != 0"
+            v-if="seasonPassFlg && getStock(seasonPassKind) && stock == 0 && stock != null"
             depressed
             text
             color="red lighten-1"
@@ -116,7 +116,7 @@
           </v-btn>
            <!-- /売り切れ -->
           <v-btn
-            v-if="apparelFlg && getStock(productId) && stock == 0"
+            v-if="apparelFlg && getStock(productId) && stock == 0 && stock != null"
             depressed
             text
             color="red lighten-1"
@@ -152,7 +152,7 @@
 export default {
   auth: false,
   data: () => ({
-    stock: 0,
+    stock: null,
     total_quantity: 0,
     productId: '',
     productName: '',
