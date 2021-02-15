@@ -104,9 +104,29 @@
             label="個数"
             outlined
           ></v-select>
+          <!-- シーズンパスの在庫数「無制限」場合には個数設定 -->
+          <v-select
+            v-if="seasonPassFlg && stock_unlimited == 1"
+            v-model="quantity"
+            class="p-select"
+            :ref="`${productId}_num`"
+            :items="items"
+            label="個数"
+            outlined
+          ></v-select>
+          <!-- 個数設定 -->
+          <v-select
+            v-if="apparelFlg && stock_unlimited == 1"
+            v-model="quantity"
+            class="p-select"
+            :ref="`${productId}_num`"
+            :items="items"
+            label="個数"
+            outlined
+          ></v-select>
           <!-- /シーズンパスの場合には売り切れ -->
           <v-btn
-            v-if="seasonPassFlg && getStock(seasonPassKind) && stock == 0 && stock != null"
+            v-if="seasonPassFlg && getStock(seasonPassKind) && stock == 0 && stock != null && stock_unlimited != 1"
             depressed
             text
             color="red lighten-1"
@@ -116,7 +136,7 @@
           </v-btn>
            <!-- /売り切れ -->
           <v-btn
-            v-if="apparelFlg && getStock(productId) && stock == 0 && stock != null"
+            v-if="apparelFlg && getStock(productId) && stock == 0 && stock != null && stock_unlimited != 1"
             depressed
             text
             color="red lighten-1"
@@ -153,6 +173,8 @@ export default {
   auth: false,
   data: () => ({
     stock: null,
+    sale_limit: null,
+    stock_unlimited: null,
     total_quantity: 0,
     productId: '',
     productName: '',
@@ -186,6 +208,8 @@ export default {
       )
       if (stamp[0] != "" && stamp[0] != null ){
         this.stock = stamp[0].stock
+        this.stock_unlimited = stamp[0].stock_unlimited
+        this.sale_limit = stamp[0].sale_limit
       }
     },
     async getStock(seasonPassKind) {
@@ -195,6 +219,8 @@ export default {
       )
       if (stamp[0] != "" && stamp[0] != null ){
         this.stock = stamp[0].stock
+        this.stock_unlimited = stamp[0].stock_unlimited
+        this.sale_limit = stamp[0].sale_limit
       }
     },
     // 商品情報の取得
@@ -259,6 +285,45 @@ export default {
           return
         }
         this.productId = this.seasonPassKind
+        let result = await this.$auth.ctx.$axios.get(`rcms-api/1/shop/product/list?topics_id=${this.$route.params.id}`)
+        let response3 = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
+        let stamp = result.data.list.filter(item =>
+          this.seasonPassKind == item.product_id
+        )
+        let product_num = response3.data.details.items.filter(item =>
+          this.seasonPassKind == item.product_id
+        )
+        if (stamp[0] != "" && stamp[0] != null &&  product_num[0] != "" && product_num[0] != null){
+          this.sale_limit = stamp[0].sale_limit
+          this.product_sum = product_num[0].quantity
+          if(product_num[0].quantity == stamp[0].sale_limit){
+            this.$store.dispatch("snackbar/setError", "購入可能数を超えています。")
+            this.$store.dispatch("snackbar/snackOn")
+            return   
+          }
+        }
+      }
+      
+      // シーズンパス以外の場合
+      if(this.apparelFlg) {
+        this.productId = this.productId
+        let result = await this.$auth.ctx.$axios.get(`rcms-api/1/shop/product/list?topics_id=${this.$route.params.id}`)
+        let response3 = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
+        let stamp = result.data.list.filter(item =>
+          this.productId == item.product_id
+        )
+        let product_num = response3.data.details.items.filter(item =>
+          this.productId == item.product_id
+        )
+        if (stamp[0] != "" && stamp[0] != null &&  product_num[0] != "" && product_num[0] != null){
+          this.sale_limit = stamp[0].sale_limit
+          this.product_sum = product_num[0].quantity
+          if(product_num[0].quantity == stamp[0].sale_limit){
+            this.$store.dispatch("snackbar/setError", "購入可能数を超えています。")
+            this.$store.dispatch("snackbar/snackOn")
+            return   
+          }
+        }
       }
 
       // 商品をカートに保存する
