@@ -165,22 +165,151 @@
       </v-col>
     </v-row>
     
-    <!-- <v-row class="p-list">
+    <v-row class="p-list">
       <v-col cols="4" class="p-header">
-        <v-subheader>住所</v-subheader>
+        <v-subheader>配送先住所</v-subheader>
       </v-col>
       <v-col cols="8">
-        <div class="p-cell address">
-          <v-text-field
-            id="address"
-            v-model="address"
-            type="number"
-            label="住所"
-            outlined
-          />
+        <v-radio-group v-model="address_elected" @change=getProductInfo()>
+          <v-radio label="FC IMABARI Sailors' Clubにご登録の住所へ配送をご希望の場合" value="login-address" />
+          <v-radio label="その他の住所へ配送をご希望の場合" value="new-address" />
+        </v-radio-group>
+        <div v-if="address_elected == 'new-address'" class="card-wrapper">
+          <v-container fluid>
+            <v-row>
+              <v-col cols="4">
+                <v-subheader>
+                  <span style="color: red;">*</span>お名前
+                </v-subheader>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col  cols="12" sm="6">
+                <v-text-field
+                  v-model="name1"
+                  label="姓"
+                  :rules="[rules.required]"
+                  hint="ハイフンなしの半角数字7桁をご入力ください"
+                  counter
+                  outlined
+                />
+              </v-col>
+              <v-col  cols="12" sm="6">
+              <v-text-field
+                v-model="name2"
+                label="名"
+                :rules="[rules.required]"
+                hint="ハイフンなしの半角数字7桁をご入力ください"
+                counter
+                outlined
+              />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="4">
+                <v-subheader>
+                  <span style="color: red;">*</span>郵便番号
+                </v-subheader>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="zip_code"
+                  label="郵便番号"
+                  type="number"
+                  :rules="[rules.required, rules.zip_length]"
+                  hint="ハイフンなしの半角数字7桁をご入力ください"
+                  counter
+                  outlined
+                />
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="4">
+                <v-subheader>
+                  <span style="color: red;">*</span>都道府県
+                </v-subheader>
+              </v-col>
+              <v-col cols="12">
+                <v-select
+                  v-model="tdfk_cd"
+                  :items="arrTdfk_cd"
+                  :rules="[rules.required]"
+                  @change=getProductInfo()
+                  item-text="name"
+                  item-value="code"
+                  menu-props="auto"
+                  label="都道府県を選択してください"
+                  hide-details
+                  single-line
+                  outlined
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="4">
+                <v-subheader>
+                  <span style="color: red;">*</span>市区町村
+                </v-subheader>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="address1"
+                  label="市区町村"
+                  :rules="[rules.required]"
+                  outlined
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="4">
+                <v-subheader>
+                  <span style="color: red;">*</span>番地
+                </v-subheader>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="address2"
+                  label="番地"
+                  :rules="[rules.required]"
+                  outlined
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="4">
+                <v-subheader>建物名／部屋番号</v-subheader>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="address3"
+                  label="建物名／部屋番号"
+                  outlined
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="4">
+                <v-subheader>
+                  <span style="color: red;">*</span>電話番号
+                </v-subheader>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="tel"
+                  label="電話番号"
+                  type="tel"
+                  :rules="[rules.required, rules.tel]"
+                  hint="ハイフンなしの半角数字をご入力ください"
+                  counter
+                  outlined
+                />
+              </v-col>
+            </v-row>
+          </v-container>
         </div>
       </v-col>
-    </v-row> -->
+    </v-row>
 
     <v-row class="p-list">
       <v-col cols="4" class="p-header">
@@ -224,10 +353,66 @@ export default {
   data() {
     return {
       loading: false,
-      //productIds: [],
       products: [],
-      // address: "",
+      name1: "",
+      name2: "",
+      zip_code: "",
+      tdfk_cd: "",
+      address1: "",
+      address2: "",
+      address3: "",
+      tel: "",
+      arrTdfk_cd: [
+        { code: "01", name: "北海道" },
+        { code: "02", name: "青森県" },
+        { code: "03", name: "岩手県" },
+        { code: "04", name: "宮城県" },
+        { code: "05", name: "秋田県" },
+        { code: "06", name: "山形県" },
+        { code: "07", name: "福島県" },
+        { code: "08", name: "茨城県" },
+        { code: "09", name: "栃木県" },
+        { code: "10", name: "群馬県" },
+        { code: "11", name: "埼玉県" },
+        { code: "12", name: "千葉県" },
+        { code: "13", name: "東京都" },
+        { code: "14", name: "神奈川県" },
+        { code: "15", name: "新潟県" },
+        { code: "16", name: "富山県" },
+        { code: "17", name: "石川県" },
+        { code: "18", name: "福井県" },
+        { code: "19", name: "山梨県" },
+        { code: "20", name: "長野県" },
+        { code: "21", name: "岐阜県" },
+        { code: "22", name: "静岡県" },
+        { code: "23", name: "愛知県" },
+        { code: "24", name: "三重県" },
+        { code: "25", name: "滋賀県" },
+        { code: "26", name: "京都府" },
+        { code: "27", name: "大阪府" },
+        { code: "28", name: "兵庫県" },
+        { code: "29", name: "奈良県" },
+        { code: "30", name: "和歌山県" },
+        { code: "31", name: "鳥取県" },
+        { code: "32", name: "島根県" },
+        { code: "33", name: "岡山県" },
+        { code: "34", name: "広島県" },
+        { code: "35", name: "山口県" },
+        { code: "36", name: "徳島県" },
+        { code: "37", name: "香川県" },
+        { code: "38", name: "愛媛県" },
+        { code: "39", name: "高知県" },
+        { code: "40", name: "福岡県" },
+        { code: "41", name: "佐賀県" },
+        { code: "42", name: "長崎県" },
+        { code: "43", name: "熊本県" },
+        { code: "44", name: "大分県" },
+        { code: "45", name: "宮崎県" },
+        { code: "46", name: "鹿児島県" },
+        { code: "47", name: "沖縄県" },
+      ],
       selectedBox: [],
+      address_elected: "login-address",
       ecPaymentId: "61",
       quantities: [1,2,3,4,5,6,7,8,9,10],
       cardName: "",
@@ -249,6 +434,11 @@ export default {
         is_card_number: (v) =>
           (v.length >= 14 && v.length <= 16) ||
           "16桁から18桁の数字で入力してください",
+        zip_length: (v) => v.length == 7 || "7文字の半角数字で入力してください",
+        tel: (v) =>
+          v.length == 0 ||
+          /^0[0-9]{9,10}$/.test(v) ||
+          "ハイフンなしの半角数字をご入力ください",
       },
     }
   },
@@ -262,37 +452,69 @@ export default {
   },
   methods: {
     async getProductInfo() {
+      let self = this
       // kurocoからデータを取得してみる
-      this.products = []
-      this.seasonPassFlg = false
-      let tdfk_cd = this.$auth.user.tdfk_cd
-      let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}?tdfk_cd=${tdfk_cd}`)
-      // 送料の設定
-      this.deliv_fee = parseInt(response.data.details.deliv_fee)
-      this.totalPrice = parseInt(response.data.details.total)
-      // let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
-      // 送料の設定
-      // this.deliv_fee = parseInt(response.data.details.deliv_fee)
-      if(response.data.details.items) {
-        response.data.details.items.forEach((item, index) => {
-          let self = this
-          this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/${item.product_id}`).then((productInfoResponse) => {
-            // シーズンパス稼働波の判定
-            if(productInfoResponse.data.details.product_data.contents_type == process.env.SEASON_PASS_CATEGORY_ID) {
-              self.seasonPassFlg = true
-            }
-            self.products.push({
-              id:       item.product_id,
-              quantity: item.quantity,
-              title:    productInfoResponse.data.details.topics_name,
-              price:    productInfoResponse.data.details.product_data.ext_col_04,
-              size:     productInfoResponse.data.details.product_name,
-              image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
+      self.products = []
+      self.seasonPassFlg = false
+      if(self.address_elected == 'new-address') {
+        let tdfk_cd = self.tdfk_cd
+        let response = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${self.$auth.user.ec_cart_id}?tdfk_cd=${tdfk_cd}`)
+        // 送料の設定
+        self.deliv_fee = parseInt(response.data.details.deliv_fee)
+        self.totalPrice = parseInt(response.data.details.total)
+        // let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
+        // 送料の設定
+        // this.deliv_fee = parseInt(response.data.details.deliv_fee)
+        if(response.data.details.items) {
+          response.data.details.items.forEach((item, index) => {
+            let self = this
+            self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/${item.product_id}`).then((productInfoResponse) => {
+              // シーズンパス稼働波の判定
+              if(productInfoResponse.data.details.product_data.contents_type == process.env.SEASON_PASS_CATEGORY_ID) {
+                self.seasonPassFlg = true
+              }
+              self.products.push({
+                id:       item.product_id,
+                quantity: item.quantity,
+                title:    productInfoResponse.data.details.topics_name,
+                price:    productInfoResponse.data.details.product_data.ext_col_04,
+                size:     productInfoResponse.data.details.product_name,
+                image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
+              })
             })
           })
-        })
+        }
+      } else if(self.address_elected == 'login-address') {
+        self.products = []
+        self.seasonPassFlg = false
+        let tdfk_cd = self.$auth.user.tdfk_cd
+        let response = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${self.$auth.user.ec_cart_id}?tdfk_cd=${tdfk_cd}`)
+        // 送料の設定
+        self.deliv_fee = parseInt(response.data.details.deliv_fee)
+        self.totalPrice = parseInt(response.data.details.total)
+        // let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
+        // 送料の設定
+        // this.deliv_fee = parseInt(response.data.details.deliv_fee)
+        if(response.data.details.items) {
+          response.data.details.items.forEach((item, index) => {
+            let self = this
+            self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/${item.product_id}`).then((productInfoResponse) => {
+              // シーズンパス稼働波の判定
+              if(productInfoResponse.data.details.product_data.contents_type == process.env.SEASON_PASS_CATEGORY_ID) {
+                self.seasonPassFlg = true
+              }
+              self.products.push({
+                id:       item.product_id,
+                quantity: item.quantity,
+                title:    productInfoResponse.data.details.topics_name,
+                price:    productInfoResponse.data.details.product_data.ext_col_04,
+                size:     productInfoResponse.data.details.product_name,
+                image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
+              })
+            })
+          })
+        }
       }
-      // 商品データの取得
     },
     async executePayment() {
       this.loading = true
@@ -308,80 +530,174 @@ export default {
       //    // 書き込み完了
       //  })
        // カード払い
-       if(self.ecPaymentId == 61) {
-         let paygentToken = new PaygentToken()
-         paygentToken.createToken(
-           process.env.PAYGENT_MERCHANT_ID,
-           process.env.PAYGENT_TOKEN,
-           {
-             card_number:  self.cardNumber,
-             expire_year:  self.cardYear,
-             expire_month: self.cardMonth,
-             cvc:          self.cardCvv,
-             name:         self.cardName,
-           },
-           function(response) {
-             if(response.result != "0000") {
-               // paygentのエラーコードの種類が判明したらハンドリングする
-               self.$store.dispatch(
-                 "snackbar/setMessage",
-                 "クレジットカード情報に誤りがあります。ご確認ください"
-               )
-               self.$store.dispatch("snackbar/snackOn")
-               self.loading = false
-               return
+       if(self.address_elected == 'new-address'){
+         if(self.ecPaymentId == 61) {
+           let paygentToken = new PaygentToken()
+           paygentToken.createToken(
+             process.env.PAYGENT_MERCHANT_ID,
+             process.env.PAYGENT_TOKEN,
+             {
+               card_number:  self.cardNumber,
+               expire_year:  self.cardYear,
+               expire_month: self.cardMonth,
+               cvc:          self.cardCvv,
+               name:         self.cardName,
+             },
+             function(response) {
+               if(response.result != "0000") {
+                 // paygentのエラーコードの種類が判明したらハンドリングする
+                 self.$store.dispatch(
+                   "snackbar/setMessage",
+                   "クレジットカード情報に誤りがあります。ご確認ください"
+                 )
+                 self.$store.dispatch("snackbar/snackOn")
+                 self.loading = false
+                 return
+               }
+               self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
+                 ec_payment_id: parseInt(self.ecPaymentId),
+                 ec_cart_id:    self.$auth.user.ec_cart_id,
+                 card_token:    response.tokenizedCardObject.token,
+                 order_note:    self.order_note,
+                 shipping_address: {
+                   name1:    self.name1,
+                   name2:    self.name2,
+                   zip_code: self.zip_code,
+                   tdfk_cd:  self.tdfk_cd,
+                   address1: self.address1,
+                   address2: self.address2,
+                   address3: self.address3,
+                   tel:      self.tel,
+                 },
+               }).then((response) => {
+                 console.warn("成功!!!!!")
+                 console.warn(response)
+                 self.$store.dispatch("snackbar/snackOn")
+                 self.$router.push("/ec/done")
+                 self.loading = false
+               }).catch(function (error) {
+                 self.$store.dispatch(
+                   "snackbar/setError",
+                   error.response.data.errors?.[0]
+                 )
+                 self.$store.dispatch("snackbar/snackOn")
+                 self.loading = false
+                 return
+               })
              }
-             self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
-               ec_payment_id: parseInt(self.ecPaymentId),
-               ec_cart_id:    self.$auth.user.ec_cart_id,
-               card_token:    response.tokenizedCardObject.token,
-               order_note:    self.order_note,
-             }).then((response) => {
-               console.warn("成功!!!!!")
-               console.warn(response)
-               self.$store.dispatch("snackbar/snackOn")
-               self.$router.push("/ec/done")
-               self.loading = false
-             }).catch(function (error) {
-               self.$store.dispatch(
-                 "snackbar/setError",
-                 error.response.data.errors?.[0]
-               )
-               self.$store.dispatch("snackbar/snackOn")
-               self.loading = false
-               return
-             })
-           }
-         )
+           )
+         } else {
+           // 銀行振り込み
+           self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
+             ec_payment_id: parseInt(self.ecPaymentId),
+             ec_cart_id:    self.$auth.user.ec_cart_id,
+             order_note:    self.order_note,
+             shipping_address: {
+               name1:    self.name1,
+               name2:    self.name2,
+               zip_code: self.zip_code,
+               tdfk_cd:  self.tdfk_cd,
+               address1: self.address1,
+               address2: self.address2,
+               address3: self.address3,
+               tel:      self.tel,
+             },
+           }).then(() => {
+             console.warn("成功!!")
+             self.$store.dispatch(
+               "snackbar/setMessage",
+               "購入完了メールをご確認の上、決済手続きをお願いいたします。"
+             )
+             self.$store.dispatch("snackbar/snackOn")
+             self.$router.push("/ec/done")
+             self.loading = false
+           }).catch(function (error) {
+             console.warn("!!! error !!!!!!")
+             console.warn(error)
+             self.$store.dispatch(
+               "snackbar/setError",
+               error.response.data.errors?.[0]
+             )
+             self.$store.dispatch("snackbar/snackOn")
+             self.loading = false
+           })
+         }
        } else {
-         // 銀行振り込み
-         self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
-           ec_payment_id: parseInt(self.ecPaymentId),
-           ec_cart_id:    self.$auth.user.ec_cart_id,
-           order_note:    self.order_note,
-         }).then(() => {
-           console.warn("成功!!")
-           self.$store.dispatch(
-             "snackbar/setMessage",
-             "購入完了メールをご確認の上、決済手続きをお願いいたします。"
+         if(self.ecPaymentId == 61) {
+           let paygentToken = new PaygentToken()
+           paygentToken.createToken(
+             process.env.PAYGENT_MERCHANT_ID,
+             process.env.PAYGENT_TOKEN,
+             {
+               card_number:  self.cardNumber,
+               expire_year:  self.cardYear,
+               expire_month: self.cardMonth,
+               cvc:          self.cardCvv,
+               name:         self.cardName,
+             },
+             function(response) {
+               if(response.result != "0000") {
+                 // paygentのエラーコードの種類が判明したらハンドリングする
+                 self.$store.dispatch(
+                   "snackbar/setMessage",
+                   "クレジットカード情報に誤りがあります。ご確認ください"
+                 )
+                 self.$store.dispatch("snackbar/snackOn")
+                 self.loading = false
+                 return
+               }
+               self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
+                 ec_payment_id: parseInt(self.ecPaymentId),
+                 ec_cart_id:    self.$auth.user.ec_cart_id,
+                 card_token:    response.tokenizedCardObject.token,
+                 order_note:    self.order_note,
+               }).then((response) => {
+                 console.warn("成功!!!!!")
+                 console.warn(response)
+                 self.$store.dispatch("snackbar/snackOn")
+                 self.$router.push("/ec/done")
+                 self.loading = false
+               }).catch(function (error) {
+                 self.$store.dispatch(
+                   "snackbar/setError",
+                   error.response.data.errors?.[0]
+                 )
+                 self.$store.dispatch("snackbar/snackOn")
+                 self.loading = false
+                 return
+               })
+             }
            )
-           self.$store.dispatch("snackbar/snackOn")
-           self.$router.push("/ec/done")
-           self.loading = false
-         }).catch(function (error) {
-           console.warn("!!! error !!!!!!")
-           console.warn(error)
-           self.$store.dispatch(
-             "snackbar/setError",
-             error.response.data.errors?.[0]
-           )
-           self.$store.dispatch("snackbar/snackOn")
-           self.loading = false
-         })
+         } else {
+           // 銀行振り込み
+           self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
+             ec_payment_id: parseInt(self.ecPaymentId),
+             ec_cart_id:    self.$auth.user.ec_cart_id,
+             order_note:    self.order_note,
+           }).then(() => {
+             console.warn("成功!!")
+             self.$store.dispatch(
+               "snackbar/setMessage",
+               "購入完了メールをご確認の上、決済手続きをお願いいたします。"
+             )
+             self.$store.dispatch("snackbar/snackOn")
+             self.$router.push("/ec/done")
+             self.loading = false
+           }).catch(function (error) {
+             console.warn("!!! error !!!!!!")
+             console.warn(error)
+             self.$store.dispatch(
+               "snackbar/setError",
+               error.response.data.errors?.[0]
+             )
+             self.$store.dispatch("snackbar/snackOn")
+             self.loading = false
+           })
+         }
        }
     },
     async removeProduct(productId) {
-      let response = await this.$auth.ctx.$axios.post(`/rcms-api/1/shop/cart/delete`, {
+      await this.$auth.ctx.$axios.post(`/rcms-api/1/shop/cart/delete`, {
         ec_cart_id: this.$auth.user.ec_cart_id,
         item: {
           product_id: productId,
