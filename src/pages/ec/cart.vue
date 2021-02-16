@@ -189,7 +189,6 @@
                   v-model="name1"
                   label="姓"
                   :rules="[rules.required]"
-                  hint="ハイフンなしの半角数字7桁をご入力ください"
                   counter
                   outlined
                 />
@@ -199,7 +198,6 @@
                 v-model="name2"
                 label="名"
                 :rules="[rules.required]"
-                hint="ハイフンなしの半角数字7桁をご入力ください"
                 counter
                 outlined
               />
