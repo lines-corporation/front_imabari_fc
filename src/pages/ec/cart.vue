@@ -169,27 +169,24 @@
       <v-col cols="4" class="p-header">
         <v-subheader>配送先住所</v-subheader>
       </v-col>
-      <v-col cols="8">
+      <v-col cols="8" class="translate">
         <v-radio-group v-model="address_elected" @change=getProductInfo()>
           <v-radio label="FC IMABARI Sailors' Clubにご登録の住所へ配送をご希望の場合" value="login-address" />
           <v-radio label="その他の住所へ配送をご希望の場合" value="new-address" />
         </v-radio-group>
-        <div v-if="address_elected == 'new-address'" class="card-wrapper">
+        <div v-if="address_elected == 'new-address'" class="card-wrapper" style="height: 820px;">
           <v-container fluid>
-            <v-row>
+            <v-row dense>
               <v-col cols="4">
-                <v-subheader>
-                  <span style="color: red;">*</span>お名前
-                </v-subheader>
+                <span style="color: red;">※</span>お名前
               </v-col>
             </v-row>
-            <v-row>
+            <v-row dense>
               <v-col  cols="12" sm="6">
                 <v-text-field
                   v-model="name1"
                   label="姓"
-                  :rules="[rules.required]"
-                  counter
+                  :rules="[rules.name]"
                   outlined
                 />
               </v-col>
@@ -197,86 +194,75 @@
               <v-text-field
                 v-model="name2"
                 label="名"
-                :rules="[rules.required]"
-                counter
+                :rules="[rules.name]"
                 outlined
               />
               </v-col>
             </v-row>
-            <v-row>
+            <v-row dense class="translate-zip-code">
               <v-col cols="4">
-                <v-subheader>
-                  <span style="color: red;">*</span>郵便番号
-                </v-subheader>
+                <span style="color: red;">※</span>郵便番号
               </v-col>
               <v-col cols="12">
                 <v-text-field
                   v-model="zip_code"
                   label="郵便番号"
                   type="number"
-                  :rules="[rules.required, rules.zip_length]"
+                  :rules="[rules.zip_required, rules.zip_length]"
                   hint="ハイフンなしの半角数字7桁をご入力ください"
-                  counter
                   outlined
                 />
               </v-col>
             </v-row>
 
-            <v-row>
+            <v-row dense class="translate-tdfk-cd">
               <v-col cols="4">
-                <v-subheader>
-                  <span style="color: red;">*</span>都道府県
-                </v-subheader>
+                <span style="color: red;">※</span>都道府県
               </v-col>
               <v-col cols="12">
                 <v-select
                   v-model="tdfk_cd"
                   :items="arrTdfk_cd"
-                  :rules="[rules.required]"
+                  :rules="[rules.tdfk_cd]"
                   @change=getProductInfo()
                   item-text="name"
                   item-value="code"
                   menu-props="auto"
                   label="都道府県を選択してください"
-                  hide-details
                   single-line
                   outlined
                 />
               </v-col>
             </v-row>
-            <v-row>
+            <v-row dense class="translate-address1">
               <v-col cols="4">
-                <v-subheader>
-                  <span style="color: red;">*</span>市区町村
-                </v-subheader>
+                <span style="color: red;">※</span>市区町村
               </v-col>
               <v-col cols="12">
                 <v-text-field
                   v-model="address1"
                   label="市区町村"
-                  :rules="[rules.required]"
+                  :rules="[rules.address]"
                   outlined
                 />
               </v-col>
             </v-row>
-            <v-row>
+            <v-row dense class="translate-address2">
               <v-col cols="4">
-                <v-subheader>
-                  <span style="color: red;">*</span>番地
-                </v-subheader>
+                <span style="color: red;">※</span>番地
               </v-col>
               <v-col cols="12">
                 <v-text-field
                   v-model="address2"
                   label="番地"
-                  :rules="[rules.required]"
+                  :rules="[rules.address]"
                   outlined
                 />
               </v-col>
             </v-row>
-            <v-row>
+            <v-row dense class="translate-address3">
               <v-col cols="4">
-                <v-subheader>建物名／部屋番号</v-subheader>
+                <span>建物名／部屋番号</span>
               </v-col>
               <v-col cols="12">
                 <v-text-field
@@ -286,20 +272,17 @@
                 />
               </v-col>
             </v-row>
-            <v-row>
+            <v-row dense class="translate-tel">
               <v-col cols="4">
-                <v-subheader>
-                  <span style="color: red;">*</span>電話番号
-                </v-subheader>
+                <span style="color: red;">※</span>電話番号
               </v-col>
               <v-col cols="12">
                 <v-text-field
                   v-model="tel"
                   label="電話番号"
                   type="tel"
-                  :rules="[rules.required, rules.tel]"
+                  :rules="[rules.tel_required, rules.tel]"
                   hint="ハイフンなしの半角数字をご入力ください"
-                  counter
                   outlined
                 />
               </v-col>
@@ -424,7 +407,11 @@ export default {
       // seasonPassRemarks: "",
       order_note: "",
       rules: {
-        required: (value) => !!value || "この項目は必須入力です",
+        name: (value) => !!value || "お名前をご確認ください。",
+        zip_required: (value) => !!value || "郵便番号をご確認ください。",
+        tdfk_cd: (value) => !!value || "都道府県が選択されていません。",
+        address: (value) => !!value || "住所をご確認ください。",
+        tel_required: (value) => !!value || "電話番号をご確認ください。",
         password_min: (v) => v.length >= 8 || "最低8文字以上を入力してください",
         zip_length: (v) => v.length <= 7 || "7文字の半角数字で入力してください",
         is_hankaku: (v) =>
@@ -719,7 +706,22 @@ export default {
 }
 </script>
 <style scoped>
-.address{
-  transform:translateY(30%);
+.translate-zip-code{
+  transform:translateY(-10%);
+}
+.translate-tdfk-cd{
+  transform:translateY(-20%);
+}
+.translate-address1{
+  transform:translateY(-30%);
+}
+.translate-address2{
+  transform:translateY(-40%);
+}
+.translate-address3{
+  transform:translateY(-50%);
+}
+.translate-tel{
+  transform:translateY(-60%);
 }
 </style>
