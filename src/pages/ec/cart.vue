@@ -121,7 +121,6 @@
                 ]"
                 menu-props="auto"
                 label="月"
-                hide-details
                 single-line
                 outlined
                 :rules="[rules.required]"
@@ -145,7 +144,6 @@
                 ]"
                 menu-props="auto"
                 label="年"
-                hide-details
                 single-line
                 outlined
                 :rules="[rules.required]"
@@ -186,7 +184,7 @@
                 <v-text-field
                   v-model="name1"
                   label="姓"
-                  :rules="[rules.name]"
+                  :rules="[rules.required]"
                   outlined
                 />
               </v-col>
@@ -194,7 +192,7 @@
               <v-text-field
                 v-model="name2"
                 label="名"
-                :rules="[rules.name]"
+                :rules="[rules.required]"
                 outlined
               />
               </v-col>
@@ -208,7 +206,7 @@
                   v-model="zip_code"
                   label="郵便番号"
                   type="number"
-                  :rules="[rules.zip_required, rules.zip_length]"
+                  :rules="[rules.required, rules.zip_length]"
                   hint="ハイフンなしの半角数字7桁をご入力ください"
                   outlined
                 />
@@ -223,7 +221,7 @@
                 <v-select
                   v-model="tdfk_cd"
                   :items="arrTdfk_cd"
-                  :rules="[rules.tdfk_cd]"
+                  :rules="[rules.required]"
                   @change=getProductInfo()
                   item-text="name"
                   item-value="code"
@@ -242,7 +240,7 @@
                 <v-text-field
                   v-model="address1"
                   label="市区町村"
-                  :rules="[rules.address]"
+                  :rules="[rules.required]"
                   outlined
                 />
               </v-col>
@@ -255,7 +253,7 @@
                 <v-text-field
                   v-model="address2"
                   label="番地"
-                  :rules="[rules.address]"
+                  :rules="[rules.required]"
                   outlined
                 />
               </v-col>
@@ -281,7 +279,7 @@
                   v-model="tel"
                   label="電話番号"
                   type="tel"
-                  :rules="[rules.tel_required, rules.tel]"
+                  :rules="[rules.required, rules.tel]"
                   hint="ハイフンなしの半角数字をご入力ください"
                   outlined
                 />
@@ -408,11 +406,6 @@ export default {
       order_note: "",
       rules: {
         required: (value) => !!value || "この項目は必須入力です",
-        name: (value) => !!value || "お名前をご確認ください。",
-        zip_required: (value) => !!value || "郵便番号をご確認ください。",
-        tdfk_cd: (value) => !!value || "都道府県が選択されていません。",
-        address: (value) => !!value || "住所をご確認ください。",
-        tel_required: (value) => !!value || "電話番号をご確認ください。",
         password_min: (v) => v.length >= 8 || "最低8文字以上を入力してください",
         zip_length: (v) => v.length <= 7 || "7文字の半角数字で入力してください",
         is_hankaku: (v) =>
@@ -530,10 +523,10 @@ export default {
                name:         self.cardName,
              },
              function(response) {
-               if(response.result != "0000") {
+               if(response.result != "0000" || self.cardYear == "" || self.cardMonth == "" || self.cardCvv == "" || self.cardName =="") {
                  // paygentのエラーコードの種類が判明したらハンドリングする
                  self.$store.dispatch(
-                   "snackbar/setMessage",
+                   "snackbar/setError",
                    "クレジットカード情報に誤りがあります。ご確認ください"
                  )
                  self.$store.dispatch("snackbar/snackOn")
@@ -558,13 +551,17 @@ export default {
                }).then((response) => {
                  console.warn("成功!!!!!")
                  console.warn(response)
+                 self.$store.dispatch(
+                   "snackbar/setMessage",
+                   "購入完了メールをご確認の上、決済手続きをお願いいたします。"
+                 )
                  self.$store.dispatch("snackbar/snackOn")
                  self.$router.push("/ec/done")
                  self.loading = false
                }).catch(function (error) {
                  self.$store.dispatch(
                    "snackbar/setError",
-                   error.response.data.errors?.[0]
+                   "配送先住所に誤りがあります。ご確認ください。"
                  )
                  self.$store.dispatch("snackbar/snackOn")
                  self.loading = false
@@ -602,7 +599,7 @@ export default {
              console.warn(error)
              self.$store.dispatch(
                "snackbar/setError",
-               error.response.data.errors?.[0]
+               "配送先住所に誤りがあります。ご確認ください。"
              )
              self.$store.dispatch("snackbar/snackOn")
              self.loading = false
@@ -622,10 +619,10 @@ export default {
                name:         self.cardName,
              },
              function(response) {
-               if(response.result != "0000") {
+               if(response.result != "0000" || self.cardYear == "" || self.cardMonth == "" || self.cardCvv == "" || self.cardName =="") {
                  // paygentのエラーコードの種類が判明したらハンドリングする
                  self.$store.dispatch(
-                   "snackbar/setMessage",
+                   "snackbar/setError",
                    "クレジットカード情報に誤りがあります。ご確認ください"
                  )
                  self.$store.dispatch("snackbar/snackOn")
@@ -640,13 +637,17 @@ export default {
                }).then((response) => {
                  console.warn("成功!!!!!")
                  console.warn(response)
+                 self.$store.dispatch(
+                   "snackbar/setMessage",
+                   "購入完了メールをご確認の上、決済手続きをお願いいたします。"
+                 )
                  self.$store.dispatch("snackbar/snackOn")
                  self.$router.push("/ec/done")
                  self.loading = false
                }).catch(function (error) {
                  self.$store.dispatch(
                    "snackbar/setError",
-                   error.response.data.errors?.[0]
+                   "クレジットカード情報に誤りがあります。ご確認ください"
                  )
                  self.$store.dispatch("snackbar/snackOn")
                  self.loading = false
@@ -674,7 +675,7 @@ export default {
              console.warn(error)
              self.$store.dispatch(
                "snackbar/setError",
-               error.response.data.errors?.[0]
+               "クレジットカード情報に誤りがあります。ご確認ください"
              )
              self.$store.dispatch("snackbar/snackOn")
              self.loading = false
