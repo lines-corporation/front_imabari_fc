@@ -182,7 +182,7 @@
               </v-col>
             </v-row>
             <v-row dense>
-              <v-col  cols="12" sm="6">
+              <v-col  cols="6" sm="6">
                 <v-text-field
                   v-model="name1"
                   label="姓"
@@ -190,7 +190,7 @@
                   outlined
                 />
               </v-col>
-              <v-col  cols="12" sm="6">
+              <v-col  cols="6" sm="6">
               <v-text-field
                 v-model="name2"
                 label="名"
@@ -407,6 +407,7 @@ export default {
       // seasonPassRemarks: "",
       order_note: "",
       rules: {
+        required: (value) => !!value || "この項目は必須入力です",
         name: (value) => !!value || "お名前をご確認ください。",
         zip_required: (value) => !!value || "郵便番号をご確認ください。",
         tdfk_cd: (value) => !!value || "都道府県が選択されていません。",
