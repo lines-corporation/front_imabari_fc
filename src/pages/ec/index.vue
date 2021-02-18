@@ -56,9 +56,12 @@
               
               <v-col cols="10" sm="6">
                 <v-text-field
+                  v-model="selectVal"
                   prepend-inner-icon="mdi-magnify"
                   class="content-border-redius head-border-redius"
                   label="商品検索"
+                  @blur="getProducts"
+                  @keyup.enter="getProducts"
                   centered
                   outlined
                   clearable
@@ -128,6 +131,7 @@
 export default {
   auth: false,
   data: () => ({
+    selectVal:"",
     flag: true,
     settings: [],
     cartItems: [],
@@ -150,52 +154,78 @@ export default {
   methods: {
     // 商品一覧の取得
     async getProducts() {
-      this.flag = true
-      // cnt 表示商品数
-      this.products = {}
-      let paramStr = '?cnt=999'
-      if(this.selectedCategory.length > 0) {
-        this.selectedCategory.forEach((categoryId, index) => {
-          paramStr += `&contents_type[]=${categoryId}`
+      let self = this
+      self.flag = true
+      if(self.selectVal == "" || self.selectVal == null || self.selectVal == undefined) {
+        let self = this
+        // cnt 表示商品数
+        self.products = {}
+        let paramStr = '?cnt=999'
+        if(self.selectedCategory.length > 0) {
+          self.selectedCategory.forEach((categoryId, index) => {
+            paramStr += `&contents_type[]=${categoryId}`
+          })
+        }
+        let response = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list${paramStr}`)
+        self.flag = false
+        console.warn(response)
+        // エラー検知
+        if(response.errors) {
+          // TODO エラー表示
+        }
+        // 商品名 topics_name
+        // id topics_id => これは種類別でこれにまとめたい
+        // 価格 price_02
+        // 商品説明 product_data.ext_col_01
+        // 詳細説明 product_data.ext_col_02
+        // 画像 product_data.ext_columns.group[0].file_url
+        //     ext_columns.group[0].file_url
+        // サイズ subject
+        // 最初のページ response.data.pageInfo.firstIndex
+        // 最後のページ response.data.pageInfo.lastIndex
+        // 現在のページ response.data.pageInfo.pageNo
+        response.data.list.forEach((product, index) => {
+          if(self.products[product.topics_id]) {
+            self.products[product.topics_id].data.push(product)
+          } else {
+            self.$set(self.products, product.topics_id,
+              {
+                name:      product.topics_name,
+                price:     product.product_data.ext_col_04,
+                description: product.product_data.ext_col_01,
+                // 注意書き?
+                note: product.product_data.ext_col_02,
+                images: self.pickupImages(product.product_data),
+                data: [product]
+              }
+            )
+          }
+        })
+      } else {
+        let self = this
+        self.products = {}
+        let paramStr = '?cnt=999'
+        let response = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list${paramStr}`)
+        self.flag = false
+        let result = response.data.list.filter(item => self.selectVal == item.topics_name)
+        result.forEach((product, index) => {
+          if(self.products[product.topics_id]) {
+            self.products[product.topics_id].data.push(product)
+          } else {
+            self.$set(self.products, product.topics_id,
+              {
+                name:      product.topics_name,
+                price:     product.product_data.ext_col_04,
+                description: product.product_data.ext_col_01,
+                // 注意書き?
+                note: product.product_data.ext_col_02,
+                images: self.pickupImages(product.product_data),
+                data: [product]
+              }
+            )
+          }
         })
       }
-      //let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list?contents_type[]=33&contents_type[]=32&cnt=12`)
-      let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list${paramStr}`)
-      this.flag = false
-      console.warn(response)
-      // エラー検知
-      if(response.errors) {
-        // TODO エラー表示
-      }
-      // 商品名 topics_name
-      // id topics_id => これは種類別でこれにまとめたい
-      // 価格 price_02
-      // 商品説明 product_data.ext_col_01
-      // 詳細説明 product_data.ext_col_02
-      // 画像 product_data.ext_columns.group[0].file_url
-      //     ext_columns.group[0].file_url
-      // サイズ subject
-      // 最初のページ response.data.pageInfo.firstIndex
-      // 最後のページ response.data.pageInfo.lastIndex
-      // 現在のページ response.data.pageInfo.pageNo
-      response.data.list.forEach((product, index) => {
-        if(this.products[product.topics_id]) {
-          this.products[product.topics_id].data.push(product)
-        } else {
-          this.$set(this.products, product.topics_id,
-            {
-              name:      product.topics_name,
-              price:     product.product_data.ext_col_04,
-              description: product.product_data.ext_col_01,
-              // 注意書き?
-              note: product.product_data.ext_col_02,
-              images: this.pickupImages(product.product_data),
-              data: [product]
-            }
-          )
-        }
-      })
-      console.warn(this.products)
     },
     async getCategories() {
       let response = await this.$auth.ctx.$axios.get("/rcms-api/1/shop/categories")
