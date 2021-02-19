@@ -435,64 +435,32 @@ export default {
       // kurocoからデータを取得してみる
       self.products = []
       self.seasonPassFlg = false
-      if(self.address_elected == 'new-address') {
-        let tdfk_cd = self.tdfk_cd
-        let response = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${self.$auth.user.ec_cart_id}?tdfk_cd=${tdfk_cd}`)
-        // 送料の設定
-        self.deliv_fee = parseInt(response.data.details.deliv_fee)
-        self.totalPrice = parseInt(response.data.details.total)
-        // let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
-        // 送料の設定
-        // this.deliv_fee = parseInt(response.data.details.deliv_fee)
-        if(response.data.details.items) {
-          response.data.details.items.forEach((item, index) => {
-            let self = this
-            self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/${item.product_id}`).then((productInfoResponse) => {
-              // シーズンパス稼働波の判定
-              if(productInfoResponse.data.details.product_data.contents_type == process.env.SEASON_PASS_CATEGORY_ID) {
-                self.seasonPassFlg = true
-              }
-              self.products.push({
-                id:       item.product_id,
-                quantity: item.quantity,
-                title:    productInfoResponse.data.details.topics_name,
-                price:    productInfoResponse.data.details.product_data.ext_col_04,
-                size:     productInfoResponse.data.details.product_name,
-                image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
-              })
+      let tdfk_cd = self.address_elected == 'new-address' ? self.tdfk_cd : self.$auth.user.tdfk_cd
+      let response = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${self.$auth.user.ec_cart_id}?tdfk_cd=${tdfk_cd}`)
+      // 送料の設定
+      self.deliv_fee = parseInt(response.data.details.deliv_fee)
+      self.totalPrice = parseInt(response.data.details.total)
+      // let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
+      // 送料の設定
+      // this.deliv_fee = parseInt(response.data.details.deliv_fee)
+      if(response.data.details.items) {
+        response.data.details.items.forEach((item, index) => {
+          let self = this
+          self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/${item.product_id}`).then((productInfoResponse) => {
+            // シーズンパス稼働波の判定
+            if(productInfoResponse.data.details.product_data.contents_type == process.env.SEASON_PASS_CATEGORY_ID) {
+              self.seasonPassFlg = true
+            }
+            self.products.push({
+              id:       item.product_id,
+              quantity: item.quantity,
+              title:    productInfoResponse.data.details.topics_name,
+              price:    productInfoResponse.data.details.product_data.ext_col_04,
+              size:     productInfoResponse.data.details.product_name,
+              image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
             })
           })
-        }
-      } else if(self.address_elected == 'login-address') {
-        self.products = []
-        self.seasonPassFlg = false
-        let tdfk_cd = self.$auth.user.tdfk_cd
-        let response = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${self.$auth.user.ec_cart_id}?tdfk_cd=${tdfk_cd}`)
-        // 送料の設定
-        self.deliv_fee = parseInt(response.data.details.deliv_fee)
-        self.totalPrice = parseInt(response.data.details.total)
-        // let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
-        // 送料の設定
-        // this.deliv_fee = parseInt(response.data.details.deliv_fee)
-        if(response.data.details.items) {
-          response.data.details.items.forEach((item, index) => {
-            let self = this
-            self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/${item.product_id}`).then((productInfoResponse) => {
-              // シーズンパス稼働波の判定
-              if(productInfoResponse.data.details.product_data.contents_type == process.env.SEASON_PASS_CATEGORY_ID) {
-                self.seasonPassFlg = true
-              }
-              self.products.push({
-                id:       item.product_id,
-                quantity: item.quantity,
-                title:    productInfoResponse.data.details.topics_name,
-                price:    productInfoResponse.data.details.product_data.ext_col_04,
-                size:     productInfoResponse.data.details.product_name,
-                image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
-              })
-            })
-          })
-        }
+        })
       }
     },
     async executePayment() {
@@ -508,69 +476,89 @@ export default {
       //  }).then(ref => {
       //    // 書き込み完了
       //  })
-       // カード払い
-       if(self.address_elected == 'new-address'){
-         if(self.ecPaymentId == 61) {
-           let paygentToken = new PaygentToken()
-           paygentToken.createToken(
-             process.env.PAYGENT_MERCHANT_ID,
-             process.env.PAYGENT_TOKEN,
-             {
-               card_number:  self.cardNumber,
-               expire_year:  self.cardYear,
-               expire_month: self.cardMonth,
-               cvc:          self.cardCvv,
-               name:         self.cardName,
-             },
-             function(response) {
-               if(response.result != "0000" || self.cardYear == "" || self.cardMonth == "" || self.cardCvv == "" || self.cardName =="") {
-                 // paygentのエラーコードの種類が判明したらハンドリングする
-                 self.$store.dispatch(
-                   "snackbar/setError",
-                   "クレジットカード情報に誤りがあります。ご確認ください"
-                 )
-                 self.$store.dispatch("snackbar/snackOn")
-                 self.loading = false
-                 return
-               }
-               self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
-                 ec_payment_id: parseInt(self.ecPaymentId),
-                 ec_cart_id:    self.$auth.user.ec_cart_id,
-                 card_token:    response.tokenizedCardObject.token,
-                 order_note:    self.order_note,
-                 shipping_address: {
-                   name1:    self.name1,
-                   name2:    self.name2,
-                   zip_code: self.zip_code,
-                   tdfk_cd:  self.tdfk_cd,
-                   address1: self.address1,
-                   address2: self.address2,
-                   address3: self.address3,
-                   tel:      self.tel,
-                 },
-               }).then((response) => {
-                 console.warn("成功!!!!!")
-                 console.warn(response)
-                 self.$store.dispatch(
-                   "snackbar/setMessage",
-                   "購入完了メールをご確認の上、決済手続きをお願いいたします。"
-                 )
-                 self.$store.dispatch("snackbar/snackOn")
-                 self.$router.push("/ec/done")
-                 self.loading = false
-               }).catch(function (error) {
-                 self.$store.dispatch(
-                   "snackbar/setError",
-                   "配送先住所に誤りがあります。ご確認ください。"
-                 )
-                 self.$store.dispatch("snackbar/snackOn")
-                 self.loading = false
-                 return
-               })
-             }
-           )
-         } else {
+
+      // その他の住所へ配送をご希望の場合
+      if(self.address_elected == 'new-address'){
+        // カード払い
+        if(self.ecPaymentId == 61) {
+          let paygentToken = new PaygentToken()
+          paygentToken.createToken(
+            process.env.PAYGENT_MERCHANT_ID,
+            process.env.PAYGENT_TOKEN,
+            {
+              card_number:  self.cardNumber,
+              expire_year:  self.cardYear,
+              expire_month: self.cardMonth,
+              cvc:          self.cardCvv,
+              name:         self.cardName,
+            },
+            function(response) {
+              if(response.result != "0000" || self.cardYear == "" || self.cardMonth == "" || self.cardCvv == "" || self.cardName =="") {
+                // paygentのエラーコードの種類が判明したらハンドリングする
+                self.$store.dispatch(
+                  "snackbar/setError",
+                  "クレジットカード情報に誤りがあります。ご確認ください"
+                )
+                self.$store.dispatch("snackbar/snackOn")
+                self.loading = false
+                return
+              }
+              if(self.name1 == "" || self.name2 == "" || self.zip_code == "" || self.tdfk_cd =="" || self.address1 =="" || self.address2 =="" || self.tel =="") {
+                self.$store.dispatch(
+                  "snackbar/setError",
+                  "配送先住所に誤りがあります。ご確認ください。"
+                )
+                self.$store.dispatch("snackbar/snackOn")
+                self.loading = false
+                return
+              }
+              self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
+                ec_payment_id: parseInt(self.ecPaymentId),
+                ec_cart_id:    self.$auth.user.ec_cart_id,
+                card_token:    response.tokenizedCardObject.token,
+                order_note:    self.order_note,
+                shipping_address: {
+                  name1:    self.name1,
+                  name2:    self.name2,
+                  zip_code: self.zip_code,
+                  tdfk_cd:  self.tdfk_cd,
+                  address1: self.address1,
+                  address2: self.address2,
+                  address3: self.address3,
+                  tel:      self.tel,
+                },
+              }).then((response) => {
+                console.warn("成功!!!!!")
+                console.warn(response)
+                self.$store.dispatch(
+                  "snackbar/setMessage",
+                  "購入完了メールをご確認の上、決済手続きをお願いいたします。"
+                )
+                self.$store.dispatch("snackbar/snackOn")
+                self.$router.push("/ec/done")
+                self.loading = false
+              }).catch(function (error) {
+                self.$store.dispatch(
+                  "snackbar/setError",
+                  error.response.data.errors?.[0]
+                )
+                self.$store.dispatch("snackbar/snackOn")
+                self.loading = false
+                return
+              })
+            }
+          )
+        } else {
            // 銀行振り込み
+           if(self.name1 == "" || self.name2 == "" || self.zip_code == "" || self.tdfk_cd =="" || self.address1 =="" || self.address2 =="" || self.tel =="") {
+             self.$store.dispatch(
+               "snackbar/setError",
+               "配送先住所に誤りがあります。ご確認ください。"
+             )
+             self.$store.dispatch("snackbar/snackOn")
+             self.loading = false
+             return
+           }
            self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
              ec_payment_id: parseInt(self.ecPaymentId),
              ec_cart_id:    self.$auth.user.ec_cart_id,
@@ -599,13 +587,14 @@ export default {
              console.warn(error)
              self.$store.dispatch(
                "snackbar/setError",
-               "配送先住所に誤りがあります。ご確認ください。"
+               error.response.data.errors?.[0]
              )
              self.$store.dispatch("snackbar/snackOn")
              self.loading = false
            })
          }
-       } else {
+       } else { // FC IMABARI Sailors' Clubにご登録の住所へ配送をご希望の場合
+         // カード払い
          if(self.ecPaymentId == 61) {
            let paygentToken = new PaygentToken()
            paygentToken.createToken(
@@ -647,7 +636,7 @@ export default {
                }).catch(function (error) {
                  self.$store.dispatch(
                    "snackbar/setError",
-                   "クレジットカード情報に誤りがあります。ご確認ください"
+                   error.response.data.errors?.[0]
                  )
                  self.$store.dispatch("snackbar/snackOn")
                  self.loading = false
@@ -675,7 +664,7 @@ export default {
              console.warn(error)
              self.$store.dispatch(
                "snackbar/setError",
-               "クレジットカード情報に誤りがあります。ご確認ください"
+               error.response.data.errors?.[0]
              )
              self.$store.dispatch("snackbar/snackOn")
              self.loading = false
