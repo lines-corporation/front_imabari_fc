@@ -337,12 +337,13 @@ export default {
             .then(() => {
               self.$store.dispatch(
                 "snackbar/setMessage",
-                self.success_message +
-                  "メールをご確認の上、決済手続きをお願いいたします。"
+                self.success_message
               )
               self.$store.dispatch("snackbar/snackOn")
-              self.$router.push("/")
-              self.loading = false
+              self.$auth.fetchUser().then(() => {
+                self.$router.push("/")
+                self.loading = false
+              })
             })
             .catch(function (error) {
               self.$store.dispatch(
