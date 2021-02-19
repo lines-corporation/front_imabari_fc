@@ -22,7 +22,7 @@
                 <v-subheader>料金プラン</v-subheader>
               </v-col>
               <v-col cols="8">
-                <p> FC今治 有料会員</p>
+               <p> FC今治 有料会員</p>
               </v-col>
             </v-row>
             <v-row>
@@ -41,12 +41,13 @@
                   コンビニ決済用のメールが送信されますので、そちらの案内にそってお支払いをお願いいたします。
                 </p>
                 <div v-if="ec_payment_id == '58'" class="card-wrapper">
+                  <p>クレジットカードの情報例</p>
                   <v-text-field
                     id="cardNumber"
                     v-model="cardNumber"
                     label="クレジットカード番号"
                     outlined
-                    :rules="[rules.required]"
+                    :rules="[rules.required, rules.cardNumber]"
                   />
                   <v-text-field
                     id="cardName"
@@ -151,7 +152,7 @@ export default {
       red_rockets: false,
       temp_user: false,
       success_message: "",
-      product_id: null,
+      product_id: "41249",
       product_id2: null,
       present: "1",
       ec_payment_id: "58",
@@ -165,6 +166,8 @@ export default {
         is_card_number: (v) =>
           (v.length >= 14 && v.length <= 16) ||
           "16桁から18桁の数字で入力してください",
+        cardNumber:(v) =>
+          !!v.match(/^[ｦ-ﾟ 0-9]*$/) || "半角英数字で入力してください",
       },
       cardName: "",
       cardNumber: "",
@@ -177,33 +180,6 @@ export default {
   mounted() {
     this.cardNumberTemp = this.otherCardMask
   },
-  created() {
-    let self = this
-    const group_ids = JSON.parse(JSON.stringify(this.$auth.user.group_ids))
-    Object.keys(group_ids).forEach(function (key) {
-      if (["113"].indexOf(key) !== -1) {
-        self.green_star = true
-        self.green_rockets = false
-        self.product_id = "41203"
-      }
-      if (["110"].indexOf(key) !== -1) {
-        self.red_star = true
-        self.red_rockets = false
-        self.product_id = "41202"
-      }
-      if (["111", "114"].indexOf(key) !== -1) {
-        self.$router.push("/")
-      }
-    })
-
-    if (!self.product_id && !self.green_rockets && !self.red_rockets) {
-      self.green_star = true
-      self.green_rockets = true
-      self.red_star = true
-      self.red_rockets = true
-      self.temp_user = true
-    }
-  },
   methods: {
     purchase() {
       this.loading = true
@@ -215,8 +191,10 @@ export default {
         } else {
           self.success_message = "アップグレードのお申し込みが完了しました"
         }
+        console.warn(`ec_payment_id: ${this.ec_payment_id}`)
 
         if (this.ec_payment_id == 58) {
+          console.warn("クレジット決済")
           // eslint-disable-next-line no-undef
           let paygentToken = new PaygentToken()
           paygentToken.createToken(
@@ -230,6 +208,8 @@ export default {
               name: self.cardName,
             },
             function (response) {
+              console.warn("クレジット決済 2")
+              console.warn(`product_id ${self.product_id}`)
               if (response.result == "0000") {
                 self.$auth.ctx.$axios
                   .post("/rcms-api/1/ec/purchase", {
@@ -271,21 +251,13 @@ export default {
             }
           )
         } else {
-          if (this.ec_payment_id != 58) {
-            if (self.product_id == "41201") {
-              self.product_id2 = "41209"
-            } else if (self.product_id == "41202") {
-              self.product_id2 = "41208"
-            } else if (self.product_id == "41203") {
-              self.product_id2 = "41210"
-            } else if (self.product_id == "41204") {
-              self.product_id2 = "41207"
-            }
-          }
+          // 銀行振り込み
+          // 銀行振り込みの場合にはproduct_idを差し替える
+          self.product_id = 41250
           self.$auth.ctx.$axios
             .post("/rcms-api/1/ec/purchase", {
               ec_payment_id: parseInt(self.ec_payment_id),
-              product_id: parseInt(self.product_id2),
+              product_id: parseInt(self.product_id),
               quantity: 1,
             })
             .then(() => {
