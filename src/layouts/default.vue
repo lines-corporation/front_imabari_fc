@@ -13,8 +13,10 @@
       <v-list>
         <v-list-item
           v-for="(item, i) in items"
-          :key="i"
           :to="item.to"
+          :href="item.link"
+          :key="i"
+          target="item.target"
           router
           exact
         >
@@ -66,23 +68,26 @@
 
     <v-footer color="#171C61" padless app absolute inset>
       <v-row justify="center" no-gutters>
-        <v-btn color="white" text rounded class="my-2" to="/inquiry">
+        <v-btn color="white" text rounded class="my-2" :href="inquiry_url" target="_blank">
           お問い合わせ
         </v-btn>
+        <!-- <v-btn color="white" text rounded class="my-2" to="/inquiry">
+          お問い合わせ
+        </v-btn> -->
         <v-btn color="white" text rounded class="my-2" to="/faq">
           よくある質問
         </v-btn>
         <v-btn color="white" text rounded class="my-2" to="/tokutei">
           特定商取引法に基づく表示
         </v-btn>
-        <v-col class="#171C61 text-center white--text" cols="12">
+        <!-- <v-col class="#171C61 text-center white--text" cols="12">
 
           <img
             src="@/assets/images/temp_icon.png"
             style="height: 100px; padding: 5px;"
           />
 
-        </v-col>
+        </v-col> -->
         <v-col class="#171C61 text-center white--text" cols="12">
           <span>Copyright FC Imabari. All rights reserved.</span>
         </v-col>
@@ -110,6 +115,7 @@
 export default {
   data() {
     return {
+      inquiry_url: "https://docs.google.com/forms/d/e/1FAIpQLSdYPh3YEm5fzrCxBVnEd64xvSVpHBwpaeKan0ODSa8thr6Gtw/viewform",
       clipped: false,
       drawer: false,
       fixed: false,
@@ -128,7 +134,8 @@ export default {
         {
           icon: "mdi-send",
           title: "お問い合わせ",
-          to: "/inquiry",
+          link: "https://docs.google.com/forms/d/e/1FAIpQLSdYPh3YEm5fzrCxBVnEd64xvSVpHBwpaeKan0ODSa8thr6Gtw/viewform",
+          target: "_blank",
         },
         {
           icon: "mdi-information",

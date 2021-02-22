@@ -168,15 +168,15 @@
                 <v-text-field
                   v-model="m_tel"
                   label="携帯電話番号"
-                  type="tel"
-                  :rules="[rules.tel]"
+                  type="m_tel"
+                  :rules="[rules.m_tel]"
                   hint="ハイフンなしの半角数字をご入力ください"
                   counter
                   outlined
                 />
               </v-col>
             </v-row>
-            <v-row>
+            <!-- <v-row>
               <v-col cols="4">
                 <v-subheader>FAX番号</v-subheader>
               </v-col>
@@ -191,7 +191,7 @@
                   outlined
                 />
               </v-col>
-            </v-row>
+            </v-row> -->
             <v-row>
               <v-col cols="4">
                 <v-subheader>
@@ -202,7 +202,7 @@
                 <p v-text="email" />
               </v-col>
             </v-row>
-            <v-row>
+            <!-- <v-row>
               <v-col cols="4">
                 <v-subheader>第２メールアドレス</v-subheader>
               </v-col>
@@ -215,7 +215,7 @@
                   outlined
                 />
               </v-col>
-            </v-row>
+            </v-row> -->
             <v-row>
               <v-col cols="4">
                 <v-subheader>パスワード</v-subheader>
@@ -363,6 +363,11 @@ export default {
           v.length == 0 ||
           /^0[0-9]{9,10}$/.test(v) ||
           "ハイフンなしの半角数字をご入力ください",
+        m_tel: (v) =>
+        v == undefined ||
+        v.length == 0 ||
+        /^0[0-9]{9,10}$/.test(v) ||
+        "ハイフンなしの半角数字をご入力ください",
       },
     }
   },
@@ -432,7 +437,7 @@ export default {
             tdfk_cd: this.tdfk_cd,
             address1: this.address1,
             address2: this.address2,
-            address3: this.address3,
+            address3: this.address3 == null ? "" : this.address3,
             tel: this.tel,
             m_tel: this.m_tel,
             fax: this.fax,
