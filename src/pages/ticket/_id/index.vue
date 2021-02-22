@@ -120,7 +120,8 @@
                                     <br />
                                     <span v-text="prodcut_nm(order_detail.product_id)" /><br />
                                     {{ order_detail.price }}円<br />
-                                    {{ order_detail.quantity }}枚
+                                    {{ order_detail.quantity }}枚<br />
+                                    {{ order.note }}
                                   </td><td>
                                     <vue-qrcode :value="order_detail.ticket_hash" tag="img" />
                                   </td>
@@ -544,15 +545,17 @@ export default {
     getSeats(zone, product, index) {
       product['seat_list'+index] = []
       this.seat_reserved_list.forEach(reserved => {
-        let reservedZone = reserved.seat.split('-')[0]
-        let seat = reserved.seat.split('-')[1]
-        if (reserved.ec_class_option_id == product.class_options[19].ec_class_option_id && reservedZone == zone) {
-          let obj = {
-              text: seat,
-              value: reserved.seat,
-              disabled: false,
-            }
-          product['seat_list'+index].push(obj)
+        if(reserved.seat != null && reserved.seat != undefined && reserved.seat != ""){
+          let reservedZone = reserved.seat.split('-')[0]
+          let seat = reserved.seat.split('-')[1]
+          if (reserved.ec_class_option_id == product.class_options[19].ec_class_option_id && reservedZone == zone) {
+            let obj = {
+                text: seat,
+                value: reserved.seat,
+                disabled: false,
+              }
+            product['seat_list'+index].push(obj)
+          }
         }
       })
     },
@@ -572,7 +575,6 @@ export default {
       }
     },
     prodcut_nm(product_id) {
-
       for (const p of this.product_list) {
         if(p.product_id == product_id){
         return p.subject
