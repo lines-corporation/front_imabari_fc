@@ -121,8 +121,11 @@
                                     <span v-text="prodcut_nm(order_detail.product_id)" /><br />
                                     {{ order_detail.price }}円<br />
                                     {{ order_detail.quantity }}枚<br />
-                                    Zone {{ order.note.split('-')[0] }} / Seate {{ order.note.split('-')[1] }}
-                                  </td><td>
+                                    <span v-if="order.note != 0 && order.note != null">
+                                      ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1] }}
+                                    </span>
+                                  </td>
+                                  <td>
                                     <vue-qrcode :value="order_detail.ticket_hash" tag="img" />
                                   </td>
                                 </tr>
