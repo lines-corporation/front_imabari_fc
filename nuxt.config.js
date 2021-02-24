@@ -35,7 +35,7 @@ export default {
       { hid: "robots", name: "robots", content: envSettings.ROBOTS },
     ],
     link: [
-      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+      { rel: "shortcut icon", type: "image/x-icon", href: "/favicon.ico" },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       { rel: "icon", type: "image/png", href: "/android-touch-icon.png" },
     ],
