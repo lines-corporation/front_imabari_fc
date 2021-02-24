@@ -24,6 +24,9 @@
               <p>{{ product.size }}</p>
               <p>個数 {{ product.quantity }}個</p>
               <p>{{ note }}</p>
+              <td>
+                <vue-qrcode :value="hash_code" tag="img"/>
+              </td>
               </div>
             </v-col>
           </v-row>
@@ -44,9 +47,16 @@
 </template>
 
 <script>
+import VueQrcode from "@chenfengyuan/vue-qrcode"
+import md5 from "js-md5"
 export default {
+  components: {
+    VueQrcode,
+    md5
+  },
   auth: false,
   data: () => ({
+    hash_code:0,
     purchaseDate: "",
     totalPaymentPrice: 0,
     note: "",
@@ -65,6 +75,9 @@ export default {
       const ids = this.$route.params.id.split(',')
       let self = this
       ids.forEach(async (id) => {
+        const response2 = await self.$auth.ctx.$axios.get(`/rcms-api/1/order_list`)
+        let result =response2.data.list.filter(item => item.ec_order_id == id)
+        self.hash_code= result[0].order_details[0].ticket_hash
         const response = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/history/${id}`)
         self.purchaseDate = response.data.details.inst_ymdhi.replace(" +0900", "")
         self.note = response.data.details.note
