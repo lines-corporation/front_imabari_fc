@@ -48,11 +48,9 @@
 
 <script>
 import VueQrcode from "@chenfengyuan/vue-qrcode"
-import md5 from "js-md5"
 export default {
   components: {
-    VueQrcode,
-    md5
+    VueQrcode
   },
   auth: false,
   data: () => ({
