@@ -21,6 +21,7 @@
           	<div>
             <h3>{{ product.title }}</h3>
             <p>¥ {{ product.price }}</p>
+            <p v-if="flag">割引価格 ¥ {{ product.discount }}</p>
             <p v-if="product.size">size : {{ product.size }}</p>
             <p v-if="product.quantity">{{ product.quantity }}個</p>
             </div>
@@ -334,6 +335,7 @@ export default {
     return {
       loading: false,
       products: [],
+      flag: true,
       name1: "",
       name2: "",
       zip_code: "",
@@ -436,6 +438,7 @@ export default {
       // kurocoからデータを取得してみる
       self.products = []
       self.seasonPassFlg = false
+      self.flag = Object.values(JSON.parse(JSON.stringify(self.$auth.user.group_ids)))[0] != "無料会員"
       let tdfk_cd = self.address_elected == 'new-address' ? self.tdfk_cd : self.$auth.user.tdfk_cd
       let response = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${self.$auth.user.ec_cart_id}?tdfk_cd=${tdfk_cd}`)
       // 送料の設定
@@ -455,6 +458,7 @@ export default {
             self.products.push({
               id:       item.product_id,
               quantity: item.quantity,
+              discount: productInfoResponse.data.details.group_price,
               title:    productInfoResponse.data.details.topics_name,
               price:    productInfoResponse.data.details.product_data.ext_col_04,
               size:     productInfoResponse.data.details.product_name,
