@@ -129,7 +129,8 @@
 
 <script>
 export default {
-  auth: false,
+  middleware: 'auth',
+  auth: true,
   data: () => ({
     selectVal:"",
     flag: true,

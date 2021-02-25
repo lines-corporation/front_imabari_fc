@@ -328,7 +328,8 @@
 import firebase from '@/plugins/firebase'
 
 export default {
-  auth: false,
+  middleware: 'auth',
+  auth: true,
   data() {
     return {
       loading: false,
