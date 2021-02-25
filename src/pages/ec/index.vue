@@ -38,7 +38,7 @@
                     </v-list-item-action>
 
                     <v-list-item-content>
-                      <v-list-item-title>{{ category.id }} - {{ category.title }}</v-list-item-title>
+                      <v-list-item-title>{{ category.title }}</v-list-item-title>
                       <v-list-item-subtitle></v-list-item-subtitle>
                     </v-list-item-content>
                   </template>
