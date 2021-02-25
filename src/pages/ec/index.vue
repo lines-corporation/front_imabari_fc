@@ -207,7 +207,7 @@ export default {
         let paramStr = '?cnt=999'
         let response = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list${paramStr}`)
         self.flag = false
-        let result = response.data.list.filter(item => self.selectVal == item.topics_name)
+        let result = response.data.list.filter(item =>item.topics_name.indexOf(self.selectVal) != -1)
         result.forEach((product, index) => {
           if(self.products[product.topics_id]) {
             self.products[product.topics_id].data.push(product)
