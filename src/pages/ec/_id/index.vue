@@ -225,6 +225,7 @@ export default {
     },
     // 商品情報の取得
     async getProducts(topics_id) {
+      let paramStr = '?cnt=999'
       let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/topic/${topics_id}`)
       // id
       // 商品名 : subject
@@ -245,7 +246,7 @@ export default {
       }
 
       // サイズや写真などの複数商品データの取得
-      let response2 = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list?topics_id=${topics_id}`)
+      let response2 = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list${paramStr}&topics_id=${topics_id}`)
       this.sizes = []
       this.passCategories = []
 
