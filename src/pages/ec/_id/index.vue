@@ -51,6 +51,8 @@
         </v-sheet>
           <h3>{{ productName }}</h3>
           <p>¥ {{ price }}</p>
+          <!-- <p v-if="flag">割引価格 ¥ {{ product.discount }}</p> -->
+          <p v-if="flag">割引価格 ¥ {{ discount }}</p>
           <!-- サイズ設定 -->
           <v-select
             v-if="apparelFlg"
@@ -172,7 +174,9 @@
 export default {
   auth: false,
   data: () => ({
+    flag: true,
     stock: null,
+    discount: 0,
     sale_limit: null,
     stock_unlimited: null,
     total_quantity: 0,
@@ -210,6 +214,8 @@ export default {
         this.stock = stamp[0].stock
         this.stock_unlimited = stamp[0].stock_unlimited
         this.sale_limit = stamp[0].sale_limit
+        this.discount = stamp[0].group_price
+        this.flag = Object.values(JSON.parse(JSON.stringify(self.$auth.user.group_ids)))[0] != "無料会員"
       }
     },
     async getStock(seasonPassKind) {
@@ -221,6 +227,8 @@ export default {
         this.stock = stamp[0].stock
         this.stock_unlimited = stamp[0].stock_unlimited
         this.sale_limit = stamp[0].sale_limit
+        this.discount = stamp[0].group_price
+        this.flag = Object.values(JSON.parse(JSON.stringify(self.$auth.user.group_ids)))[0] != "無料会員"
       }
     },
     // 商品情報の取得
