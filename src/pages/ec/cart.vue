@@ -174,7 +174,7 @@
           <v-radio label="その他の住所へ配送をご希望の場合" value="new-address" />
         </v-radio-group>
         <div v-if="address_elected == 'new-address'" class="card-wrapper" style="height: 820px;">
-          <v-container fluid ref="form">
+          <v-container fluid>
             <v-row dense>
               <v-col cols="4">
                 <span style="color: red;">※</span>お名前
@@ -517,14 +517,14 @@ export default {
                 self.loading = false
                 return
               }
-              if((self.tel).match(/[\uff00-\uffff]/g)) {
-                 self.$store.dispatch(
-                  "snackbar/setError",
-                  "配送先住所に誤りがあります。ご確認ください。"
-                )
-                self.$store.dispatch("snackbar/snackOn")
-                self.loading = false
-                return
+              if((self.tel).match(/[\uff00-\uffff]/g) || self.zip_code.length != 7 || self.tel.length < 10 || self.tel.length>11 || self.tel.substring(0,1) != 0) {
+                self.$store.dispatch(
+                 "snackbar/setError",
+                 "配送先住所に誤りがあります。ご確認ください。"
+               )
+               self.$store.dispatch("snackbar/snackOn")
+               self.loading = false
+               return
               }
               self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
                 ec_payment_id: parseInt(self.ecPaymentId),
