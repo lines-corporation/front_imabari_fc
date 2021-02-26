@@ -21,7 +21,7 @@
           	<div>
             <h3>{{ product.title }}</h3>
             <p>¥ {{ product.price }}</p>
-            <p v-if="flag">割引価格 ¥ {{ product.discount }}</p>
+            <p v-if="flag && product.discount">割引価格 ¥ {{ product.discount }}</p>
             <p v-if="product.size">size : {{ product.size }}</p>
             <p v-if="product.quantity">{{ product.quantity }}個</p>
             </div>
