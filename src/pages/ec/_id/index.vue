@@ -51,7 +51,6 @@
         </v-sheet>
           <h3>{{ productName }}</h3>
           <p>¥ {{ price }}</p>
-          <!-- <p v-if="flag">割引価格 ¥ {{ product.discount }}</p> -->
           <p v-if="flag">割引価格 ¥ {{ discount }}</p>
           <!-- サイズ設定 -->
           <v-select
@@ -174,7 +173,7 @@
 export default {
   auth: false,
   data: () => ({
-    flag: true,
+    flag: false,
     stock: null,
     discount: 0,
     sale_limit: null,
@@ -206,29 +205,39 @@ export default {
   },
   methods: {
     async getStock(productId) {
-      let result = await this.$auth.ctx.$axios.get(`rcms-api/1/shop/product/list?topics_id=${this.$route.params.id}`)
+      let self = this
+      let result = await self.$auth.ctx.$axios.get(`rcms-api/1/shop/product/list?topics_id=${self.$route.params.id}`)
       let stamp = result.data.list.filter(item =>
         productId == item.product_id
       )
       if (stamp[0] != "" && stamp[0] != null ){
-        this.stock = stamp[0].stock
-        this.stock_unlimited = stamp[0].stock_unlimited
-        this.sale_limit = stamp[0].sale_limit
-        this.discount = stamp[0].group_price
-        this.flag = Object.values(JSON.parse(JSON.stringify(self.$auth.user.group_ids)))[0] != "無料会員"
+        self.stock = stamp[0].stock
+        self.stock_unlimited = stamp[0].stock_unlimited
+        self.sale_limit = stamp[0].sale_limit
+        self.discount = stamp[0].group_price
+        if(self.discount == null || self.discount == 0 || Object.values(JSON.parse(JSON.stringify(self.$auth.user.group_ids)))[0] == "無料会員"){
+          self.flag = false
+        } else {
+          self.flag = true
+        }
       }
     },
     async getStock(seasonPassKind) {
-      let result = await this.$auth.ctx.$axios.get(`rcms-api/1/shop/product/list?topics_id=${this.$route.params.id}`)
+      let self = this
+      let result = await self.$auth.ctx.$axios.get(`rcms-api/1/shop/product/list?topics_id=${self.$route.params.id}`)
       let stamp = result.data.list.filter(item =>
         seasonPassKind == item.product_id
       )
       if (stamp[0] != "" && stamp[0] != null ){
-        this.stock = stamp[0].stock
-        this.stock_unlimited = stamp[0].stock_unlimited
-        this.sale_limit = stamp[0].sale_limit
-        this.discount = stamp[0].group_price
-        this.flag = Object.values(JSON.parse(JSON.stringify(self.$auth.user.group_ids)))[0] != "無料会員"
+        self.stock = stamp[0].stock
+        self.stock_unlimited = stamp[0].stock_unlimited
+        self.sale_limit = stamp[0].sale_limit
+        self.discount = stamp[0].group_price
+        if(self.discount == null || self.discount == 0 || Object.values(JSON.parse(JSON.stringify(self.$auth.user.group_ids)))[0] == "無料会員"){
+          self.flag = false
+        } else {
+          self.flag = true
+        }
       }
     },
     // 商品情報の取得
