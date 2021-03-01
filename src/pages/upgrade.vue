@@ -252,7 +252,7 @@ export default {
   */
   },
   methods: {
-    purchase() {
+    async purchase() {
       this.loading = true
       if (this.$refs.form3.validate()) {
         let self = this

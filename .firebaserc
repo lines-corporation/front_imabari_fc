@@ -16,11 +16,8 @@
     },
     "kuroco-member-imabari": {
       "hosting": {
-        "production": [
-          "kuroco-member-imabari"
-        ],
         "development": [
-          "dev-imabari-fc"
+          "kuroco-member-imabari"
         ]
       }
     }

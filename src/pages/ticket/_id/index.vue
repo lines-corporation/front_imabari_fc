@@ -99,6 +99,9 @@
                             <th class="text-left">
                               内容
                             </th>
+                            <th class="text-left">
+                              QRコード
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
@@ -120,20 +123,108 @@
                                     <br />
                                     <span v-text="prodcut_nm(order_detail.product_id)" /><br />
                                     {{ order_detail.price }}円<br />
-                                    {{ order_detail.quantity }}枚
-                                  </td><td>
-                                    <vue-qrcode :value="order_detail.ticket_hash" :options="qr_option" tag="img" />
+                                    {{ order_detail.quantity }}枚<br />
+                                    <span v-if="order.note != 0 && order.note != null">
+                                      ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1] }}
+                                    </span>
                                   </td>
                                 </tr>
                               </table>
                             </td>
+                            <td>
+                              <div style="padding-top:0px">
+                                <tr
+                                  v-for="order_detail in order.order_details"
+                                  :key="order_detail.product_id"
+                                > 
+                                  <v-dialog
+                                    transform="translateY(10px)"
+                                    transition="dialog-bottom-transition"
+                                    max-width="1000"
+                                  >
+                                    <template v-slot:activator="{ on, attrs }">
+                                      <v-btn
+                                        color="primary"
+                                        dark
+                                        v-bind="attrs"
+                                        v-on="on"
+                                      >QRコードを表示</v-btn>
+                                    </template>
+                                    <template v-slot:default="dialog">
+                                      <v-card>
+                                        <v-toolbar
+                                          color="primary"
+                                          dark
+                                        >
+                                          <v-spacer></v-spacer>
+                                          <v-card-actions class="justify-end">
+                                            <v-btn
+                                              dark
+                                              text
+                                              @click="dialog.value = false"
+                                            >
+                                              閉じる
+                                            </v-btn>
+                                          </v-card-actions>
+                                        </v-toolbar>
+                                        <v-card-text >
+                                          <div style="display:inline-block;padding-left:200px" >
+                                            <div style="width:300px;float:left;padding-top:20px">
+                                              <p v-text="prodcut_nm(order_detail.product_id)" />
+                                              <p v-if="order.note != 0 && order.note != null">
+                                               ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1] }}
+                                              </p>
+                                            </div>
+                                            <div style="width:300px;float:left;">
+                                              <vue-qrcode :value="order_detail.ticket_hash" tag="img" />
+                                            </div>
+                                          </div>
+                                        </v-card-text>
+                                      </v-card>
+                                    </template>
+                                  </v-dialog>
+                                  <br /><br />
+                                </tr>
+                              </div>
+                            </td>
                           </tr>
                         </tbody>
-                        </table>
                       </template>
                     </v-simple-table>
+                  </v-card-text>
+                </v-card>
+              </v-container>
+
+              <v-container v-if="quantity_list.length > 1 && product_list.length > 0" fluid>
+                <v-card class="mx-auto" outlined>
+                  <v-card-text>
+                  <div class="center">
+                  　　<v-subheader class="center-text">夢スタ　座席マップ</v-subheader>
+                  </div>                              
+                  <v-row align="center">
+                    <v-col
+                      cols="12"
+                      md="6"
+                    >
+                      <!-- <vue-photo-zoom-pro :url="zoneImg" :mask="false" :width="250"></vue-photo-zoom-pro> -->
+                      <div align="center" class="resize-logo">
+                        <section>
+                          <img :src="zoneImg.url" :preview="zoneImg.preview" width=100%>
+                        </section>
+                      </div>
                     </v-col>
-                    </v-row>
+                    <v-col
+                      cols="12"
+                      md="6"
+                    >
+                      <!-- <vue-photo-zoom-pro :url="seatImg" :mask="false" :width="250"></vue-photo-zoom-pro> -->
+                      <div align="center" class="resize-logo">
+                        <section>
+                          <img :src="seatImg.url" :preview="seatImg.preview" width=100%>
+                        </section>
+                      </div>
+                    </v-col>
+                  </v-row>
                   </v-card-text>
                 </v-card>
               </v-container>
@@ -158,25 +249,65 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <tr v-for="t in product_list" :key="t.product_id">
-                            <td>{{ t.subject }}</td>
-                            <td>{{ t.price_02 }}円</td>
-                            <td>
-                              <v-select
-                                v-if="t.stock > 0"
-                                v-model="order_products[t.product_id]"
-                                :items="quantity_list"
-                                menu-props="auto"
-                                label="枚数"
-                                hide-details
-                                single-line
-                                outlined
-                              />
-                              <p v-if="t.stock == 0">
-                                完売
-                              </p>
-                            </td>
-                          </tr>
+                          <template v-for="t in product_list">
+                            <tr>
+                              <td>{{ t.subject }}</td>
+                              <td>{{ t.price_02 }}円</td>
+                              <td>
+                                <v-select
+                                  v-if="t.stock > 0"
+                                  v-model="order_products[t.product_id]"
+                                  :items="quantity_list"
+                                  menu-props="auto"
+                                  label="枚数"
+                                  hide-details
+                                  single-line
+                                  outlined
+                                />
+                                <p v-if="t.stock == 0">
+                                  完売
+                                </p>
+                              </td>
+                            </tr>
+                            <template v-if="order_products[t.product_id] > 0 && seat_reserved_product.has(t.class_options[19].ec_class_option_id+'')">
+                              <tr style="background-color: #EEEEEE" v-for="i in order_products[t.product_id]" :key="t.product_id+''+i">
+                                <td style="vertical-align:top" v-if="$vuetify.breakpoint.xs ? false : true">
+                                  <div>座席選択{{i}}</div>
+                                </td>
+                                <td style="vertical-align:top" colspan="1">
+                                  <div style="height:50%;">▼ゾーン選択</div>
+                                  <div>▼座席選択</div>
+                                </td>
+                                <td style="vertical-align:top" colspan="2">
+                                  <div>
+                                    <v-select
+                                      style="padding-bottom: 10px;"
+                                      no-data-text=''
+                                      :items="t.zone_list"
+                                      v-model="t['zone'+i]"
+                                      label="ゾーンを選択してください"
+                                      single-line
+                                      hide-details
+                                      outlined
+                                      @change="getSeats(t['zone'+i], t, i)"
+                                    ></v-select>
+                                  </div>
+                                  <div>
+                                    <v-select
+                                      no-data-text=''
+                                      ref='seatlist'
+                                      :items="t['seat_list'+i]"
+                                      v-model="t['seat'+i]"
+                                      :rules="[rules.required]"
+                                      label="座席を選択してください"
+                                      single-line
+                                      outlined
+                                    ></v-select>
+                                  </div>
+                                </td>
+                              </tr>
+                            </template>
+                          </template>
                         </tbody>
                       </template>
                     </v-simple-table>
@@ -299,15 +430,35 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import VueQrcode from "@chenfengyuan/vue-qrcode"
+// import VuePhotoZoomPro from 'vue-photo-zoom-pro'
+import preview from 'vue-photo-preview'
+import 'vue-photo-preview/dist/skin.css'
+Vue.use(preview)
+
+// Vue.use(VuePhotoZoomPro)
 
 export default {
   components: {
     VueQrcode
   },
   data: () => ({
+    // zoneImg: require('@/assets/images/zone.png'),
+    // seatImg: require('@/assets/images/seat.png'),
+    zoneImg: {
+          url: require('@/assets/images/zone.png'),
+          preview: '1'
+        },
+    seatImg: {
+          url: require('@/assets/images/seat.png'),
+          preview: '2'
+        },
     item: [],
     product_list: [],
+    seat_reserved_product: new Set(),
+    seat_reserved_list: [],
+    seat_blackAndSaved_list: [],
     order_list: [],
     valid: true,
     can_order: false,
@@ -349,40 +500,140 @@ export default {
   }),
   mounted() {
     let self = this
-    let url = "/rcms-api/1/ticket/" + this.$route.params.id
-    this.$auth.ctx.$axios.get(url).then(function (response) {
-      self.item = response.data.details
-      self.topics_id = self.item.topics_id
-      let url_p = "/rcms-api/1/product_list?topics_id=" + self.topics_id
-      self.$auth.ctx.$axios.get(url_p).then(function (res_p) {
-        for (const p_list of res_p.data.list) {
-          if(p_list.open_flg){
-            self.product_list.push(p_list)
+    let topic_id = this.$route.params.id
+    let url = "/rcms-api/1/ticket/" + topic_id
+    let urlReserved = "/rcms-api/1/seat_reserved_list"
+    let urlBlack = "/rcms-api/1/seat_black_list"
+    let urlOrdered = "/rcms-api/1/ordered_order_note?topics_id=" + topic_id
+    this.$auth.ctx.$axios.get(urlBlack)
+    .then(function (res) {
+      let seatBlack = res.data.list
+      seatBlack && seatBlack.forEach(black => {
+        if (topic_id == black[0]) {
+          let s = {
+            topic_id: black[0],
+            seat: black[1]
           }
+          self.seat_blackAndSaved_list.push(s)
         }
-      })
+      });
 
-      let url_o = "/rcms-api/1/order_list?is_canceled=0&without_payment_error=1&topics_id=" + self.topics_id
-      self.$auth.ctx.$axios.get(url_o).then(function (res_o) {
-        self.order_list = res_o.data.list
-        for (const o_list of res_o.data.list) {
-          for (const o_detail of o_list.order_details) {
-            self.purchase_cnt += parseInt(o_detail.quantity)
-          }
-        }
-        for (let i = 1; i <= parseInt(self.item.ext_col_08) - self.purchase_cnt; i++) {
-          self.quantity_list.push({ value: i, text: i + "枚" })
-        }
-      })
-
+      return self.$auth.ctx.$axios.get(urlOrdered)
     })
+    .then(function (res) {
+      let seatOrderedData = res.data.data
+      let seatOrdered
+      if (seatOrderedData && seatOrderedData.topics_id == topic_id) {
+        seatOrdered = seatOrderedData.ordered_order_note
+      }
+      seatOrdered && seatOrdered.forEach(oerdered => {
+        let s = {
+          topic_id: topic_id,
+          seat: oerdered
+        }
+        self.seat_blackAndSaved_list.push(s)
+      });
 
-    //self.product_id = response.data.details.product_id
-    //self.can_order = response.data.details.order_list.length ? false : true
+      return self.$auth.ctx.$axios.get(urlReserved)
+    })
+    .then(function (res) {
+      let seatReserved = res.data.list
+      seatReserved && seatReserved.forEach(reserved => {
+        let s = {
+          ec_class_option_id: reserved[0],
+          seat: reserved[1]
+        }
+        self.seat_reserved_list.push(s)
+        self.seat_reserved_product.add(reserved[0])
+      });
+      self.seat_reserved_list.shift()
+
+      self.seat_blackAndSaved_list.forEach(blackAndSaved => {
+        self.seat_reserved_list = self.seat_reserved_list.filter(reserved => {
+          if (blackAndSaved.seat == reserved.seat) {
+            return false   
+          }
+          return true
+        })
+      })
+
+      self.$auth.ctx.$axios.get(url).then(function (response) {
+        self.item = response.data.details
+        self.topics_id = self.item.topics_id
+        let url_p = "/rcms-api/1/product_list?topics_id=" + self.topics_id
+        self.$auth.ctx.$axios.get(url_p).then(function (res_p) {
+          for (const p_list of res_p.data.list) {
+            if(p_list.open_flg){
+              self.product_list.push(p_list)   
+              p_list.zone_list = []
+              for(const reserved of self.seat_reserved_list) {
+                if (p_list.class_options[19].ec_class_option_id == reserved.ec_class_option_id) {
+                  let zone = reserved.seat.split('-')[0]
+                  let obj = {
+                    text: 'ゾーン' + self.switchZoneNo(zone),
+                    value: zone,
+                    disabled: false,
+                  }
+                  p_list.zone_list.push(obj)
+                }
+              }
+            }
+          }
+        })
+
+        let url_o = "/rcms-api/1/order_list?is_canceled=0&without_payment_error=1&topics_id=" + self.topics_id
+        self.$auth.ctx.$axios.get(url_o).then(function (res_o) {
+          self.order_list = res_o.data.list
+          for (const o_list of res_o.data.list) {
+            for (const o_detail of o_list.order_details) {
+              self.purchase_cnt += parseInt(o_detail.quantity)
+            }
+          }
+          for (let i = 1; i <= parseInt(self.item.ext_col_08) - self.purchase_cnt; i++) {
+            self.quantity_list.push({ value: i, text: i + "枚" })
+          }
+        })
+
+      })
+
+      //self.product_id = response.data.details.product_id
+      //self.can_order = response.data.details.order_list.length ? false : true
+    })
   },
   methods: {
+    getSeats(zone, product, index) {
+      product['seat_list'+index] = []
+      this.seat_reserved_list.forEach(reserved => {
+        if(reserved.seat != null && reserved.seat != undefined && reserved.seat != ""){
+          let reservedZone = reserved.seat.split('-')[0]
+          let seat = reserved.seat.split('-')[1]
+          if (reserved.ec_class_option_id == product.class_options[19].ec_class_option_id && reservedZone == zone) {
+            let obj = {
+                text: seat,
+                value: reserved.seat,
+                disabled: false,
+              }
+            product['seat_list'+index].push(obj)
+          }
+        }
+      })
+    },
+    switchZoneNo(zoneNo) {
+      switch (zoneNo) {
+        case '1' : return '①'
+        case '2' : return '②'
+        case '3' : return '③'
+        case '4' : return '④'
+        case '5' : return '⑤'
+        case '6' : return '⑥'
+        case '7' : return '⑦'
+        case '8' : return '⑧'
+        case '9' : return '⑨'
+        case '10' : return '⑩'
+        default : return zoneNo
+      }
+    },
     prodcut_nm(product_id) {
-
       for (const p of this.product_list) {
         if(p.product_id == product_id){
         return p.subject
@@ -418,6 +669,7 @@ export default {
       this.loading = true
       let self = this
       let from_order_products = []
+      let from_order_note = ''
       let order_cnt = 0
       Object.keys(self.order_products).forEach(function (key) {
         let obj = new Object()
@@ -427,6 +679,29 @@ export default {
         Object.assign({}, obj)
         from_order_products.push(obj)
       })
+
+      if (this.$refs.seatlist) {
+        this.$refs.seatlist.forEach(seat => {
+          if (seat.value) {
+            from_order_note += seat.value + ','
+          }
+        })
+        from_order_note = from_order_note.substr(0, from_order_note.length - 1)
+      }
+
+      if (from_order_note) {
+        let arrLength = from_order_note.split(',').length
+        let setLength = new Set(from_order_note.split(',')).size
+        if (arrLength !== 0 && arrLength !== setLength) {
+          self.$store.dispatch(
+            "snackbar/setError",
+            "1座席を二回以上購入しています。"
+          )
+          self.$store.dispatch("snackbar/snackOn")
+          self.loading = false
+          return
+        }
+      }
       
       if(self.purchase_cnt + order_cnt > parseInt(self.item.ext_col_08)){
         self.$store.dispatch(
@@ -460,6 +735,7 @@ export default {
                     ec_payment_id: parseInt(self.ec_payment_id),
                     order_products: from_order_products,
                     card_token: response.tokenizedCardObject.token,
+                    order_note: from_order_note
                   })
                   .then(() => {
                     self.$store.dispatch(
@@ -498,6 +774,7 @@ export default {
             .post("/rcms-api/1/ec/purchase", {
               ec_payment_id: parseInt(self.ec_payment_id),
               order_products: from_order_products,
+              order_note: from_order_note
             })
             .then(() => {
               self.$store.dispatch(
@@ -528,5 +805,17 @@ export default {
 <style scoped>
 .col {
   white-space: pre-line;
+}
+.zone {
+  padding: 0 !important;
+}
+.center{
+  text-align: center;
+}
+.center-text{
+  display: inline-block;
+}
+.resize-logo {
+  cursor: zoom-in; 
 }
 </style>
