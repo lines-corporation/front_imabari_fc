@@ -169,7 +169,7 @@
                 </v-simple-table>
               </v-card-text>
             </v-card>
-            <v-card v-if="tester" class="mx-auto" outlined>
+            <v-card class="mx-auto" outlined>
               <v-card-text>
                 <h3>購入済み・予約済みのチケット</h3>
 
@@ -212,7 +212,7 @@
                 </v-simple-table>
               </v-card-text>
             </v-card>
-            <v-card v-if="tester" class="mx-auto" outlined>
+            <v-card class="mx-auto" outlined>
               <v-card-text>
                 <h3>現在販売中のチケット</h3>
 
