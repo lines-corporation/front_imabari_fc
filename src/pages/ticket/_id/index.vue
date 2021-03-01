@@ -99,6 +99,9 @@
                             <th class="text-left">
                               内容
                             </th>
+                            <th class="text-left">
+                              QRコード
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
@@ -125,11 +128,64 @@
                                       ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1] }}
                                     </span>
                                   </td>
-                                  <td>
-                                    <vue-qrcode :value="order_detail.ticket_hash" tag="img" />
-                                  </td>
                                 </tr>
                               </table>
+                            </td>
+                            <td>
+                              <div style="padding-top:0px">
+                                <tr
+                                  v-for="order_detail in order.order_details"
+                                  :key="order_detail.product_id"
+                                > 
+                                  <v-dialog
+                                    transform="translateY(10px)"
+                                    transition="dialog-bottom-transition"
+                                    max-width="1000"
+                                  >
+                                    <template v-slot:activator="{ on, attrs }">
+                                      <v-btn
+                                        color="primary"
+                                        dark
+                                        v-bind="attrs"
+                                        v-on="on"
+                                      >QRコードを表示</v-btn>
+                                    </template>
+                                    <template v-slot:default="dialog">
+                                      <v-card>
+                                        <v-toolbar
+                                          color="primary"
+                                          dark
+                                        >
+                                          <v-spacer></v-spacer>
+                                          <v-card-actions class="justify-end">
+                                            <v-btn
+                                              dark
+                                              text
+                                              @click="dialog.value = false"
+                                            >
+                                              閉じる
+                                            </v-btn>
+                                          </v-card-actions>
+                                        </v-toolbar>
+                                        <v-card-text >
+                                          <div style="display:inline-block;padding-left:200px" >
+                                            <div style="width:300px;float:left;padding-top:20px">
+                                              <p v-text="prodcut_nm(order_detail.product_id)" />
+                                              <p v-if="order.note != 0 && order.note != null">
+                                               ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1] }}
+                                              </p>
+                                            </div>
+                                            <div style="width:300px;float:left;">
+                                              <vue-qrcode :value="order_detail.ticket_hash" tag="img" />
+                                            </div>
+                                          </div>
+                                        </v-card-text>
+                                      </v-card>
+                                    </template>
+                                  </v-dialog>
+                                  <br /><br />
+                                </tr>
+                              </div>
                             </td>
                           </tr>
                         </tbody>
@@ -143,7 +199,7 @@
                 <v-card class="mx-auto" outlined>
                   <v-card-text>
                   <div class="center">
-                  　　<v-subheader class="center_text">夢スタ　座席マップ</v-subheader>
+                  　　<v-subheader class="center-text">夢スタ　座席マップ</v-subheader>
                   </div>                              
                   <v-row align="center">
                     <v-col
@@ -756,7 +812,7 @@ export default {
 .center{
   text-align: center;
 }
-.center_text{
+.center-text{
   display: inline-block;
 }
 .resize-logo {
