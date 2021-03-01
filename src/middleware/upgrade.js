@@ -1,10 +1,13 @@
 export default function ({ store, redirect, route }) {
   // 仮会員の時 / は ページ側でチェック
+  // TODO ECの場合にはセッション確認をしないようにする
   if (
     store.$auth.loggedIn &&
     route.path !== "/upgrade" &&
     route.path !== "/inquiry"
   ) {
+    // TODO いったん外す
+    /*
     const group_ids = JSON.parse(JSON.stringify(store.$auth.user.group_ids))
     let upgraded_flg = false
     Object.keys(group_ids).forEach(function (key) {
@@ -12,6 +15,7 @@ export default function ({ store, redirect, route }) {
         upgraded_flg = true
       }
     })
+    */
     /*
     if (!upgraded_flg) {
       return redirect("/upgrade")

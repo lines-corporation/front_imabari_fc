@@ -34,7 +34,11 @@ export default {
       },
       { hid: "robots", name: "robots", content: envSettings.ROBOTS },
     ],
-    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+    link: [
+      { rel: "shortcut icon", type: "image/x-icon", href: "/favicon.ico" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+      { rel: "icon", type: "image/png", href: "/android-touch-icon.png" },
+    ],
     script: [
       {
         src: envSettings.PAYGENT_JS,
@@ -44,12 +48,12 @@ export default {
   /*
    ** Global CSS
    */
-  css: ["@/assets/main.css"],
+  css: ["@/assets/main.css", "@/assets/content-styles.css"],
   /*
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
    */
-  plugins: [],
+  plugins: ['@/plugins/firebase'],
   /*
    ** Auto import components
    ** See https://nuxtjs.org/api/configuration-components
@@ -62,7 +66,7 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/axios", "@nuxtjs/auth", "@nuxtjs/pwa"],
+  modules: ["@nuxtjs/axios", "@nuxtjs/auth", "@nuxtjs/pwa", 'nuxt-client-init-module'],
   /*
    ** vuetify module configuration
    ** https://github.com/nuxt-community/vuetify-module

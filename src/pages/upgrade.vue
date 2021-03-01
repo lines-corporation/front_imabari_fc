@@ -2,10 +2,10 @@
   <div class="form-page">
     <header>
       <h2 v-if="!temp_user" class="form-ttl">
-        FC今治 有料会員 アップグレード
+        FC IMABARI Sailors'Club 有料会員 アップグレード
       </h2>
       <h2 v-if="temp_user" class="form-ttl">
-        FC今治 有料会員・支払い方法登録
+        FC IMABARI Sailors'Club 有料会員・支払い方法登録
       </h2>
     </header>
     <div class="theme--light v-stepper">
@@ -18,11 +18,35 @@
         >
           <v-container fluid>
             <v-row>
+              <v-col cols="12" align="center">
+                <div class="center">
+                    <v-img :src="require('@/assets/images/20210111_tokuten.png')" width=70%></v-img>
+                </div>
+              </v-col>
+              <v-col cols="12" align="center">
+                 <p class="v-label theme--light">
+                  有料会員は無料会員の特典に加え継続年数にあわせたギフト、チケットの先行購入、グッズ10%OFF、限定グッズの購入権などの特典が付与されます。
+                 </p>
+              </v-col>
+            </v-row>
+            <v-row>
               <v-col cols="4">
                 <v-subheader>料金プラン</v-subheader>
               </v-col>
               <v-col cols="8">
-               <p> FC今治 有料会員</p>
+                <v-radio-group v-model="product_id" :rules="[rules.required]">
+                  <!--
+                  <img
+                  src="@/assets/images/RR.png"
+                  v-if="red_star || red_rockets"
+                  style="width: 240px; padding: 10px;"
+                  />
+                -->
+                  <v-radio
+                  label="FC IMABARI Sailors'Club 有料会員(年会費: 3300円 (税込み) )"
+                  value="41249"
+                  />
+                </v-radio-group>
               </v-col>
             </v-row>
             <v-row>
@@ -42,6 +66,20 @@
                 </p>
                 <div v-if="ec_payment_id == '58'" class="card-wrapper">
                   <p>クレジットカードの情報例</p>
+                  <v-row>
+                    <v-col cols="12" sm="6">
+                    <p>表面</p>
+                      <v-img :src="require('@/assets/images/img_card_f.png')" width=100%></v-img>
+                    </v-col>
+                    <v-col cols="12" sm="6">
+                    <p>裏面</p>
+                      <v-img :src="require('@/assets/images/img_cvv.png')" width=100%></v-img>
+                    </v-col>
+                  </v-row>
+                  <p>
+                    ※American ExpressのCVVはカード前面に4桁の数字で記載されています。<br/>
+                    <br>
+                  </p>
                   <v-text-field
                     id="cardNumber"
                     v-model="cardNumber"
@@ -152,6 +190,7 @@ export default {
       red_rockets: false,
       temp_user: false,
       success_message: "",
+      //product_id: 41250, // とりあえずデフォルトで有料会員
       product_id: "41249",
       product_id2: null,
       present: "1",
@@ -179,6 +218,38 @@ export default {
   },
   mounted() {
     this.cardNumberTemp = this.otherCardMask
+  },
+  created() {
+    let self = this
+    const group_ids = JSON.parse(JSON.stringify(this.$auth.user.group_ids))
+
+    /*
+    Object.keys(group_ids).forEach(function (key) {
+      if (["113"].indexOf(key) !== -1) {
+        self.green_star = true
+        self.green_rockets = false
+        self.product_id = "41203"
+      }
+      if (["110"].indexOf(key) !== -1) {
+        self.red_star = true
+        self.red_rockets = false
+        self.product_id = "41202"
+      }
+      if (["111", "114"].indexOf(key) !== -1) {
+        self.$router.push("/")
+      }
+    })
+    */
+
+/*
+    if (!self.product_id && !self.green_rockets && !self.red_rockets) {
+      self.green_star = true
+      self.green_rockets = true
+      self.red_star = true
+      self.red_rockets = true
+      self.temp_user = true
+    }
+  */
   },
   methods: {
     async purchase() {
@@ -254,6 +325,9 @@ export default {
           // 銀行振り込み
           // 銀行振り込みの場合にはproduct_idを差し替える
           self.product_id = 41250
+          console.warn(`ec_payment_id: ${self.ec_payment_id}`)
+          console.warn(`product_id: ${self.product_id}`)
+
           self.$auth.ctx.$axios
             .post("/rcms-api/1/ec/purchase", {
               ec_payment_id: parseInt(self.ec_payment_id),

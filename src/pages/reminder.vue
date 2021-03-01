@@ -3,24 +3,25 @@
     <v-flex>
       <header>
         <h2 class="form-ttl">
-          パスワードの再設定
+          仮パスワード発行
         </h2>
       </header>
-      <v-stepper v-model="e1">
-        <v-stepper-header>
-          <v-stepper-step :complete="e1 > 1" step="1">
+      <v-stepper v-model="e1" vertical class="head-border-redius border-size">
+        <v-stepper-header >
+          <v-stepper-step :complete="e1 > 1" step="1" class="nowrap" >
             メールアドレス送信
           </v-stepper-step>
 
-          <v-divider />
+          <v-divider class="position-y" />
 
-          <v-stepper-step :complete="e1 > 2" step="2">
+          <v-stepper-step :complete="e1 > 2" step="2" class="nowrap">
             パスワード変更
           </v-stepper-step>
 
-          <v-divider />
+          <v-divider class="position-y" />
         </v-stepper-header>
-
+      </v-stepper >
+      <v-stepper v-model="e1"  class="content-border-redius">
         <v-stepper-items>
           <v-stepper-content step="1">
             <v-form
@@ -33,7 +34,8 @@
                 <v-row>
                   <v-col cols="12">
                     <p>
-                      ご登録いただいたメールアドレスを入力して送信をしてください。
+                      ご登録いただいたメールアドレスを入力して送信をしてください。<br />
+                      仮パスワードを発行します
                     </p>
                     <p>
                       <v-text-field
@@ -79,7 +81,7 @@
                     <p>
                       <v-text-field
                         v-model="temp_pwd"
-                        :type="text"
+                        :type="'text'"
                         label="仮パスワード"
                       />
                     </p>
@@ -242,3 +244,23 @@ export default {
   },
 }
 </script>
+<style scoped>
+.nowrap{
+   font-size: 4.5px;
+}
+.border-size{
+  height: 72px;
+}
+.content-border-redius{
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.head-border-redius{
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.position-y{
+  position: relative;
+  top: 4px;
+}
+</style>

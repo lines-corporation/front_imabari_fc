@@ -3,78 +3,85 @@
     <client-only>
       <div v-if="!auth.loggedIn">
         <form class="login-page" @submit.prevent="login">
-          <p class="fnt-w">
-            <strong>
-              今シーズンは以前ご入会されていた方も改めて新規入会が必要になりますので、必ず新規入会のお手続きをお願い致します。<br />
-              詳しくは下記をご確認ください。</strong><br />
-            <br />
-            <a href="https://rugby.necsports.net/topics_detail1/id=1946"
-              >FC今治ご案内</a
-            ><br />
-          </p>
-          <div class="login-screen lgn-left">
-            <h3 class="subtitle mb-3">
-              FC今治 会員ログイン
-            </h3>
-            <div class="inner">
-              <form @submit.prevent="login">
-                <p class="pm">
-                  <strong>メールアドレスとパスワードを<br
-                    class="spbr"
-                  />入力してください。</strong>
-                </p>
-                <p class="fnt-s clr-red pm">
-                </p>
+          <v-row>
+            <p class="fnt-w col-xl-auto">
+              <strong>
+                FC IMABARI Sailors' Club 更新・新規入会方法の詳細は下記をご確認ください。<br />
+              </strong><br />
+              <!-- <NuxtLink to="/form">
+                FC IMABARI Sailors' Club 更新・新規入会方法
+              </NuxtLink> -->
+              <a :href="join_renew_url">
+                FC IMABARI Sailors' Club 更新・新規入会方法
+              </a>
+            </p>
+          </v-row>
+          <v-row>
+            <div class="login-screen lgn-left">
+              <h3 class="subtitle mb-3">
+                FC IMABARI Sailors'Club 会員ログイン
+              </h3>
+              <div class="inner">
+                <form @submit.prevent="login">
+                  <p class="pm">
+                    <strong>メールアドレスとパスワードを<br
+                      class="spbr"
+                      />入力してください。</strong>
+                    </p>
+                    <p class="fnt-s clr-red pm">
+                    </p>
+                    <p>
+                      <v-text-field
+                      v-model="form.email"
+                      label="メールアドレス"
+                      type="email"
+                      outlined
+                      />
+                    </p>
+                    <p>
+                      <v-text-field
+                      v-model="form.password"
+                      label="パスワード"
+                      :type="show_pwd1 ? 'text' : 'password'"
+                      :append-icon="show_pwd1 ? 'mdi-eye' : 'mdi-eye-off'"
+                      outlined
+                      @click:append="show_pwd1 = !show_pwd1"
+                      />
+                    </p>
+                    <v-btn
+                    type="submit"
+                    block
+                    x-large
+                    color="success"
+                    dark
+                    :loading="loading"
+                    >
+                    ログインする
+                  </v-btn>
+                </form>
                 <p>
-                  <v-text-field
-                    v-model="form.email"
-                    label="メールアドレス"
-                    type="email"
-                    outlined
-                  />
+                  <NuxtLink to="/reminder">
+                    仮パスワード発行<br />
+                    (パスワードを忘れた場合もこちらからお手続きください)
+                  </NuxtLink>
                 </p>
-                <p>
-                  <v-text-field
-                    v-model="form.password"
-                    label="パスワード"
-                    :type="show_pwd1 ? 'text' : 'password'"
-                    :append-icon="show_pwd1 ? 'mdi-eye' : 'mdi-eye-off'"
-                    outlined
-                    @click:append="show_pwd1 = !show_pwd1"
-                  />
+              </div>
+            </div>
+            <div class="login-screen lgn-right">
+              <h3 class="subtitle mb-3">
+                FC IMABARI Sailors'Club 新規入会はこちら
+              </h3>
+              <div class="inner">
+                <p class="body-1 new-btn">
+                  <NuxtLink to="/form">
+                    FC IMABARI Sailors'Club 新規入会登録
+                  </NuxtLink>
                 </p>
-                <v-btn
-                  type="submit"
-                  block
-                  x-large
-                  color="success"
-                  dark
-                  :loading="loading"
-                >
-                  ログインする
-                </v-btn>
-              </form>
-              <p>
-                <NuxtLink to="/reminder">
-                  パスワードを忘れた方はこちらから
-                </NuxtLink>
-              </p>
+                <p class="body-1 nec-btn">
+                </p>
+              </div>
             </div>
-          </div>
-          <div class="login-screen lgn-right">
-            <h3 class="subtitle mb-3">
-              FC今治新規入会はこちら
-            </h3>
-            <div class="inner">
-              <p class="body-1 new-btn">
-                <NuxtLink to="/form">
-                  FC今治会員新規入会登録
-                </NuxtLink>
-              </p>
-              <p class="body-1 nec-btn">
-              </p>
-            </div>
-          </div>
+          </v-row>
         </form>
       </div>
 
@@ -94,7 +101,14 @@
                     <strong>会員種別</strong><span>{{ group_nm }}</span>
                   </p>
                 </div>
-                <v-img :src="require('@/assets/images/temp_member_card.jpg')"></v-img>
+                <!-- 無料会員 会員証 -->
+                <v-img v-if="can_upgrade" :src="require('@/assets/images/free_member_card.png')"></v-img>
+                <!-- 有料会員 会員証 -->
+                <v-img v-else :src="require('@/assets/images/member_card.png')"></v-img>
+                <h4>会員番号QR</h4>
+                <v-img class="qr">
+                  <vue-qrcode v-if="user.member_no != null && user.member_no.length > 0" :value="user.member_no" tag="img" />
+                </v-img>
               </v-card-text>
               <v-card-actions>
                 <v-btn text color="deep-purple accent-4" to="/profile_edit">
@@ -105,19 +119,31 @@
 
             <v-card v-if="can_upgrade" class="mx-auto" outlined>
               <v-card-text>
-                <h3>アップグレードのご案内</h3>
-                <p class="body-1 ug-p">
+                <h4>アップグレードのご案内</h4>
+                <p class="body-1 ug-p fnt-w">
                   <NuxtLink to="/upgrade">
                     有料への種別変更はこちら
                   </NuxtLink>
+                  <!--
+                  <NuxtLink to="/ec">
+                    グッズ販売はこちら
+                  </NuxtLink>
+                -->
                 </p>
+              </v-card-text>
+            </v-card>
+            <v-card class="mx-auto" outlined>
+              <v-card-text>
+                <NuxtLink to="/ec">
+                  <v-img :src="require('@/assets/images/btn-ecpage.png')"></v-img>
+                </NuxtLink>
               </v-card-text>
             </v-card>
           </v-col>
           <v-col cols="12" sm="6">
             <v-card class="mx-auto" outlined>
               <v-card-text>
-                <h3>お知らせ</h3>
+                <h4>お知らせ</h4>
 
                 <v-simple-table :fixed-header="false">
                   <template v-slot:default>
@@ -238,7 +264,11 @@
 </template>
 
 <script>
+import VueQrcode from "@chenfengyuan/vue-qrcode"
 export default {
+  components: {
+   VueQrcode
+  },
   middleware: "auth",
   auth: false,
   data: () => ({
@@ -248,10 +278,12 @@ export default {
     loading: false,
     show_pwd1: false,
     show_pwd2: false,
+    can_ticket_sales: false,
     form: {
       email: "",
       password: "",
     },
+    join_renew_url:"https://www.fcimabari.com/support/FISC.html",
   }),
   computed: {
     user() {
@@ -264,6 +296,8 @@ export default {
       if (this.$auth.loggedIn) {
         self.can_upgrade = true
         const group_ids = JSON.parse(JSON.stringify(this.$auth.user.group_ids))
+        console.warn("************ group_ids *************")
+        console.warn(group_ids)
         Object.keys(group_ids).forEach(function (key) {
           if (["114", "111"].indexOf(key) !== -1) {
             self.can_upgrade = false
@@ -274,6 +308,8 @@ export default {
       return false
     },
     tester() {
+      // チケット販売を許可していない場合には項目を表示しない
+      if (!this.can_ticket_sales) { return false }
       if (this.$auth.loggedIn) {
         self.tester = false
         const group_ids = JSON.parse(JSON.stringify(this.$auth.user.group_ids))
@@ -374,3 +410,9 @@ export default {
   },
 }
 </script>
+<style scoped>
+.qr{
+   text-align: center; 
+   display: block;    
+ }
+</style>
