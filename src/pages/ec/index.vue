@@ -84,8 +84,8 @@
                 </v-icon>
               </v-col>
             </v-row>
-            <v-row v-if="products">
-              <v-col v-for="(product, topics_id) in products" :key="topics_id" cols="4" sm="12">
+            <v-row v-if="displayLists">
+              <v-col v-for="(product, topics_id) in displayLists" :key="topics_id" cols="4" sm="12">
                 <v-card class="p-card">
                   <v-img
                     class="white--text align-end"
@@ -115,15 +115,14 @@
       </v-row>
     </v-container>
 
-    <!-- ページネーション 一旦OFF -->
-    <!--
+     <!-- ページネーション -->
     <div class="text-center">
       <v-pagination
-      v-model="page"
-      :length="6"
+      v-model="pageNumber"
+      :length="page_length"
+      @input = "getProducts"
       ></v-pagination>
     </div>
-  -->
   </div>
 </template>
 
@@ -132,13 +131,16 @@ export default {
   middleware: 'auth',
   auth: true,
   data: () => ({
+    pageNumber: 1,
+    count: 0,
+    page_length:0,
+    displayLists: [],
+    pageSize: 30,
     selectVal:"",
     flag: true,
     settings: [],
     cartItems: [],
     total_quantity: 0,
-    length: 3,
-    page: 1,
     onboarding: 0,
     items: [
       // {
@@ -202,6 +204,12 @@ export default {
             )
           }
         })
+        if(Object.values(self.products).length < self.pageSize && self.count <= 1) {
+          self.pageNumber = 1
+          self.count = 1
+        }
+        self.displayLists = Object.values(self.products).slice(self.pageSize*(self.pageNumber -1), self.pageSize*(self.pageNumber))
+        self.page_length = Math.ceil(Object.values(self.products).length/self.pageSize)
       } else {
         let self = this
         self.products = {}
@@ -226,6 +234,12 @@ export default {
             )
           }
         })
+        if(Object.values(self.products).length < self.pageSize && self.count <= 1) {
+          self.pageNumber = 1
+          self.count = 1
+        }
+        self.displayLists = Object.values(self.products).slice(self.pageSize*(self.pageNumber -1), self.pageSize*(self.pageNumber))
+        self.page_length = Math.ceil(Object.values(self.products).length/self.pageSize)
       }
     },
     async getCategories() {
