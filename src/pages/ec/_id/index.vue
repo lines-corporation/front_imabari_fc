@@ -51,7 +51,7 @@
         </v-sheet>
           <h3>{{ productName }}</h3>
           <p>¥ {{ price }}</p>
-          <p v-if="flag">割引価格 ¥ {{ discount }}</p>
+          <p v-if="flag">有料会員限定の割引価格 ¥ {{ discount }}</p>
           <!-- サイズ設定 -->
           <v-select
             v-if="apparelFlg"
