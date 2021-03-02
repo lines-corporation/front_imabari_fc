@@ -99,7 +99,7 @@
                   </v-card-text>
 
                   <v-card-actions>
-                    <v-btn @click="moveProductDetail(topics_id)" color="orange" text>
+                    <v-btn @click="moveProductDetail(product.data[0].topics_id)" color="orange" text>
                       商品詳細
                     </v-btn>
                   </v-card-actions>
