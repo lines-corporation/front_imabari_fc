@@ -142,9 +142,9 @@ export default {
     total_quantity: 0,
     onboarding: 0,
     items: [
-      // {
-      //   url: require('@/assets/images/uniform_img.jpg'),
-      // },
+      {
+        url: require('@/assets/images/uniform_img.jpg'),
+      },
       {
         url: require('@/assets/images/temp_banner.jpg'),
       },
