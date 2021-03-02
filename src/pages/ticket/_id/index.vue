@@ -167,7 +167,7 @@
                                             </v-btn>
                                           </v-card-actions>
                                         </v-toolbar>
-                                        <v-card-text >
+                                        <v-card-text>
                                           <div style="display:inline-block;padding-left:200px" >
                                             <div style="width:300px;float:left;padding-top:20px">
                                               <p v-text="prodcut_nm(order_detail.product_id)" />
@@ -179,6 +179,14 @@
                                               <vue-qrcode :value="order_detail.ticket_hash" tag="img" />
                                             </div>
                                           </div>
+                                        </v-card-text>
+                                        <v-card-text>
+                                          <p style="text-align:center">QRコードを送信する場合。</p>
+                                          <p style="text-align:center">LINEなどで送信する場合には、QRコード画像箇所を長押しして表示さ共有機能にて送信ください。</p>
+                                          <div class="d-flex flex-column justify-space-between align-center">
+                                          <v-img :src="require('@/assets/images/share.png')" width=20%></v-img>
+                                          </div>
+                                          <p style="text-align:center">※共有を押すと画像共有ツールが表示されます。</p>
                                         </v-card-text>
                                       </v-card>
                                     </template>
