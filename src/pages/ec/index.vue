@@ -128,7 +128,6 @@
 
 <script>
 export default {
-  middleware: 'auth',
   auth: false,
   data: () => ({
     pageNumber: 1,

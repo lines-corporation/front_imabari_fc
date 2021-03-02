@@ -269,7 +269,6 @@ export default {
   components: {
    VueQrcode
   },
-  middleware: "auth",
   auth: false,
   data: () => ({
     ticket_list: [],
