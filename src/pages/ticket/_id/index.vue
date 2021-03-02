@@ -139,8 +139,8 @@
                                 > 
                                   <v-dialog
                                     transform="translateY(10px)"
-                                    transition="dialog-bottom-transition"
                                     max-width="1000"
+                                    transition="dialog-bottom-transition"
                                   >
                                     <template v-slot:activator="{ on, attrs }">
                                       <v-btn
@@ -167,18 +167,17 @@
                                             </v-btn>
                                           </v-card-actions>
                                         </v-toolbar>
-                                        <v-card-text>
-                                          <div style="display:inline-block;padding-left:200px" >
-                                            <div style="width:300px;float:left;padding-top:20px">
-                                              <p v-text="prodcut_nm(order_detail.product_id)" />
-                                              <p v-if="order.note != 0 && order.note != null">
-                                               ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1] }}
-                                              </p>
-                                            </div>
-                                            <div style="width:300px;float:left;">
-                                              <vue-qrcode :value="order_detail.ticket_hash" tag="img" />
-                                            </div>
-                                          </div>
+                                        <v-card-text style="text-align:center">
+                                          <p>
+                                            <br />
+                                            <span v-text="prodcut_nm(order_detail.product_id)" /> <br/>
+                                            <span v-if="order.note != 0 && order.note != null">
+                                             ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1] }}
+                                            </span>
+                                          </p>
+                                          <p>
+                                            <vue-qrcode :value="order_detail.ticket_hash" tag="img" />
+                                          </p>
                                         </v-card-text>
                                         <v-card-text>
                                           <p style="text-align:center">QRコードを送信する場合。</p>
