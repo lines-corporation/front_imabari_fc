@@ -132,64 +132,69 @@
                               </table>
                             </td>
                             <td>
-                              <div style="padding-top:0px">
+                              <div>
                                 <tr
                                   v-for="order_detail in order.order_details"
                                   :key="order_detail.product_id"
                                 > 
-                                  <v-dialog
-                                    transform="translateY(10px)"
-                                    max-width="1000"
-                                    transition="dialog-bottom-transition"
+                                  <td
+                                    v-for="index in parseInt(order_detail.quantity)"
+                                    :key="index"
                                   >
-                                    <template v-slot:activator="{ on, attrs }">
-                                      <v-btn
-                                        color="primary"
-                                        dark
-                                        v-bind="attrs"
-                                        v-on="on"
-                                      >QRコードを表示</v-btn>
-                                    </template>
-                                    <template v-slot:default="dialog">
-                                      <v-card>
-                                        <v-toolbar
+                                    <v-dialog
+                                      transform="translateY(10px)"
+                                      max-width="1000"
+                                      transition="dialog-bottom-transition"
+                                    >
+                                      <template v-slot:activator="{ on, attrs }">
+                                        <v-btn
                                           color="primary"
                                           dark
-                                        >
-                                          <v-spacer></v-spacer>
-                                          <v-card-actions class="justify-end">
-                                            <v-btn
-                                              dark
-                                              text
-                                              @click="dialog.value = false"
-                                            >
-                                              閉じる
-                                            </v-btn>
-                                          </v-card-actions>
-                                        </v-toolbar>
-                                        <v-card-text style="text-align:center">
-                                          <p>
-                                            <br />
-                                            <span v-text="prodcut_nm(order_detail.product_id)" /> <br/>
-                                            <span v-if="order.note != 0 && order.note != null">
-                                             ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1] }}
-                                            </span>
-                                          </p>
-                                          <p>
-                                            <vue-qrcode :value="order_detail.ticket_hash" tag="img" />
-                                          </p>
-                                        </v-card-text>
-                                        <v-card-text>
-                                          <p style="text-align:center">QRコードを送信する場合。</p>
-                                          <p style="text-align:center">LINEなどで送信する場合には、QRコード画像箇所を長押しして表示さ共有機能にて送信ください。</p>
-                                          <div class="d-flex flex-column justify-space-between align-center">
-                                          <v-img :src="require('@/assets/images/share.png')" width=20%></v-img>
-                                          </div>
-                                          <p style="text-align:center">※共有を押すと画像共有ツールが表示されます。</p>
-                                        </v-card-text>
-                                      </v-card>
-                                    </template>
-                                  </v-dialog>
+                                          v-bind="attrs"
+                                          v-on="on"
+                                        >QRコードを表示</v-btn>
+                                      </template>
+                                      <template v-slot:default="dialog">
+                                        <v-card>
+                                          <v-toolbar
+                                            color="primary"
+                                            dark
+                                          >
+                                            <v-spacer></v-spacer>
+                                            <v-card-actions class="justify-end">
+                                              <v-btn
+                                                dark
+                                                text
+                                                @click="dialog.value = false"
+                                              >
+                                                閉じる
+                                              </v-btn>
+                                            </v-card-actions>
+                                          </v-toolbar>
+                                          <v-card-text style="text-align:center">
+                                            <p>
+                                              <br />
+                                              <span v-text="prodcut_nm(order_detail.product_id)" /> <br/>
+                                              <span v-if="order.note != 0 && order.note != null">
+                                               ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1] }}
+                                              </span>
+                                            </p>
+                                            <p>
+                                              <vue-qrcode :value="prodcut_qr(order.ec_order_id + ':' + 'imabari' + ':' + order_detail.order_detail_id + ':' + index)" tag="img" />
+                                            </p>
+                                          </v-card-text>
+                                          <v-card-text>
+                                            <p style="text-align:center">QRコードを送信する場合。</p>
+                                            <p style="text-align:center">LINEなどで送信する場合には、QRコード画像箇所を長押しして表示される共有機能にて送信ください。</p>
+                                            <div class="d-flex flex-column justify-space-between align-center">
+                                            <v-img :src="require('@/assets/images/share.png')" width=20%></v-img>
+                                            </div>
+                                            <p style="text-align:center">※共有を押すと画像共有ツールが表示されます。</p>
+                                          </v-card-text>
+                                        </v-card>
+                                      </template>
+                                    </v-dialog>
+                                  </td>
                                   <br /><br />
                                 </tr>
                               </div>
@@ -213,7 +218,6 @@
                       cols="12"
                       md="6"
                     >
-                      <!-- <vue-photo-zoom-pro :url="zoneImg" :mask="false" :width="250"></vue-photo-zoom-pro> -->
                       <div align="center" class="resize-logo">
                         <section>
                           <img :src="zoneImg.url" :preview="zoneImg.preview" width=100%>
@@ -224,7 +228,6 @@
                       cols="12"
                       md="6"
                     >
-                      <!-- <vue-photo-zoom-pro :url="seatImg" :mask="false" :width="250"></vue-photo-zoom-pro> -->
                       <div align="center" class="resize-logo">
                         <section>
                           <img :src="seatImg.url" :preview="seatImg.preview" width=100%>
@@ -255,8 +258,8 @@
                             </th>
                           </tr>
                         </thead>
-                        <tbody>
-                          <template v-for="t in product_list">
+                        <tbody v-for="t in product_list" :key="t.product_id">
+                          <template>
                             <tr>
                               <td>{{ t.subject }}</td>
                               <td>{{ t.price_02 }}円</td>
@@ -439,20 +442,17 @@
 <script>
 import Vue from 'vue'
 import VueQrcode from "@chenfengyuan/vue-qrcode"
-// import VuePhotoZoomPro from 'vue-photo-zoom-pro'
 import preview from 'vue-photo-preview'
 import 'vue-photo-preview/dist/skin.css'
+import md5 from "js-md5"
 Vue.use(preview)
-
-// Vue.use(VuePhotoZoomPro)
 
 export default {
   components: {
-    VueQrcode
+    VueQrcode,
+    md5
   },
   data: () => ({
-    // zoneImg: require('@/assets/images/zone.png'),
-    // seatImg: require('@/assets/images/seat.png'),
     zoneImg: {
           url: require('@/assets/images/zone.png'),
           preview: '1'
@@ -645,6 +645,13 @@ export default {
         if(p.product_id == product_id){
         return p.subject
         }
+      }
+      return ""
+    },
+    prodcut_qr(qr_code){
+      if(qr_code != null){
+        let hash_code = md5(qr_code.toString())
+        return hash_code
       }
       return ""
     },
