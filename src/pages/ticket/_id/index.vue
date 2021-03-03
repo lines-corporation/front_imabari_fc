@@ -132,7 +132,7 @@
                               </table>
                             </td>
                             <td>
-                              <div>
+                              <div v-if="order.payment_status == 450">
                                 <tr
                                   v-for="order_detail in order.order_details"
                                   :key="order_detail.product_id"
@@ -140,9 +140,10 @@
                                   <td
                                     v-for="index in parseInt(order_detail.quantity)"
                                     :key="index"
+                                    style="display:block"
                                   >
+                                    <p style="margin-bottom:0"> {{ order.ec_order_id + ':' + 'imabari' + ':' + order_detail.order_detail_id+ ':' +  index }} </p>
                                     <v-dialog
-                                      transform="translateY(10px)"
                                       max-width="1000"
                                       transition="dialog-bottom-transition"
                                     >
@@ -195,10 +196,17 @@
                                       </template>
                                     </v-dialog>
                                   </td>
-                                  <br /><br />
                                 </tr>
                               </div>
-                            </td>
+                              <div v-else>
+                                <tr
+                                  v-for="order_detail in order.order_details"
+                                  :key="order_detail.product_id"
+                                > 
+                                  <p>決済お手続き完了後に表示されます。</p>
+                                </tr>
+                              </div>
+                            </td><br/>
                           </tr>
                         </tbody>
                       </template>
