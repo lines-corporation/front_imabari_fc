@@ -196,12 +196,12 @@
                         :to="'/ticket/' + item.topics_id"
                         tag="tr"
                       >
-                        <td class="date">
+                        <td v-if="item.order_list[0].payment_status == 450 || item.order_list[0].payment_status == 150" class="date">
                           {{ item.product_data.ymd }}
                         </td>
-                        <td>{{ item.topics_name }}</td>
-                        <td>{{ item.subject }}</td>
-                        <td class="arw">
+                        <td v-if="item.order_list[0].payment_status == 450 || item.order_list[0].payment_status == 150">{{ item.topics_name }}</td>
+                        <td v-if="item.order_list[0].payment_status == 450 || item.order_list[0].payment_status == 150">{{ item.subject }}</td>
+                        <td class="arw" v-if="item.order_list[0].payment_status == 450 || item.order_list[0].payment_status == 150">
                           <v-btn icon :to="'/ticket/' + item.topics_id" nuxt>
                             <v-icon>mdi-chevron-right</v-icon>
                           </v-btn>
