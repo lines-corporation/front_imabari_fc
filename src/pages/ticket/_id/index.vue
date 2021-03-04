@@ -132,7 +132,7 @@
                               </table>
                             </td>
                             <td>
-                              <div v-if="order.payment_status == 450">
+                              <div v-if="order.payment_status == 450 || order.payment_status == 150">
                                 <tr
                                   v-for="order_detail in order.order_details"
                                   :key="order_detail.product_id"
@@ -149,9 +149,9 @@
                                     >
                                       <template v-slot:activator="{ on, attrs }">
                                         <v-btn
-                                          color="primary"
-                                          dark
+                                          class="btn"
                                           v-bind="attrs"
+                                          outlinedlargefabcolor="indigo"
                                           v-on="on"
                                         >QRコードを表示</v-btn>
                                       </template>
@@ -164,7 +164,6 @@
                                             <v-spacer></v-spacer>
                                             <v-card-actions class="justify-end">
                                               <v-btn
-                                                dark
                                                 text
                                                 @click="dialog.value = false"
                                               >
@@ -220,7 +219,7 @@
                   <v-card-text>
                   <div class="center">
                   　　<v-subheader class="center-text">夢スタ　座席マップ</v-subheader>
-                  </div>                              
+                  </div>
                   <v-row align="center">
                     <v-col
                       cols="12"
@@ -839,5 +838,12 @@ export default {
 }
 .resize-logo {
   cursor: zoom-in; 
+}
+.btn {
+  background-color: rgb(255 255 255 / 12%) !important;
+  border-color: #1976d2 !important;
+  border-style: solid !important;
+  border-width: 3px;
+  box-shadow: none;
 }
 </style>
