@@ -197,15 +197,41 @@
                                   </td>
                                 </tr>
                               </div>
+                              
+                              <div v-else-if="order.payment_status == 410">
+                                <tr
+                                  v-for="order_detail in order.order_details"
+                                  :key="order_detail.product_id"
+                                > 
+                                  <div v-if="order.order_details.length == 1">
+                                    <br/><p>決済お手続き完了後に表示されます。</p>
+                                  </div>
+                                  <div v-else-if="order.order_details.length > 1 && order.note != null && order.note != 0">
+                                    <br/><br/><p>決済お手続き完了後に表示されます。</p><br/>
+                                  </div>
+                                  <div v-else>
+                                    <br/><br/><p>決済お手続き完了後に表示されます。</p>
+                                  </div>
+                                </tr>
+                              </div>
+
                               <div v-else>
                                 <tr
                                   v-for="order_detail in order.order_details"
                                   :key="order_detail.product_id"
                                 > 
-                                  <p>決済お手続き完了後に表示されます。</p>
+                                  <div v-if="order.order_details.length == 1">
+                                    <br/><p>キャンセル済み。</p>
+                                  </div>
+                                   <div v-else-if="order.order_details.length > 1 && order.note != null && order.note != 0">
+                                    <br/><br/><p>キャンセル済み。</p><br/>
+                                  </div>
+                                  <div v-else>
+                                    <br/><br/><p>キャンセル済み。</p>
+                                  </div>
                                 </tr>
                               </div>
-                            </td><br/>
+                            </td>
                           </tr>
                         </tbody>
                       </template>
