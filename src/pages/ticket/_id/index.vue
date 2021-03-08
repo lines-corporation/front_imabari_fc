@@ -124,13 +124,10 @@
                                     <span v-text="prodcut_nm(order_detail.product_id)" /><br />
                                     {{ order_detail.price }}円<br />
                                     {{ order_detail.quantity }}枚<br />
-                                    <div v-if="prodcut_nm(order_detail.product_id).search('自由席') == -1 ">
-                                      <span v-if="order.note != 0 && order.note != null && order.note.length <= 5">
-                                        ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1] }}
-                                      </span>
-                                      <span v-else-if="order.note != 0 && order.note != null && order.note.length > 5">
-                                        ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1] }} <br/>
-                                        ゾーン {{ order.note.split('-')[1].substring(4,5) }} / 座席 {{ order.note.split('-')[2] }} <br/>
+                                    <div v-if="prodcut_nm(order_detail.product_id).search('自由席') == -1 && order.note != 0 && order.note != null ">
+                                       ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1].substring(0,3) }} <br/>
+                                      <span v-for="i of order.note.split('-').length - 2" :key="i">
+                                        ゾーン {{ order.note.split('-')[i].substring(3,6).replace(",","") }} / 座席 {{ order.note.split('-')[i+1].substring(0,3).replace(",","") }} <br/>
                                       </span>
                                     </div>
                                   </td>
