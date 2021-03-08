@@ -145,7 +145,8 @@
                                     :key="index"
                                     style="display:block"
                                   >
-                                    <p style="margin-bottom:0"> {{ order.ec_order_id + ':' + 'imabari' + ':' + order_detail.order_detail_id+ ':' +  index }} </p>
+                                    <br/>
+                                    <p style="margin-bottom:0"> {{ order.ec_order_id + ':' + 'imabari' + ':' + order_detail.order_detail_id+ ':' +  index }} </p> 
                                     <v-dialog
                                       max-width="1000"
                                       transition="dialog-bottom-transition"
@@ -178,32 +179,8 @@
                                             <p style="text-align:center" v-text="prodcut_nm(order_detail.product_id)" /> <br/>
                                             <p style="text-align:center" v-if="prodcut_nm(order_detail.product_id).search('自由席') == -1 && order.note != 0 && order.note != null ">
                                               <span v-if="index == 1" >ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1].substring(0,3) }}</span> 
-                                              <span v-if="index == 2">
-                                                ゾーン {{ order.note.split('-')[1].substring(3,6).replace(",","") }} / 座席 {{ order.note.split('-')[2].substring(0,3).replace(",","") }}
-                                              </span>
-                                              <span v-if="index == 3">
-                                                ゾーン {{ order.note.split('-')[2].substring(3,6).replace(",","") }} / 座席 {{ order.note.split('-')[3].substring(0,3).replace(",","") }}
-                                              </span>
-                                              <span v-if="index == 4">
-                                                ゾーン {{ order.note.split('-')[3].substring(3,6).replace(",","") }} / 座席 {{ order.note.split('-')[4].substring(0,3).replace(",","") }}
-                                              </span>
-                                              <span v-if="index == 5">
-                                                ゾーン {{ order.note.split('-')[4].substring(3,6).replace(",","") }} / 座席 {{ order.note.split('-')[5].substring(0,3).replace(",","") }}
-                                              </span>
-                                              <span v-if="index == 6">
-                                                ゾーン {{ order.note.split('-')[5].substring(3,6).replace(",","") }} / 座席 {{ order.note.split('-')[6].substring(0,3).replace(",","") }}
-                                              </span>
-                                              <span v-if="index == 7">
-                                                ゾーン {{ order.note.split('-')[6].substring(3,6).replace(",","") }} / 座席 {{ order.note.split('-')[7].substring(0,3).replace(",","") }}
-                                              </span>
-                                              <span v-if="index == 8">
-                                                ゾーン {{ order.note.split('-')[7].substring(3,6).replace(",","") }} / 座席 {{ order.note.split('-')[8].substring(0,3).replace(",","") }}
-                                              </span>
-                                              <span v-if="index == 9">
-                                                ゾーン {{ order.note.split('-')[8].substring(3,6).replace(",","") }} / 座席 {{ order.note.split('-')[9].substring(0,3).replace(",","") }}
-                                              </span>
-                                              <span v-if="index == 10">
-                                                ゾーン {{ order.note.split('-')[9].substring(3,6).replace(",","") }} / 座席 {{ order.note.split('-')[10].substring(0,3).replace(",","") }}
+                                              <span v-if="index != 1">
+                                                ゾーン {{ order.note.split('-')[index-1].substring(3,6).replace(",","") }} / 座席 {{ order.note.split('-')[index].substring(0,3).replace(",","") }}
                                               </span>
                                             </p>
                                             <p>
