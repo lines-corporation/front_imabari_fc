@@ -87,12 +87,14 @@
             <v-row v-if="displayLists">
               <v-col v-for="(product, topics_id) in displayLists" :key="topics_id" cols="4" sm="12">
                 <v-card class="p-card">
-                  <v-img
-                    class="white--text align-end fill"
-                    height="300px"
-                    width="300px"
-                    :src="product.images[0]"
-                  />
+                  <div class="square">
+                    <v-img
+                      class="white--text align-end"
+                      :src="product.images[0]"
+                    />
+                  </div>
+                  
+                  
                   <v-card-title>{{ product.name }}</v-card-title>
                   <v-card-text class="text--primary">
                     <div>価格： ¥{{ product.price }}</div>
@@ -310,7 +312,8 @@ export default {
   border-bottom-left-radius: 35px;
   border-bottom-right-radius: 35px;
 }
-.fill{
-  object-fit: fill;
+.square{
+  width:250px;
+  height:250px
 }
 </style>
