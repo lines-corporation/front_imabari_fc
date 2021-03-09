@@ -84,12 +84,34 @@
                 </v-icon>
               </v-col>
             </v-row>
-            <v-row v-if="displayLists">
+            <v-row v-if="displayLists && !isMobile()">
               <v-col v-for="(product, topics_id) in displayLists" :key="topics_id" cols="4" sm="12">
                 <v-card class="p-card">
-                  <div class="rightullidiv">
+                  <div class="pc-rightullidiv">
                     <v-img
-                      class="rightulliimg"
+                      class="pc-rightulliimg"
+                      :src="product.images[0]"
+                    />
+                  </div>
+                  <v-card-title>{{ product.name }}</v-card-title>
+                  <v-card-text class="text--primary">
+                    <div>価格： ¥{{ product.price }}</div>
+                  </v-card-text>
+
+                  <v-card-actions>
+                    <v-btn @click="moveProductDetail(product.data[0].topics_id)" color="orange" text>
+                      商品詳細
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-col>
+            </v-row>
+            <v-row v-else-if="displayLists && isMobile()">
+              <v-col v-for="(product, topics_id) in displayLists" :key="topics_id" cols="4" sm="12">
+                <v-card class="p-card">
+                  <div class="phone-rightullidiv">
+                    <v-img
+                      class="phone-rightulliimg"
                       :src="product.images[0]"
                     />
                   </div>
@@ -284,6 +306,10 @@ export default {
     },
     moveProductDetail(product_id) {
       this.$router.push(`/ec/${product_id}`)
+    },
+    isMobile() {
+	    let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+	    return flag
     }
   },
   computed: {
@@ -298,6 +324,7 @@ export default {
     this.getProducts()
     this.getCategories()
     this.getCartItems()
+    this.isMobile() 
   },
 }
 </script>
@@ -310,16 +337,26 @@ export default {
   border-bottom-left-radius: 35px;
   border-bottom-right-radius: 35px;
 }
-.rightullidiv {
+.pc-rightullidiv {
   width: 100%;
   height: 270px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.rightulliimg {
+.pc-rightulliimg {
   max-width: 100%;
   max-height: 270px;
 }
-
+.phone-rightullidiv {
+  width: 100%;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.phone-rightulliimg {
+  max-width: 100%;
+  max-height: 200px;
+}
 </style>
