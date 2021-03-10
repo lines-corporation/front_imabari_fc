@@ -23,7 +23,7 @@
               <p>¥ {{ product.price }}</p>
               <p>{{ product.size }}</p>
               <p>個数 {{ product.quantity }}個</p>
-              <p>{{ note }}</p>
+              <p v-if="product.size.search('自由席') == -1"> {{ note }}</p>
               </div>
             </v-col>
           </v-row>
