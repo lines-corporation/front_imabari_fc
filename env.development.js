@@ -1,5 +1,5 @@
 module.exports = {
-  META_TITLE: "FC IMABARI Sailors' Club",
+  META_TITLE: "【開発】FC IMABARI Sailors'Club",
   ROBOTS: "noindex",
   BASE_URL: "https://dev-member-imabari.a.kuroco.app",
   PAYGENT_JS: "https://sandbox.paygent.co.jp/js/PaygentToken.js",

@@ -30,9 +30,42 @@ export default {
       {
         hid: "description",
         name: "description",
-        content: process.env.npm_package_description || "",
+        content: envSettings.META_TITLE,
       },
       { hid: "robots", name: "robots", content: envSettings.ROBOTS },
+      {
+        hid: "og:description",
+        property: "og:description",
+        content: envSettings.META_TITLE,
+      },
+      {
+        hid: "og:title",
+        name: "og:title",
+        property: "og:title",
+        content: envSettings.META_TITLE,
+      },
+      {
+        hid: "og:site_name",
+        name: "og:site_name",
+        property: "og:site_name",
+        content: envSettings.META_TITLE,
+      },
+      {
+        hid: "og:type",
+        name: "og:type",
+        property: "og:type",
+        content: envSettings.META_TITLE,
+      },
+      {
+        hid: "apple-mobile-web-app-title",
+        name: "apple-mobile-web-app-title",
+        content: envSettings.META_TITLE,
+      },
+      {
+        hid: "mobile-web-app-capable",
+        name: "mobile-web-app-capable",
+        content: envSettings.META_TITLE,
+      },
     ],
     link: [
       { rel: "shortcut icon", type: "image/x-icon", href: "/favicon.ico" },
