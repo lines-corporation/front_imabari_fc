@@ -55,6 +55,7 @@
         <v-radio-group v-model="ecPaymentId">
           <v-radio label="カード決済" value="61" />
           <v-radio label="銀行振り込み" value="60" />
+          <v-radio label="コンビニ払い" value="59" />
         </v-radio-group>
         <p v-if="ecPaymentId == '60'" class="body-1">
           ■振込先 <br>
@@ -483,6 +484,24 @@ export default {
 
       // その他の住所へ配送をご希望の場合
       if(self.address_elected == 'new-address'){
+        if(self.name1 == "" || self.name2 == "" || self.zip_code == "" || self.tdfk_cd =="" || self.address1 =="" || self.address2 =="" || self.tel =="") {
+        self.$store.dispatch(
+          "snackbar/setError",
+          "配送先住所に誤りがあります。ご確認ください。"
+        )
+        self.$store.dispatch("snackbar/snackOn")
+        self.loading = false
+        return
+        }
+        if((self.tel).match(/[\uff00-\uffff]/g) || self.zip_code.length != 7 || self.tel.length < 10 || self.tel.length>11 || self.tel.substring(0,1) != 0) {
+          self.$store.dispatch(
+           "snackbar/setError",
+           "配送先住所に誤りがあります。ご確認ください。"
+         )
+         self.$store.dispatch("snackbar/snackOn")
+         self.loading = false
+         return
+        }
         // カード払い
         if(self.ecPaymentId == 61) {
           let paygentToken = new PaygentToken()
@@ -506,24 +525,6 @@ export default {
                 self.$store.dispatch("snackbar/snackOn")
                 self.loading = false
                 return
-              }
-              if(self.name1 == "" || self.name2 == "" || self.zip_code == "" || self.tdfk_cd =="" || self.address1 =="" || self.address2 =="" || self.tel =="") {
-                self.$store.dispatch(
-                  "snackbar/setError",
-                  "配送先住所に誤りがあります。ご確認ください。"
-                )
-                self.$store.dispatch("snackbar/snackOn")
-                self.loading = false
-                return
-              }
-              if((self.tel).match(/[\uff00-\uffff]/g) || self.zip_code.length != 7 || self.tel.length < 10 || self.tel.length>11 || self.tel.substring(0,1) != 0) {
-                self.$store.dispatch(
-                 "snackbar/setError",
-                 "配送先住所に誤りがあります。ご確認ください。"
-               )
-               self.$store.dispatch("snackbar/snackOn")
-               self.loading = false
-               return
               }
               self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
                 ec_payment_id: parseInt(self.ecPaymentId),
@@ -561,26 +562,43 @@ export default {
               })
             }
           )
-        } else {
+        } else if(self.ecPaymentId == 60){
            // 銀行振り込み
-           if(self.name1 == "" || self.name2 == "" || self.zip_code == "" || self.tdfk_cd =="" || self.address1 =="" || self.address2 =="" || self.tel =="") {
+           self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
+             ec_payment_id: parseInt(self.ecPaymentId),
+             ec_cart_id:    self.$auth.user.ec_cart_id,
+             order_note:    self.order_note,
+             shipping_address: {
+               name1:    self.name1,
+               name2:    self.name2,
+               zip_code: self.zip_code,
+               tdfk_cd:  self.tdfk_cd,
+               address1: self.address1,
+               address2: self.address2,
+               address3: self.address3,
+               tel:      self.tel,
+             },
+           }).then(() => {
+             console.warn("成功!!")
+             self.$store.dispatch(
+               "snackbar/setMessage",
+               "購入完了メールをご確認の上、決済手続きをお願いいたします。"
+             )
+             self.$store.dispatch("snackbar/snackOn")
+             self.$router.push("/ec/done")
+             self.loading = false
+           }).catch(function (error) {
+             console.warn("!!! error !!!!!!")
+             console.warn(error)
              self.$store.dispatch(
                "snackbar/setError",
-               "配送先住所に誤りがあります。ご確認ください。"
+               error.response.data.errors?.[0]
              )
              self.$store.dispatch("snackbar/snackOn")
              self.loading = false
-             return
-           }
-           if((self.tel).match(/[\uff00-\uffff]/g) || self.zip_code.length != 7 || self.tel.length < 10 || self.tel.length>11 || self.tel.substring(0,1) != 0) {
-                self.$store.dispatch(
-                 "snackbar/setError",
-                 "配送先住所に誤りがあります。ご確認ください。"
-               )
-               self.$store.dispatch("snackbar/snackOn")
-               self.loading = false
-               return
-           }
+           })
+         } else if (self.ecPaymentId == 59){
+          //  コンビニ払い
            self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
              ec_payment_id: parseInt(self.ecPaymentId),
              ec_cart_id:    self.$auth.user.ec_cart_id,
@@ -666,8 +684,33 @@ export default {
                })
              }
            )
-         } else {
+         } else if (self.ecPaymentId == 60){
            // 銀行振り込み
+           self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
+             ec_payment_id: parseInt(self.ecPaymentId),
+             ec_cart_id:    self.$auth.user.ec_cart_id,
+             order_note:    self.order_note,
+           }).then(() => {
+             console.warn("成功!!")
+             self.$store.dispatch(
+               "snackbar/setMessage",
+               "購入完了メールをご確認の上、決済手続きをお願いいたします。"
+             )
+             self.$store.dispatch("snackbar/snackOn")
+             self.$router.push("/ec/done")
+             self.loading = false
+           }).catch(function (error) {
+             console.warn("!!! error !!!!!!")
+             console.warn(error)
+             self.$store.dispatch(
+               "snackbar/setError",
+               error.response.data.errors?.[0]
+             )
+             self.$store.dispatch("snackbar/snackOn")
+             self.loading = false
+           })
+         } else if (self.ecPaymentId == 59){
+          //  コンビニ払い
            self.$auth.ctx.$axios.post("/rcms-api/1/ec/purchase", {
              ec_payment_id: parseInt(self.ecPaymentId),
              ec_cart_id:    self.$auth.user.ec_cart_id,
