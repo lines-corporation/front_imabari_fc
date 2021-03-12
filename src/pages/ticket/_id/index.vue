@@ -198,7 +198,8 @@
                                             </v-card-actions>
                                           </v-toolbar>
                                           <v-card-text style="text-align:center">
-                                            <p style="text-align:center" v-text="prodcut_nm(order_detail.product_id)" /> <br/>
+                                            <br />
+                                            <p style="text-align:center" v-text="prodcut_nm(order_detail.product_id)" />
                                             <p style="text-align:center" v-if="prodcut_nm(order_detail.product_id).search('自由席') == -1 && order.note != 0 && order.note != null ">
                                               <span v-if="index == 1" >ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1].substring(0,3) }}</span> 
                                               <span v-if="index != 1">
