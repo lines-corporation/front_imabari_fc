@@ -148,19 +148,41 @@
                                     <br/>
                                     <p style="margin-bottom:0"> {{ order.ec_order_id + ':' + 'imabari' + ':' + order_detail.order_detail_id+ ':' +  index }} </p> 
                                     <v-dialog
-                                      max-width="1000"
+                                      max-width="1200"
                                       transition="dialog-bottom-transition"
                                     >
                                       <template v-slot:activator="{ on, attrs }">
                                         <v-btn
-                                          class="btn"
+                                          class="share-btn"
                                           v-bind="attrs"
                                           outlinedlargefabcolor="indigo"
                                           v-on="on"
+                                          @click="value = 1"
+                                        >譲渡/分配</v-btn>
+                                        <v-btn
+                                          class="share-cancel-btn"
+                                          v-bind="attrs"
+                                          outlinedlargefabcolor="indigo"
+                                          v-on="on"
+                                          @click="value = 2"
+                                        >譲渡/分配 取消し</v-btn>
+                                        <v-btn
+                                          class="share-finish-btn"
+                                          v-bind="attrs"
+                                          outlinedlargefabcolor="indigo"
+                                          v-on="on"
+                                          @click="value = 3"
+                                        >譲渡/分配済み</v-btn>
+                                        <v-btn
+                                          class="qr-code-btn"
+                                          v-bind="attrs"
+                                          outlinedlargefabcolor="indigo"
+                                          v-on="on"
+                                          @click="value = 4"
                                         >QRコードを表示</v-btn>
                                       </template>
                                       <template v-slot:default="dialog">
-                                        <v-card>
+                                        <v-card v-if="value == 4">
                                           <v-toolbar
                                             color="primary"
                                             dark
@@ -194,6 +216,115 @@
                                             <v-img :src="require('@/assets/images/share.png')" width=20%></v-img>
                                             </div>
                                             <p style="text-align:center">※共有を押すと画像共有ツールが表示されます。</p>
+                                          </v-card-text>
+                                        </v-card>
+
+                                        <v-card v-else-if="value == 1">
+                                          <v-toolbar
+                                            color="primary"
+                                            dark
+                                          >
+                                            <v-spacer></v-spacer>
+                                            <v-card-actions class="justify-end">
+                                              <v-btn
+                                                text
+                                                @click="dialog.value = false"
+                                              >
+                                                閉じる
+                                              </v-btn>
+                                            </v-card-actions>
+                                          </v-toolbar>
+                                          <v-card-text style="text-align:center"><br/>
+                                            <p style="text-align:center" > URLをコピー </p> <br/>
+                                            <v-card
+                                            class="align-center justify-center pa-4 mx-auto"
+                                            max-width="855"
+                                            min-height="76"
+                                            outlined
+                                            >
+                                              <div style="text-align:left">
+                                                <p style="text-align:left"> イベント日時：{{ item.ymd.replaceAll("-","/") }} </p>
+                                                <p style="text-align:left"> {{ item.ext_col_01 }}  {{ item.ext_col_02}} </p>
+                                                <span>  券種： </span><span v-text="prodcut_nm(order_detail.product_id)"></span><br/><br/>
+                                                <p>  QRコードURL </p>
+                                              </div>
+                                            </v-card>
+                                            <v-card
+                                            class="align-center justify-center pa-4 mx-auto"
+                                            style="box-shadow:none"
+                                            max-width="890"
+                                            min-height="76"
+                                            >
+                                              <div style="text-align:left">
+                                                <span style="text-align:left"> QRコードシェアに関する注意文表示，注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル </span>
+                                                <p>  注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル
+                                                     注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル
+                                                     注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル
+                                                     注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル
+                                                </p>
+                                              </div>
+                                            </v-card>
+                                            <v-spacer></v-spacer>
+                                            <v-card-actions class="justify-center">
+                                              <v-btn
+                                                class="share-btn"
+                                                text
+                                                @click="dialog.value = false"
+                                              >
+                                                URLをコピー
+                                              </v-btn>
+                                            </v-card-actions>
+                                            <v-card-actions class="justify-center">
+                                              <v-btn
+                                                class="close-btn"
+                                                text
+                                                @click="dialog.value = false"
+                                              >
+                                                閉じる
+                                              </v-btn>
+                                            </v-card-actions>
+                                          </v-card-text>
+                                        </v-card>
+
+                                        <v-card v-else-if="value == 2">
+                                          <v-toolbar
+                                            color="primary"
+                                            dark
+                                          >
+                                            <v-spacer></v-spacer>
+                                            <v-card-actions class="justify-end">
+                                              <v-btn
+                                                text
+                                                @click="dialog.value = false"
+                                              >
+                                                閉じる
+                                              </v-btn>
+                                            </v-card-actions>
+                                          </v-toolbar>
+                                          <v-card-text style="text-align:center"><br/>
+                                            <p style="text-align:center" > 譲渡/分配の取消しの確認 </p>
+                                            <br/><br/><br/>
+                                            <p style="text-align:center" > 譲渡/分配を取消しますか？ </p>
+                                            <p style="text-align:center" > 取消すと、譲渡/分配済みのURLが無効になります。 </p> <br/>
+                                            <v-spacer></v-spacer><br/><br/>
+                                            <v-card-actions class="justify-center">
+                                              <v-btn
+                                                class="share-cancel-y-btn"
+                                                text
+                                                @click="dialog.value = false"
+                                              >
+                                                はい
+                                              </v-btn>
+                                            </v-card-actions>
+                                            <v-card-actions class="justify-center">
+                                              <v-btn
+                                                class="close-btn"
+                                                text
+                                                @click="dialog.value = false"
+                                              >
+                                                いいえ
+                                              </v-btn>
+                                            </v-card-actions>
                                           </v-card-text>
                                         </v-card>
                                       </template>
@@ -869,11 +1000,52 @@ export default {
 .resize-logo {
   cursor: zoom-in; 
 }
-.btn {
+.share-finish-btn {
   background-color: rgb(255 255 255 / 12%) !important;
   border-color: #1976d2 !important;
   border-style: solid !important;
   border-width: 3px;
   box-shadow: none;
+}
+.qr-code-btn {
+  background-color: rgb(255 255 255 / 12%) !important;
+  border-color: #1976d2 !important;
+  border-style: solid !important;
+  border-width: 3px;
+  box-shadow: none;
+  padding: 0px 9px !important;
+}
+.share-cancel-btn {
+  background-color: #FFF100 !important;
+  border-color: #1976d2 !important;
+  border-style: solid !important;
+  border-width: 3px;
+  box-shadow: none;
+  padding: 0px 5px !important;
+}
+.share-cancel-y-btn{
+  background-color: #FFF100 !important;
+  border-color: #1976d2 !important;
+  border-style: solid !important;
+  border-width: 3px;
+  box-shadow: none;
+  padding: 0px 60px !important;
+}
+.share-btn {
+  background-color: #171C61 !important;
+  border-color: #1976d2 !important;
+  border-style: solid !important;
+  border-width: 3px;
+  color: white;
+  box-shadow: none;
+  padding: 0px 30px !important;
+}
+.close-btn{
+  background-color: rgb(255 255 255 / 12%) !important;
+  border-color: #1976d2 !important;
+  border-style: solid !important;
+  border-width: 3px;
+  box-shadow: none;
+  padding: 0px 53px !important;
 }
 </style>
