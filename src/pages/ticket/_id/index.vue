@@ -1002,7 +1002,7 @@ export default {
 }
 .share-finish-btn {
   background-color: rgb(255 255 255 / 12%) !important;
-  border-color: #1976d2 !important;
+  border-color: white !important;
   border-style: solid !important;
   border-width: 3px;
   box-shadow: none;
