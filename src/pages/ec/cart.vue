@@ -8,7 +8,7 @@
         </v-col>
       </v-row>
 
-      <div v-for="product in products">
+      <div v-for="product in products" :key="product.id">
         <v-row no-gutters class="cart-list">
           <v-col class="c-img">
             <v-img
