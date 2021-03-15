@@ -24,6 +24,7 @@
               <p>{{ product.size }}</p>
               <p>個数 {{ product.quantity }}個</p>
               <p v-if="product.size.search('自由席') == -1"> {{ note }}</p>
+              <p>お支払い状態： {{ generic_payment_status }}</p>
               </div>
             </v-col>
           </v-row>
@@ -50,7 +51,8 @@ export default {
     purchaseDate: "",
     totalPaymentPrice: 0,
     note: "",
-    products: []
+    products: [],
+    generic_payment_status: ""
   }),
   computed: {
     user() {
@@ -68,6 +70,7 @@ export default {
         const response = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/history/${id}`)
         self.purchaseDate = response.data.details.inst_ymdhi.replace(" +0900", "")
         self.note = response.data.details.note
+        self.generic_payment_status = response.data.details.generic_payment_status.label
         self.totalPaymentPrice = parseInt(response.data.details.total)
         response.data.details.order_details.forEach((order) => {
           self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/${order.product_id}`).then((productInfoResponse) => {
