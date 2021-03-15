@@ -8,7 +8,7 @@
           <h3> {{ purchaseDate }}</h3>
         </v-col>
         <!-- TODO 購入履歴ノーデータを確認できたらここを入れ替える(histories) -->
-        <div v-for="product in products">
+        <div v-for="product in products" :key="product.id">
           <v-row no-gutters class="cart-list">
             <v-col class="c-img">
               <v-img
@@ -71,14 +71,16 @@ export default {
         self.totalPaymentPrice = parseInt(response.data.details.total)
         response.data.details.order_details.forEach((order) => {
           self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/${order.product_id}`).then((productInfoResponse) => {
-            self.products.push({
-              id:       order.product_id,
-              quantity: order.quantity,
-              title:    productInfoResponse.data.details.topics_name,
-              price:    productInfoResponse.data.details.product_data.ext_col_04,
-              size:     productInfoResponse.data.details.product_name,
-              image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
-            })
+            if(productInfoResponse.data.details.product_data.ext_columns.straight[0] != undefined) {
+              self.products.push({
+                id:       order.product_id,
+                quantity: order.quantity,
+                title:    productInfoResponse.data.details.topics_name,
+                price:    productInfoResponse.data.details.product_data.ext_col_04,
+                size:     productInfoResponse.data.details.product_name,
+                image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
+              })
+            }
           })
         })
       })

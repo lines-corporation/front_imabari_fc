@@ -52,7 +52,8 @@ export default {
       const response = await this.$auth.ctx.$axios.get("/rcms-api/1/order_list")
       let self = this
       self.histories = {}
-      response.data.list.forEach((history, index) => {
+      let resumeResult = response.data.list.filter((item) => item.generic_payment_status.label == "注文済み" || item.generic_payment_status.label == "未入金状態" || item.generic_payment_status.label == "決済完了")
+      resumeResult.forEach((history, index) => {
         const date = history.inst_ymdhi.replace(" +0900", "")
         if(self.histories[date]) {
           self.histories[date].ids.push(history.ec_order_id)
