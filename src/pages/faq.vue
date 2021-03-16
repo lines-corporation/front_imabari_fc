@@ -60,18 +60,18 @@ export default {
           category_id: 28,
         },
         {
-          action: "チケット購入",
+          action: "チケット購入について",
           title: "",
           active: false,
           items: [],
-          category_id: 31,
+          category_id: 38,
         },
         {
           action: "グッズ購入について",
           title: "",
           active: false,
           items: [],
-          category_id: 32,
+          category_id: 39,
         }
       ],
     }
