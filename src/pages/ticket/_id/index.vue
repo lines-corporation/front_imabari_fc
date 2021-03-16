@@ -146,7 +146,15 @@
                                     style="display:block"
                                   >
                                     <br/>
-                                    <p style="margin-bottom:0"> {{ order.ec_order_id + ':' + 'imabari' + ':' + order_detail.order_detail_id+ ':' +  index }} </p> 
+                                    <p style="margin:0;padding:0;">
+                                      <span v-text="prodcut_nm(order_detail.product_id)" /><br />
+                                      <span v-if="prodcut_nm(order_detail.product_id).search('自由席') == -1 && order.note != 0 && order.note != null ">
+                                        <span v-if="index == 1" >ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1].substring(0,3) }}</span> 
+                                        <span v-if="index != 1">
+                                          ゾーン {{ order.note.split('-')[index-1].substring(3,6).replace(",","") }} / 座席 {{ order.note.split('-')[index].substring(0,3).replace(",","") }}
+                                        </span>
+                                      </span>
+                                    </p>
                                     <v-dialog
                                       max-width="1200"
                                       transition="dialog-bottom-transition"
