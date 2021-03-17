@@ -18,12 +18,15 @@
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </template>
-        <br /> 
         <v-list-item v-for="subItem in item.items" :key="subItem.subject">
           <v-list-item-content>
             <v-list-item-title v-text="subItem.subject" />
             <v-list-item-subtitle>
-              <div >
+              <div  v-if='subItem.contents.substring(4,8) != "nbsp"'>
+                <br/><br/>
+                <p  v-html="subItem.contents" class="p-label" />
+              </div>
+              <div v-else>
                 <p  v-html="subItem.contents" class="p-label" />
               </div>
             </v-list-item-subtitle>
