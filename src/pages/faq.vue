@@ -100,7 +100,7 @@ export default {
 </script>
 <style scoped>
 .p-label{
-  max-width: 800px;
+  max-width: 100%;
   white-space: pre-wrap;
 }
 </style>
