@@ -24,10 +24,10 @@
             <v-list-item-subtitle>
               <div  v-if='subItem.contents.substring(4,8) != "nbsp"'>
                 <br/><br/>
-                <p  v-html="subItem.contents" class="p-label" />
+                <p class="p-label" v-html="subItem.contents" />
               </div>
               <div v-else>
-                <p  v-html="subItem.contents" class="p-label" />
+                <p class="p-label" v-html="subItem.contents" />
               </div>
             </v-list-item-subtitle>
           </v-list-item-content>
@@ -102,5 +102,8 @@ export default {
 .p-label{
   max-width: 100%;
   white-space: pre-wrap;
+}
+.p-label >>> p{
+  margin-bottom: 5px;
 }
 </style>
