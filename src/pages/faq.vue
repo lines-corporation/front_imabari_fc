@@ -7,8 +7,8 @@
     </header>
     <v-list>
       <v-list-group
-        v-for="item in category_items"
-        :key="item.title"
+        v-for="(item,index) in category_items"
+        :key="index"
         v-model="item.active"
         :prepend-icon="item.action"
         no-action
@@ -18,12 +18,14 @@
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </template>
-
+        <br /> 
         <v-list-item v-for="subItem in item.items" :key="subItem.subject">
           <v-list-item-content>
             <v-list-item-title v-text="subItem.subject" />
             <v-list-item-subtitle>
-              <div v-html="subItem.contents" />
+              <div >
+                <p  v-html="subItem.contents" class="p-label" />
+              </div>
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -93,3 +95,9 @@ export default {
   },
 }
 </script>
+<style scoped>
+.p-label{
+  max-width: 800px;
+  white-space: pre-wrap;
+}
+</style>
