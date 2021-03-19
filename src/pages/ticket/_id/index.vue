@@ -165,7 +165,7 @@
                                           v-bind="attrs"
                                           outlinedlargefabcolor="indigo"
                                           v-on="on"
-                                          @click="value = 1"
+                                          @click="getQrcode_hash(order.ec_order_id,order_detail.order_detail_id,index),value = 1"
                                         >譲渡/分配</v-btn>
                                         <v-btn
                                           class="share-cancel-btn"
@@ -251,11 +251,11 @@
                                             min-height="76"
                                             outlined
                                             >
-                                              <div style="text-align:left">
+                                              <div style="text-align:left" id="success_form_input">
                                                 <p style="text-align:left"> イベント日時：{{ item.ymd.replaceAll("-","/") }} </p>
                                                 <p style="text-align:left"> {{ item.ext_col_01 }}  {{ item.ext_col_02}} </p>
                                                 <span>  券種： </span><span v-text="prodcut_nm(order_detail.product_id)"></span><br/><br/>
-                                                <p>  QRコードURL </p>
+                                                <p>  {{ path }} </p>
                                               </div>
                                             </v-card>
                                             <v-card
@@ -278,7 +278,7 @@
                                               <v-btn
                                                 class="share-btn"
                                                 text
-                                                @click="dialog.value = false"
+                                                @click="doCopy"
                                               >
                                                 URLをコピー
                                               </v-btn>
@@ -400,15 +400,87 @@
                           <img :src="zoneImg.url" :preview="zoneImg.preview" width=100%>
                         </section>
                       </div>
+                      <v-btn
+                        class="blank-detail-btn"
+                       >
+                      </v-btn>
                     </v-col>
                     <v-col
                       cols="12"
                       md="6"
+                      v-model="seat_num"
                     >
                       <div align="center" class="resize-logo">
                         <section>
-                          <img :src="seatImg.url" :preview="seatImg.preview" width=100%>
+                          <img :src="items[seat_num].url" :preview="items[seat_num].preview" width=100%>
                         </section>
+                      </div>
+                      <div align="center">
+                        <v-btn
+                          @click="seat_num = 0"
+                          v-if="seat_num == 0"
+                          class= "seat-detail-btn2"
+                          text
+                        >
+                         3
+                        </v-btn>
+                        <v-btn
+                          @click="seat_num = 0"
+                          v-else
+                          class= "seat-detail-btn1"
+                          text
+                        >
+                         3
+                        </v-btn>
+                        <v-btn
+                          @click="seat_num = 1"
+                          v-if="seat_num == 1"
+                          class= "seat-detail-btn2"
+                          text
+                        >
+                         4
+                        </v-btn>
+                        <v-btn
+                          @click="seat_num = 1"
+                          v-else
+                          class= "seat-detail-btn1"
+                          text
+                        >
+                         4
+                        </v-btn>
+                        <v-btn
+                          @click="seat_num = 2"
+                          v-if="seat_num == 2"
+                          class= "seat-detail-btn2"
+                          text
+                        >
+                         5
+                        </v-btn>
+                        <v-btn
+                          @click="seat_num = 2"
+                          v-else
+                          class= "seat-detail-btn1"
+                          text
+                        >
+                         5
+                        </v-btn>
+                        <v-btn
+                          @click="seat_num = 3"
+                          v-if="seat_num == 3"
+                          class= "seat-detail-btn2"
+                          text
+                        >
+                         6
+                        </v-btn>
+                        <v-btn
+                          @click="seat_num = 3"
+                          v-else
+                          class= "seat-detail-btn1"
+                          text
+                        >
+                         6
+                        </v-btn>
+                        
                       </div>
                     </v-col>
                   </v-row>
@@ -621,8 +693,10 @@ import Vue from 'vue'
 import VueQrcode from "@chenfengyuan/vue-qrcode"
 import preview from 'vue-photo-preview'
 import 'vue-photo-preview/dist/skin.css'
+import VueClipboard from 'vue-clipboard2'
 import md5 from "js-md5"
-Vue.use(preview)
+Vue.use(preview,VueClipboard)
+
 
 export default {
   components: {
@@ -631,14 +705,29 @@ export default {
   },
   data: () => ({
     zoneImg: {
-          url: require('@/assets/images/zone.png'),
+          url: require('@/assets/images/seat_map.png'),
           preview: '1'
         },
-    seatImg: {
-          url: require('@/assets/images/seat.png'),
+    items: [
+        {
+          url: require('@/assets/images/seat_detail_3.png'),
           preview: '2'
         },
+        {
+          url: require('@/assets/images/seat_detail_4.png'),
+          preview: '3'
+        },
+        {
+          url: require('@/assets/images/seat_detail_5.png'),
+          preview: '4'
+        },
+        {
+          url: require('@/assets/images/seat_detail_6.png'),
+          preview: '5'
+        },
+    ],
     item: [],
+    seat_num: 0,
     product_list: [],
     seat_reserved_product: new Set(),
     seat_reserved_list: [],
@@ -650,6 +739,9 @@ export default {
     topics_id: null,
     ec_payment_id: "61",
     order_products: [],
+    qrcode_string: "",
+    path: "",
+    message: "copy the text",
     purchase_cnt:0,
     from_order_products:null,
     quantity_list: [{ value: "0", text: "0枚" }],
@@ -832,6 +924,24 @@ export default {
       }
       return ""
     },
+    async getQrcode_hash(ec_order_id,order_detail_id,no){
+      let self = this
+      let hash = `/rcms-api/1/qrcode/url?ec_order_id=${ec_order_id}&order_detail_id=${order_detail_id}&no=${no}`
+      self.$auth.ctx.$axios.get(hash).then(function (response) {
+        self.qrcode_string = response.data.data.qrcode_string
+        self.path = window.location.href + "?" + self.qrcode_string;
+      })
+    },
+    // doCopy() {
+    //   let self = this
+    //   self.$copyText(self.message).then(function (e) {
+    //     alert('Copied')
+    //     console.log(e)
+    //   }, function (e) {
+    //     alert('Can not copy')
+    //     console.log(e)
+    //   })
+    // },
     order_status(ec_payment_id,payment_status){
       let rtn = ""
       if(ec_payment_id==60){
@@ -1009,6 +1119,32 @@ export default {
 .resize-logo {
   cursor: zoom-in; 
 }
+.blank-detail-btn{
+  background-color: white !important;
+  color: white;
+  height: 25px !important;
+  min-width: 20px !important;
+  box-shadow: none; 
+  padding: 0 9px !important;
+} 
+.seat-detail-btn1 {
+  background-color: white !important;
+  border-color: #171C61 !important;
+  color: rgb(12, 9, 9);
+  height: 25px !important;
+  min-width: 20px !important;
+  box-shadow: none; 
+  padding: 0 9px !important;
+} 
+.seat-detail-btn2 {
+  background-color: #171C61 !important;
+  border-color: #171C61 !important;
+  color: white;
+  height: 25px !important;
+  min-width: 20px !important;
+  box-shadow: none; 
+  padding: 0 9px !important;
+} 
 .share-finish-btn {
   background-color: rgb(255 255 255 / 12%) !important;
   border-color: white !important;
