@@ -21,6 +21,7 @@
       <v-row no-gutters class="m-6">
         <v-col>
           <v-img
+          　v-cloak
             :lazy-src="imageUrl"
             :src="imageUrl"
             max-width="500"
@@ -39,6 +40,7 @@
               >
                 <v-row class="fill-height" ALIGN="CENTER" justify="center">
                   <v-img
+                  　v-cloak
                     :lazy-src="image"
                     :src="image"
                     max-width="101"
@@ -390,7 +392,7 @@ export default {
     pickupImages(data) {
       this.images = []
       data.ext_columns.straight.forEach((info, index) => {
-        // とりあえず今表示される画像データがなけれrば入れる
+        // とりあえず今表示される画像データがなければ入れる
         if(info.file_url) {
           if(!this.imageUrl) {
             this.imageUrl = info.file_url
@@ -410,5 +412,8 @@ export default {
 .sell-out{
   font-weight: 800;
   border-color: crimson !important;
+}
+[v-cloak]{
+    display:none !important;
 }
 </style>
