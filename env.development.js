@@ -14,5 +14,7 @@ module.exports = {
   FIREBASE_STORAGE_BUCKET: "kuroco-member-imabari.appspot.com",
   FIREBASE_MESSAGING_SENDER_ID: "189599849707",
   FIREBASE_APP_ID: "1:189599849707:web:14abde7acb1eec18cfb2ae",
-  FIREBASE_COLLECTION: 'dev-seasonpass'
+  FIREBASE_COLLECTION: "dev-seasonpass",
+  VAPP_URL:"https://mnt-fcimabari-ms-fan.neveso.com/fanpage/idLinkageLogin",
+  VAPP_ClubId: "304200010001"
 }
