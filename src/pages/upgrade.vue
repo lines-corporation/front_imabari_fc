@@ -30,6 +30,16 @@
               </v-col>
             </v-row>
             <v-row>
+              <span>購入者様以外の方の分をご購入の場合は、ご利用される方の①お名前②年齢③性別④電話番号をご記入ください。</span>
+            </v-row>
+            <v-row>
+              <v-textarea
+                name="input-7-1"
+                filled
+                v-model="order_note"
+              ></v-textarea>
+            </v-row>
+            <v-row>
               <v-col cols="4">
                 <v-subheader>料金プラン</v-subheader>
               </v-col>
@@ -183,6 +193,7 @@ export default {
   auth: true,
   data() {
     return {
+      order_note: "",
       valid: true,
       red_star: false,
       green_star: false,
@@ -288,6 +299,7 @@ export default {
                     product_id: parseInt(self.product_id),
                     quantity: 1,
                     card_token: response.tokenizedCardObject.token,
+                    order_note: self.order_note,
                   })
                   .then(() => {
                     self.$store.dispatch(
@@ -333,6 +345,7 @@ export default {
               ec_payment_id: parseInt(self.ec_payment_id),
               product_id: parseInt(self.product_id),
               quantity: 1,
+              order_note: self.order_note,
             })
             .then(() => {
               self.$store.dispatch(

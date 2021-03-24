@@ -32,7 +32,7 @@
                     </p>
                     <p>
                       <v-text-field
-                      v-model="form.email"
+                      v-model="email"
                       label="メールアドレス"
                       type="email"
                       outlined
@@ -40,7 +40,7 @@
                     </p>
                     <p>
                       <v-text-field
-                      v-model="form.password"
+                      v-model="password"
                       label="パスワード"
                       :type="show_pwd1 ? 'text' : 'password'"
                       :append-icon="show_pwd1 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -55,10 +55,18 @@
                     color="success"
                     dark
                     :loading="loading"
+                    @click="getLogin(login_flag)"
                     >
-                    ログインする
-                  </v-btn>
+                      ログインする
+                    </v-btn>
                 </form>
+                <v-checkbox
+                  class="box"
+                  v-model="login_flag"
+                  type="login_flag"
+                  label="ログイン状態を保持する"
+                >
+                </v-checkbox>
                 <p>
                   <NuxtLink to="/reminder">
                     仮パスワード発行<br />
@@ -137,6 +145,20 @@
                 <NuxtLink to="/ec">
                   <v-img :src="require('@/assets/images/btn-ecpage.png')"></v-img>
                 </NuxtLink>
+              </v-card-text>
+            </v-card>
+            <v-card class="mx-auto" outlined>
+              <v-card-actions>
+                <br /><br /><br /><br />
+                <v-btn text color="deep-purple accent-4" to="/vapp">
+                  FC今治アプリに連携する
+                </v-btn>
+              </v-card-actions>
+              <v-card-text class="text-center">
+                <NuxtLink to="/from_fm">
+                  ※「FC今治アプリ連携」とは
+                </NuxtLink>
+                <br /><br />
               </v-card-text>
             </v-card>
           </v-col>
@@ -264,10 +286,16 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import VueQrcode from "@chenfengyuan/vue-qrcode"
+import { Base64 } from 'js-base64'
+import CryptoJS from "crypto-js";
+Vue.use(CryptoJS)
 export default {
   components: {
-   VueQrcode
+   VueQrcode,
+   Base64,
+   CryptoJS
   },
   auth: false,
   data: () => ({
@@ -278,10 +306,10 @@ export default {
     show_pwd1: false,
     show_pwd2: false,
     can_ticket_sales: false,
-    form: {
-      email: "",
-      password: "",
-    },
+    email: "",
+    password: "",
+    login_save: 0,
+    login_flag: false,
     join_renew_url:"https://www.fcimabari.com/support/FISC.html",
   }),
   computed: {
@@ -347,6 +375,9 @@ export default {
   mounted() {
     this.getInfo()
   },
+  created () {
+   this.getCookie()
+  },
   methods: {
     getInfo() {
       if (this.$auth.loggedIn) {
@@ -376,35 +407,94 @@ export default {
           })
       }
     },
+    getLogin(info){
+      self = this
+      if(info == false){
+        self.login_save= 0
+      } else {
+        self.login_save= 1
+      }
+    },
+    checkedPwd(username,pwd){
+      self = this
+      if (self.login_flag){
+        // base64 暗号化処理
+        let base64Pwd=Base64.encode(pwd);
+        // Encrypt 暗号化処理
+        let cryptoJsPwd=CryptoJS.AES.encrypt(base64Pwd,"secretkey123").toString()
+        // アカウントとパスワード保存日数
+        self.setCookie(username,cryptoJsPwd,2)
+      }else{
+        // データをクリーンアップ
+        self.clearCookie()
+      }
+    },
+    //cookieを設定
+    setCookie(c_name, c_pwd, exdays) {
+      var exdate = new Date()
+      // 保存日数
+      exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays)
+      //文字列の切り替え
+      window.document.cookie = "username" + "=" + c_name + ";path=/;expires=" + exdate.toGMTString()
+      window.document.cookie = "password" + "=" + c_pwd + ";path=/;expires=" + exdate.toGMTString()
+    },
+    //cookieを読み込み
+    getCookie: function() {
+      if (document.cookie.length > 0) {
+        this.checked=true
+        var arr = document.cookie.split('; ');
+        for (var i = 0; i < arr.length; i++) {
+          var arr2 = arr[i].split('=');
+          if (arr2[0] == "username") {
+          this.email = arr2[1];
+          } else if (arr2[0] == "password") {
+          // Decrypt デコード
+          let bytes = CryptoJS.AES.decrypt(arr2[1],"secretkey123")
+          let originalText=bytes.toString(CryptoJS.enc.Utf8)
+          // base64 デコード
+          let pwd=Base64.decode(originalText)
+          this.password = pwd;
+          }
+        }
+      }
+    },
+    // cookieをクリーンアップ
+    clearCookie: function() {
+      this.setCookie("", "", -1);
+    },
     async login() {
-      this.loading = true
-      await this.$auth
-        .loginWith("local", { data: this.form })
+      self = this
+      self.loading = true
+      await this.$auth.ctx.$axios
+          .post("/rcms-api/1/login", {
+          email: self.email,
+          password: self.password,
+          login_save: self.login_save,
+        })
         .then(() => {
-          const group_ids = JSON.parse(
-            JSON.stringify(this.$auth.user.group_ids)
-          )
-          let upgraded_flg = false
-          Object.keys(group_ids).forEach(function (key) {
-            if (key == 114 || key == 111 || key == 110 || key == 113) {
-              upgraded_flg = true
-            }
-          })
-          //if (!upgraded_flg) {
-          //  this.$router.push("/upgrade")
-          //} else {
-            this.getInfo()
-            this.$router.push("/")
-          //}
-          this.$store.dispatch("snackbar/setMessage", "ログインしました")
-          this.$store.dispatch("snackbar/snackOn")
-          this.loading = false
+        this.$auth.ctx.$axios.get("/rcms-api/1/profile").then(function (response) {
+        const group_ids = JSON.parse(
+            JSON.stringify(response.data.group_ids)
+        )
+        let upgraded_flg = false
+        Object.keys(group_ids).forEach(function (key) {
+          if (key == 114 || key == 111 || key == 110 || key == 113) {
+            upgraded_flg = true
+          }
         })
-        .catch(() => {
-          this.$store.dispatch("snackbar/setError", "ログインに失敗しました")
-          this.$store.dispatch("snackbar/snackOn")
-          this.loading = false
+        self.getInfo()
+        self.$store.dispatch("snackbar/setMessage", "ログインしました")
+        self.$store.dispatch("snackbar/snackOn")
+        self.checkedPwd(self.email,self.password)
+        location.reload()
         })
+        self.loading = false
+      })
+      .catch(() => {
+        self.$store.dispatch("snackbar/setError", "ログインに失敗しました")
+        self.$store.dispatch("snackbar/snackOn")
+        self.loading = false
+      })
     },
   },
 }
@@ -412,6 +502,10 @@ export default {
 <style scoped>
 .qr{
    text-align: center; 
-   display: block;    
+   display: block;
  }
+.box {
+  text-align: center;
+  display:inline-block;
+}
 </style>

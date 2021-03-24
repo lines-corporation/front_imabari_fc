@@ -156,7 +156,7 @@ export default {
     count: 0,
     page_length:0,
     displayLists: [],
-    pageSize: 30,
+    pageSize: 18,
     selectVal:"",
     flag: true,
     settings: [],

@@ -122,7 +122,7 @@
                                   <td class="text-left">
                                     <br />
                                     <span v-text="prodcut_nm(order_detail.product_id)" /><br />
-                                    {{ order_detail.price*parseInt(order_detail.quantity) }}円<br />
+                                    {{ order.payment_total }}円<br />
                                     {{ order_detail.quantity }}枚<br />
                                     <div v-if="prodcut_nm(order_detail.product_id).search('自由席') == -1 && order.note != 0 && order.note != null ">
                                        ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1].substring(0,3) }} <br/>
@@ -218,14 +218,6 @@
                                               <vue-qrcode :value="prodcut_qr(order.ec_order_id + ':' + 'imabari' + ':' + order_detail.order_detail_id + ':' + index)" tag="img" />
                                             </p>
                                           </v-card-text>
-                                          <v-card-text>
-                                            <p style="text-align:center">QRコードを送信する場合。</p>
-                                            <p style="text-align:center">LINEなどで送信する場合には、QRコード画像箇所を長押しして表示される共有機能にて送信ください。</p>
-                                            <div class="d-flex flex-column justify-space-between align-center">
-                                            <v-img :src="require('@/assets/images/share.png')" width=20%></v-img>
-                                            </div>
-                                            <p style="text-align:center">※共有を押すと画像共有ツールが表示されます。</p>
-                                          </v-card-text>
                                         </v-card>
 
                                         <v-card v-else-if="value == 1">
@@ -246,12 +238,14 @@
                                           <v-card-text style="text-align:center"><br/>
                                             <p style="text-align:center" > URLをコピー </p> <br/>
                                             <v-card
+                                            id="copyObj"
+                                            v-model="message"
                                             class="align-center justify-center pa-4 mx-auto"
                                             max-width="855"
                                             min-height="76"
                                             outlined
                                             >
-                                              <div style="text-align:left" id="success_form_input">
+                                              <div style="text-align:left">
                                                 <p style="text-align:left"> イベント日時：{{ item.ymd.replaceAll("-","/") }} </p>
                                                 <p style="text-align:left"> {{ item.ext_col_01 }}  {{ item.ext_col_02}} </p>
                                                 <span>  券種： </span><span v-text="prodcut_nm(order_detail.product_id)"></span><br/><br/>
@@ -277,8 +271,10 @@
                                             <v-card-actions class="justify-center">
                                               <v-btn
                                                 class="share-btn"
-                                                text
-                                                @click="doCopy"
+                                                v-clipboard:copy="message"
+                                                v-clipboard:success="onCopy"
+                                                v-clipboard:error="onError"
+                                                @click="Copy(),update(order.ec_order_id,order_detail.order_detail_id,index), hash_check(qrcode_string), dialog.value = false"
                                               >
                                                 URLをコピー
                                               </v-btn>
@@ -320,7 +316,7 @@
                                               <v-btn
                                                 class="share-cancel-y-btn"
                                                 text
-                                                @click="dialog.value = false"
+                                                @click="update(order.ec_order_id,order_detail.order_detail_id,index), hash_check(qrcode_string), dialog.value = false"
                                               >
                                                 はい
                                               </v-btn>
@@ -511,7 +507,10 @@
                           <template>
                             <tr>
                               <td>{{ t.subject }}</td>
-                              <td>{{ t.price_02 }}円</td>
+                              <td>
+                                <span>{{ t.price_02 }}円</span> <br/>
+                                <span v-if="flag && t.group_price > 0"> 有料会員限定の割引価格 {{ t.group_price }}円</span>
+                              </td>
                               <td>
                                 <v-select
                                   v-if="t.stock > 0"
@@ -695,13 +694,16 @@ import preview from 'vue-photo-preview'
 import 'vue-photo-preview/dist/skin.css'
 import VueClipboard from 'vue-clipboard2'
 import md5 from "js-md5"
-Vue.use(preview,VueClipboard)
-
+VueClipboard.config.autoSetContainer = true
+Vue.use(preview)
+Vue.use(VueClipboard)
 
 export default {
+  auth: false,
   components: {
     VueQrcode,
-    md5
+    md5,
+    VueClipboard
   },
   data: () => ({
     zoneImg: {
@@ -726,6 +728,9 @@ export default {
           preview: '5'
         },
     ],
+    message: "",
+    order_detail_id: 1,
+    flag: false,
     item: [],
     seat_num: 0,
     product_list: [],
@@ -741,7 +746,6 @@ export default {
     order_products: [],
     qrcode_string: "",
     path: "",
-    message: "copy the text",
     purchase_cnt:0,
     from_order_products:null,
     quantity_list: [{ value: "0", text: "0枚" }],
@@ -855,6 +859,11 @@ export default {
               }
             }
           }
+          if(Object.values(JSON.parse(JSON.stringify(self.$auth.user.group_ids)))[0] == "無料会員"){
+            self.flag = false
+          } else {
+            self.flag = true
+          }
         })
 
         let url_o = "/rcms-api/1/order_list?is_canceled=0&without_payment_error=1&topics_id=" + self.topics_id
@@ -932,16 +941,74 @@ export default {
         self.path = window.location.href + "?" + self.qrcode_string;
       })
     },
-    // doCopy() {
-    //   let self = this
-    //   self.$copyText(self.message).then(function (e) {
-    //     alert('Copied')
-    //     console.log(e)
-    //   }, function (e) {
-    //     alert('Can not copy')
-    //     console.log(e)
-    //   })
-    // },
+    async update(ec_order_id,order_detail_id,no){
+      let self = this
+      if (no == "1") {
+        self.$auth.ctx.$axios
+        .post("/rcms-api/1/qrcode/update", {
+          ec_order_id: ec_order_id,
+          order_detail_id: order_detail_id,
+          no: no,
+          mode: "delete"
+        })
+        .then(() => {
+          console.log(self.success_message)
+        })
+        .catch(function (error) {
+          self.$store.dispatch(
+            "snackbar/setError",
+            "失敗する"
+          )
+          self.$store.dispatch("snackbar/snackOn")
+          self.loading = false
+        })
+      } else {
+        self.$auth.ctx.$axios
+        .post("/rcms-api/1/qrcode/update", {
+          ec_order_id: ec_order_id,
+          order_detail_id: order_detail_id,
+          no: no,
+          mode: "insert"
+        })
+        .then(() => {
+          console.log(self.success_message)
+        })
+        .catch(function (error) {
+          self.$store.dispatch(
+            "snackbar/setError",
+            "失敗する"
+          )
+          self.$store.dispatch("snackbar/snackOn")
+          self.loading = false
+        })
+      }
+    },
+    async hash_check(hash){
+      let self = this
+      let check_message = `rcms-api/1/qrcode/hash?hash=${hash}`
+      self.$auth.ctx.$axios.get(check_message).then(function (response) {
+        self.order_detail_id = response.data.data.order_detail_id
+      })
+    },
+    Copy: function() {
+      self = this
+      let url = document.querySelector('#copyObj')
+      self.message = url.textContent
+    },
+    onCopy: function (e) {
+      self.$store.dispatch(
+        "snackbar/setMessage",
+        "URLをコピーに成功しました。"
+      )
+      self.$store.dispatch("snackbar/snackOn")
+    },
+    onError: function (e) {
+      self.$store.dispatch(
+         "snackbar/setError",
+         "URLをコピーに失敗しました。"
+    　)
+    　self.$store.dispatch("snackbar/snackOn")
+    },
     order_status(ec_payment_id,payment_status){
       let rtn = ""
       if(ec_payment_id==60){
