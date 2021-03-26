@@ -164,19 +164,19 @@
                                         <div>
                                           <div style="display:inline" v-show="order_detail.order_detail_id == ec_order_id_key && index == order_detail_id_no && qrcode_type == 1">
                                             <v-btn
-                                              class="share-btn"
-                                              v-bind="attrs"
-                                              outlinedlargefabcolor="indigo"
-                                              v-on="on"
-                                              @click="getQrcode(order.ec_order_id,order_detail.order_detail_id,index), value = 1"
-                                            >譲渡/分配</v-btn>
-                                            <v-btn
                                               class="qr-code-btn"
                                               v-bind="attrs"
                                               outlinedlargefabcolor="indigo"
                                               v-on="on"
                                               @click="value = 4"
                                             >QRコードを表示</v-btn>
+                                            <v-btn
+                                              class="share-btn"
+                                              v-bind="attrs"
+                                              outlinedlargefabcolor="indigo"
+                                              v-on="on"
+                                              @click="getQrcode(order.ec_order_id,order_detail.order_detail_id,index), value = 1"
+                                            >譲渡/分配</v-btn>
                                           </div>
                                           <div style="display:inline" v-show="order_detail.order_detail_id == ec_order_id_key && index == order_detail_id_no && qrcode_type ==2">
                                             <span
