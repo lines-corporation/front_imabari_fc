@@ -161,36 +161,36 @@
                                       transition="dialog-bottom-transition"
                                     > 
                                       <template v-slot:activator="{ on, attrs }">
-                                        <v-btn
-                                          v-show="order_detail.order_detail_id == ec_order_id_key && index == order_detail_id_no && qrcode_type == 1"
-                                          class="share-btn"
-                                          v-bind="attrs"
-                                          outlinedlargefabcolor="indigo"
-                                          v-on="on"
-                                          @click="getQrcode(order.ec_order_id,order_detail.order_detail_id,index), value = 1"
-                                        >譲渡/分配</v-btn>
-                                        <div style="display:inline">
-                                          <span
-                                            v-show="order_detail.order_detail_id == ec_order_id_key && index == order_detail_id_no && qrcode_type ==2"
-                                            @click="value = 3"
-                                          >譲渡/分配済み</span>
-                                          <v-btn
-                                            v-show="order_detail.order_detail_id == ec_order_id_key && index == order_detail_id_no && qrcode_type==2"
-                                            class="share-cancel-btn"
-                                            v-bind="attrs"
-                                            outlinedlargefabcolor="indigo"
-                                            v-on="on"
-                                            @click="value = 2"
-                                          >譲渡/分配取消し</v-btn>
+                                        <div>
+                                          <div style="display:inline" v-show="order_detail.order_detail_id == ec_order_id_key && index == order_detail_id_no && qrcode_type == 1">
+                                            <v-btn
+                                              class="share-btn"
+                                              v-bind="attrs"
+                                              outlinedlargefabcolor="indigo"
+                                              v-on="on"
+                                              @click="getQrcode(order.ec_order_id,order_detail.order_detail_id,index), value = 1"
+                                            >譲渡/分配</v-btn>
+                                            <v-btn
+                                              class="qr-code-btn"
+                                              v-bind="attrs"
+                                              outlinedlargefabcolor="indigo"
+                                              v-on="on"
+                                              @click="value = 4"
+                                            >QRコードを表示</v-btn>
+                                          </div>
+                                          <div style="display:inline" v-show="order_detail.order_detail_id == ec_order_id_key && index == order_detail_id_no && qrcode_type ==2">
+                                            <span
+                                              @click="value = 3"
+                                            >譲渡/分配済み</span>
+                                            <v-btn
+                                              class="share-cancel-btn"
+                                              v-bind="attrs"
+                                              outlinedlargefabcolor="indigo"
+                                              v-on="on"
+                                              @click="value = 2"
+                                            >譲渡/分配取消し</v-btn>
+                                          </div>
                                         </div>
-                                        <v-btn
-                                          v-show="order_detail.order_detail_id == ec_order_id_key && index == order_detail_id_no && qrcode_type == 1"
-                                          class="qr-code-btn"
-                                          v-bind="attrs"
-                                          outlinedlargefabcolor="indigo"
-                                          v-on="on"
-                                          @click="value = 4"
-                                        >QRコードを表示</v-btn>
                                       </template>
                                       <template v-slot:default="dialog">
                                         <v-card v-if="value == 4">
