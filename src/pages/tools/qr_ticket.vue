@@ -15,14 +15,16 @@
     </v-card-text> -->
       
 　   <v-container>
-       <v-col class="c-txt">
-         <td style="padding-left: 550px;">
+       <v-card-text class="c-txt" style="text-align:center;">
+         <p style="text-align:center;">
            <vue-qrcode
+             v-if="order_detail_id != null && order_id != null"
+             style="text-align:center;"
              :value="hash_code"
              tag="img"
            />
-         </td>
-       </v-col>
+         </p>
+       </v-card-text>
     </v-container>
   </div>
 </template>
@@ -56,7 +58,13 @@ export default {
         self.product_name = response.data.data.product_name
         self.note = response.data.data.note
         self.no = response.data.data.no
-        self.hash_code = md5(self.ec_order_id + ":imabari:" + self.order_detail_id + ':' + self.no)
+        if(self.order_detail_id == null || self.order_id  == null) {
+        self.$store.dispatch("snackbar/setError", "HASHの存在しません")
+        self.$store.dispatch("snackbar/snackOn")
+        self.loading = false
+        } else {
+          self.hash_code = md5(self.ec_order_id + ":imabari:" + self.order_detail_id + ':' + self.no) 
+        }
       })
     }
   },
