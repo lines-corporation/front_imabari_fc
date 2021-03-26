@@ -13,7 +13,7 @@
         <v-row>
           <v-col cols="12">
             <v-subheader>
-              以下の連携ボタンをタップして、VアプリのID/PWDを入力していただくと、VアプリからロケッツクラブへID、PWDを入力せずにログインできるようになります。
+              以下の連携ボタンをタップして、FC今治アプリのID/PWDを入力していただくと、FC今治アプリからFC IMABARI Sailors' ClubへID、PWDを入力せずにログインできるようになります。
             </v-subheader>
           </v-col>
         </v-row>

@@ -156,25 +156,29 @@
                                       </span>
                                     </p>
                                     <v-dialog
+                                      v-if="getQrcode_hash(order.ec_order_id,order_detail.order_detail_id,index)"
                                       max-width="1200"
                                       transition="dialog-bottom-transition"
-                                    >
+                                    > 
                                       <template v-slot:activator="{ on, attrs }">
                                         <v-btn
+                                          v-show="order_detail.order_detail_id == ec_order_id_key && index == order_detail_id_no && qrcode_type == 1"
                                           class="share-btn"
                                           v-bind="attrs"
                                           outlinedlargefabcolor="indigo"
                                           v-on="on"
-                                          @click="getQrcode_hash(order.ec_order_id,order_detail.order_detail_id,index),value = 1"
+                                          @click="getQrcode(order.ec_order_id,order_detail.order_detail_id,index), value = 1"
                                         >譲渡/分配</v-btn>
                                         <v-btn
+                                          v-show="order_detail.order_detail_id == ec_order_id_key && index == order_detail_id_no && qrcode_type==2"
                                           class="share-cancel-btn"
                                           v-bind="attrs"
                                           outlinedlargefabcolor="indigo"
                                           v-on="on"
                                           @click="value = 2"
-                                        >譲渡/分配 取消し</v-btn>
+                                        >譲渡/分配取消し</v-btn>
                                         <v-btn
+                                          v-show="order_detail.order_detail_id == ec_order_id_key && index == order_detail_id_no && qrcode_type ==2"
                                           class="share-finish-btn"
                                           v-bind="attrs"
                                           outlinedlargefabcolor="indigo"
@@ -182,6 +186,7 @@
                                           @click="value = 3"
                                         >譲渡/分配済み</v-btn>
                                         <v-btn
+                                          v-show="order_detail.order_detail_id == ec_order_id_key && index == order_detail_id_no && qrcode_type == 1"
                                           class="qr-code-btn"
                                           v-bind="attrs"
                                           outlinedlargefabcolor="indigo"
@@ -236,7 +241,7 @@
                                             </v-card-actions>
                                           </v-toolbar>
                                           <v-card-text style="text-align:center"><br/>
-                                            <p style="text-align:center" > URLをコピー </p> <br/>
+                                            <p style="text-align:center;font-weight:bold" > 譲渡 / 分配 </p> <br/>
                                             <v-card
                                             id="copyObj"
                                             v-model="message"
@@ -255,28 +260,33 @@
                                             <v-card
                                             class="align-center justify-center pa-4 mx-auto"
                                             style="box-shadow:none"
-                                            max-width="890"
+                                            max-width="880"
                                             min-height="76"
                                             >
-                                              <div style="text-align:left">
-                                                <span style="text-align:left"> QRコードシェアに関する注意文表示，注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル </span>
-                                                <p>  注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル
-                                                     注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル
-                                                     注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル
-                                                     注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル注意サンプル
+                                              <div style="text-align:left;font-weight:bold">
+                                                <span style="text-align:left"> 【譲渡/分配に関するご注意】 </span>
+                                                <p>  ※一度「譲渡/分配」されて発行されたQRコードは、「譲渡/分配 取消し」
+                                                  によってURLをクリックした際にQRコードは無効化されますが、譲渡/分配され
+                                                  た方が、そのQRコードを画面キャプチャなどして保存していた場合、試合会場
+                                                  でゲートに入ることができてしまうため、必ず「譲渡/分配」されて送信された
+                                                  QRコードの管理については購入者の責任で管理をお願いします。
+                                                  （※その場合の一切の責任をチーム側で負うことは出来かねます事予めご了承
+                                                  の上で「譲渡/分配」機能を実行ください）新型コロナウィルス感染防止のため、
+                                                  どなたに譲渡・分配されたか確認させていただくことがございます。
+                                                  譲渡・分配先の方については必ず記録される様にお願い致します。
                                                 </p>
                                               </div>
                                             </v-card>
                                             <v-spacer></v-spacer>
                                             <v-card-actions class="justify-center">
                                               <v-btn
-                                                class="share-btn"
+                                                class="share-transfer-btn"
                                                 v-clipboard:copy="message"
                                                 v-clipboard:success="onCopy"
                                                 v-clipboard:error="onError"
-                                                @click="Copy(),update(order.ec_order_id,order_detail.order_detail_id,index), hash_check(qrcode_string), dialog.value = false"
+                                                @click="update_disable(order.ec_order_id,order_detail.order_detail_id,index), Copy()"
                                               >
-                                                URLをコピー
+                                                URLをコピーする
                                               </v-btn>
                                             </v-card-actions>
                                             <v-card-actions class="justify-center">
@@ -316,7 +326,7 @@
                                               <v-btn
                                                 class="share-cancel-y-btn"
                                                 text
-                                                @click="update(order.ec_order_id,order_detail.order_detail_id,index), hash_check(qrcode_string), dialog.value = false"
+                                                @click="update_enable(order.ec_order_id,order_detail.order_detail_id,index)"
                                               >
                                                 はい
                                               </v-btn>
@@ -729,7 +739,11 @@ export default {
         },
     ],
     message: "",
+    ec_order_id_key: 1,
+    order_detail_id_no: 1,
     order_detail_id: 1,
+    qrcode_type: 1,
+    keyword: 0,
     flag: false,
     item: [],
     seat_num: 0,
@@ -933,63 +947,93 @@ export default {
       }
       return ""
     },
-    async getQrcode_hash(ec_order_id,order_detail_id,no){
+    async update_enable(ec_order_id,order_detail_id,no){
+      let self = this
+      self.$auth.ctx.$axios
+      .post("/rcms-api/1/qrcode/update", {
+        ec_order_id: ec_order_id,
+        order_detail_id: order_detail_id,
+        no: no,
+        mode: "enable"
+      })
+      .then(() => {
+        let hash = `/rcms-api/1/qrcode/url?ec_order_id=${ec_order_id}&order_detail_id=${order_detail_id}&no=${no}`
+        self.$auth.ctx.$axios.get(hash).then(function (response) {
+        self.qrcode_type = response.data.data.qrcode_type
+        self.ec_order_id_key = response.data.data.key.substring(0,4)
+        self.order_detail_id_no = response.data.data.key.substring(8,10)
+        })
+        self.$store.dispatch(
+        "snackbar/setMessage",
+        "分配取消成功しました。"
+        )
+        self.$store.dispatch("snackbar/snackOn")
+      })
+      .catch(function (error) {
+        self.$store.dispatch(
+          "snackbar/setError",
+          "失敗する"
+        )
+        self.$store.dispatch("snackbar/snackOn")
+        self.loading = false
+      })
+    },
+    async update_disable(ec_order_id,order_detail_id,no){
+      let self = this
+      self.$auth.ctx.$axios
+      .post("/rcms-api/1/qrcode/update", {
+        ec_order_id: ec_order_id,
+        order_detail_id: order_detail_id,
+        no: no,
+        mode: "disable"
+      })
+      .then(() => {
+        let hash = `/rcms-api/1/qrcode/url?ec_order_id=${ec_order_id}&order_detail_id=${order_detail_id}&no=${no}`
+        self.$auth.ctx.$axios.get(hash).then(function (response) {
+        self.qrcode_type = response.data.data.qrcode_type
+        self.ec_order_id_key = response.data.data.key.substring(0,4)
+        self.order_detail_id_no = response.data.data.key.substring(8,10)
+        })
+        self.$store.dispatch(
+        "snackbar/setMessage",
+        "URLをコピーに成功しました。"
+        )
+        self.$store.dispatch("snackbar/snackOn")
+      })
+      .catch(function (error) {
+        self.$store.dispatch(
+          "snackbar/setError",
+          "失敗する"
+        )
+        self.$store.dispatch("snackbar/snackOn")
+        self.loading = false
+      })
+    },
+    async getQrcode(ec_order_id,order_detail_id,no){
       let self = this
       let hash = `/rcms-api/1/qrcode/url?ec_order_id=${ec_order_id}&order_detail_id=${order_detail_id}&no=${no}`
       self.$auth.ctx.$axios.get(hash).then(function (response) {
         self.qrcode_string = response.data.data.qrcode_string
-        self.path = window.location.href + "?" + self.qrcode_string;
+        self.path = window.location.origin + "/"+  "tools/qr_ticket/?" + "ec_order_id="+ ec_order_id +"&order_detail_id="+ order_detail_id + "&no=" + no;
       })
     },
-    async update(ec_order_id,order_detail_id,no){
+    async getQrcode_hash(ec_order_id,order_detail_id,no){
       let self = this
-      if (no == "1") {
-        self.$auth.ctx.$axios
-        .post("/rcms-api/1/qrcode/update", {
-          ec_order_id: ec_order_id,
-          order_detail_id: order_detail_id,
-          no: no,
-          mode: "delete"
-        })
-        .then(() => {
-          console.log(self.success_message)
-        })
-        .catch(function (error) {
-          self.$store.dispatch(
-            "snackbar/setError",
-            "失敗する"
-          )
-          self.$store.dispatch("snackbar/snackOn")
-          self.loading = false
-        })
-      } else {
-        self.$auth.ctx.$axios
-        .post("/rcms-api/1/qrcode/update", {
-          ec_order_id: ec_order_id,
-          order_detail_id: order_detail_id,
-          no: no,
-          mode: "insert"
-        })
-        .then(() => {
-          console.log(self.success_message)
-        })
-        .catch(function (error) {
-          self.$store.dispatch(
-            "snackbar/setError",
-            "失敗する"
-          )
-          self.$store.dispatch("snackbar/snackOn")
-          self.loading = false
-        })
-      }
-    },
-    async hash_check(hash){
-      let self = this
-      let check_message = `rcms-api/1/qrcode/hash?hash=${hash}`
-      self.$auth.ctx.$axios.get(check_message).then(function (response) {
-        self.order_detail_id = response.data.data.order_detail_id
+      self.order_qrcodes = []
+      let hash = `/rcms-api/1/qrcode/url?ec_order_id=${ec_order_id}&order_detail_id=${order_detail_id}&no=${no}`
+      self.$auth.ctx.$axios.get(hash).then(function (response) {
+        self.qrcode_type = response.data.data.qrcode_type
+        self.ec_order_id_key = response.data.data.key.substring(0,4)
+        self.order_detail_id_no = response.data.data.key.substring(8,10)
       })
     },
+    // async hash_check(hash){
+    //   let self = this
+    //   let check_message = `rcms-api/1/qrcode/hash?hash=${hash}`
+    //   self.$auth.ctx.$axios.get(check_message).then(function (response) {
+    //     self.order_detail_id = response.data.data.order_detail_id
+    //   })
+    // },
     Copy: function() {
       self = this
       let url = document.querySelector('#copyObj')
@@ -1251,6 +1295,15 @@ export default {
   color: white;
   box-shadow: none;
   padding: 0px 30px !important;
+}
+.share-transfer-btn {
+  background-color: #171C61 !important;
+  border-color: #1976d2 !important;
+  border-style: solid !important;
+  border-width: 3px;
+  color: white;
+  box-shadow: none;
+  padding: 0px 14px !important;
 }
 .close-btn{
   background-color: rgb(255 255 255 / 12%) !important;
