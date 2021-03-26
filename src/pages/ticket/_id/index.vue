@@ -1012,7 +1012,7 @@ export default {
       let hash = `/rcms-api/1/qrcode/url?ec_order_id=${ec_order_id}&order_detail_id=${order_detail_id}&no=${no}`
       self.$auth.ctx.$axios.get(hash).then(function (response) {
         self.qrcode_string = response.data.data.qrcode_string
-        self.path = window.location.origin + "/"+  "tools/qr_ticket/?" + "ec_order_id="+ ec_order_id +"&order_detail_id="+ order_detail_id + "&no=" + no;
+        self.path = window.location.origin + "/"+  "tools/qr_ticket/?" + "qrcode_string="+ self.qrcode_string + "&topics_id=" + self.$route.params.id;
       })
     },
     async getQrcode_hash(ec_order_id,order_detail_id,no){

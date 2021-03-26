@@ -1,17 +1,8 @@
 <template>
   <div class="container shop-wrap shop-cart">
-    <!-- <tr
-      v-for="order_detail in order.order_details"
-      :key="order_detail.product_id"
-    > 
-      <td
-        v-for="index in parseInt(order_detail.quantity)"
-        :key="index"
-        style="display:block"
-      >
-    <v-card-text style="text-align:center">
+    <!-- <v-card-text style="text-align:center">
       <br />
-      <p style="text-align:center" v-text="prodcut_nm(order_detail.product_id)" />
+      <p style="text-align:center"> {{  }} </p>
       <p style="text-align:center" v-if="prodcut_nm(order_detail.product_id).search('自由席') == -1 && order.note != 0 && order.note != null ">
         <span v-if="index == 1" >ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1].substring(0,3) }}</span> 
         <span v-if="index != 1">
@@ -21,9 +12,7 @@
       <p>
         <vue-qrcode :value="prodcut_qr(order.ec_order_id + ':' + 'imabari' + ':' + order_detail.order_detail_id + ':' + index)" tag="img" />
       </p>
-    </v-card-text>
-    </td>
-    </tr> -->
+    </v-card-text> -->
       
 　   <v-container>
        <v-col class="c-txt">
@@ -42,6 +31,7 @@
 import VueQrcode from "@chenfengyuan/vue-qrcode"
 import md5 from "js-md5"
 export default {
+  auth: false,
   components: {
     VueQrcode,
     md5
@@ -50,26 +40,28 @@ export default {
     hash_code:0,
     ec_order_id:0,
     order_detail_id:0,
+    no: 0,
+    product_name: "",
+    note: "",
   }),
   methods: {
-    async getQrcode() {
+    async hash_check(){
       let self = this
-      self.ec_order_id = this.$route.query.ec_order_id
-      self.index = this.$route.query.no
-      self.order_detail_id = this.$route.query.order_detail_id
-      self.hash_code = md5(self.ec_order_id + ":imabari:" + self.order_detail_id + ':' + self.index)
-    },
-    prodcut_nm(product_id) {
-      for (const p of this.product_list) {
-        if(p.product_id == product_id){
-        return p.subject
-        }
-      }
-      return ""
-    },
+      self.qrcode_string = self.$route.query.qrcode_string
+      self.topics_id = self.$route.query.topics_id
+      let check_message = `rcms-api/1/qrcode/hash?hash=${self.qrcode_string}&topics_id=${self.topics_id}`
+      self.$auth.ctx.$axios.get(check_message).then(function (response) {
+        self.order_id = response.data.data.order_id
+        self.order_detail_id = response.data.data.order_detail_id
+        self.product_name = response.data.data.product_name
+        self.note = response.data.data.note
+        self.no = response.data.data.no
+        self.hash_code = md5(self.ec_order_id + ":imabari:" + self.order_detail_id + ':' + self.no)
+      })
+    }
   },
   mounted() {
-    this.getQrcode()
+    this.hash_check()
   }
 }
 </script>
