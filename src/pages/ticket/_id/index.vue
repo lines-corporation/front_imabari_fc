@@ -169,22 +169,20 @@
                                           v-on="on"
                                           @click="getQrcode(order.ec_order_id,order_detail.order_detail_id,index), value = 1"
                                         >譲渡/分配</v-btn>
-                                        <v-btn
-                                          v-show="order_detail.order_detail_id == ec_order_id_key && index == order_detail_id_no && qrcode_type==2"
-                                          class="share-cancel-btn"
-                                          v-bind="attrs"
-                                          outlinedlargefabcolor="indigo"
-                                          v-on="on"
-                                          @click="value = 2"
-                                        >譲渡/分配取消し</v-btn>
-                                        <v-btn
-                                          v-show="order_detail.order_detail_id == ec_order_id_key && index == order_detail_id_no && qrcode_type ==2"
-                                          class="share-finish-btn"
-                                          v-bind="attrs"
-                                          outlinedlargefabcolor="indigo"
-                                          v-on="on"
-                                          @click="value = 3"
-                                        >譲渡/分配済み</v-btn>
+                                        <div style="display:inline">
+                                          <span
+                                            v-show="order_detail.order_detail_id == ec_order_id_key && index == order_detail_id_no && qrcode_type ==2"
+                                            @click="value = 3"
+                                          >譲渡/分配済み</span>
+                                          <v-btn
+                                            v-show="order_detail.order_detail_id == ec_order_id_key && index == order_detail_id_no && qrcode_type==2"
+                                            class="share-cancel-btn"
+                                            v-bind="attrs"
+                                            outlinedlargefabcolor="indigo"
+                                            v-on="on"
+                                            @click="value = 2"
+                                          >譲渡/分配取消し</v-btn>
+                                        </div>
                                         <v-btn
                                           v-show="order_detail.order_detail_id == ec_order_id_key && index == order_detail_id_no && qrcode_type == 1"
                                           class="qr-code-btn"
@@ -1018,13 +1016,17 @@ export default {
       })
     },
     async getQrcode_hash(ec_order_id,order_detail_id,no){
+      'use strict'
       let self = this
       self.order_qrcodes = []
       let hash = `/rcms-api/1/qrcode/url?ec_order_id=${ec_order_id}&order_detail_id=${order_detail_id}&no=${no}`
       self.$auth.ctx.$axios.get(hash).then(function (response) {
-        self.qrcode_type = response.data.data.qrcode_type
-        self.ec_order_id_key = response.data.data.key.substring(0,4)
-        self.order_detail_id_no = response.data.data.key.substring(8,10)
+         let qrcode_type = response.data.data.qrcode_type
+         self.qrcode_type = qrcode_type
+         let ec_order_id_key = response.data.data.key.substring(0,4)
+         self.ec_order_id_key = ec_order_id_key
+         let order_detail_id_no = response.data.data.key.substring(8,10)
+         self.order_detail_id_no = order_detail_id_no
       })
     },
     // async hash_check(hash){
@@ -1256,13 +1258,6 @@ export default {
   box-shadow: none; 
   padding: 0 9px !important;
 } 
-.share-finish-btn {
-  background-color: rgb(255 255 255 / 12%) !important;
-  border-color: white !important;
-  border-style: solid !important;
-  border-width: 3px;
-  box-shadow: none;
-}
 .qr-code-btn {
   background-color: rgb(255 255 255 / 12%) !important;
   border-color: #1976d2 !important;
