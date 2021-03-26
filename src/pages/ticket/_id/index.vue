@@ -284,7 +284,7 @@
                                                 v-clipboard:copy="message"
                                                 v-clipboard:success="onCopy"
                                                 v-clipboard:error="onError"
-                                                @click="update_disable(order.ec_order_id,order_detail.order_detail_id,index), Copy()"
+                                                @click="update_disable(order.ec_order_id,order_detail.order_detail_id,index), Copy(), dialog.value = false"
                                               >
                                                 URLをコピーする
                                               </v-btn>
@@ -326,7 +326,7 @@
                                               <v-btn
                                                 class="share-cancel-y-btn"
                                                 text
-                                                @click="update_enable(order.ec_order_id,order_detail.order_detail_id,index)"
+                                                @click="update_enable(order.ec_order_id,order_detail.order_detail_id,index), dialog.value = false"
                                               >
                                                 はい
                                               </v-btn>
