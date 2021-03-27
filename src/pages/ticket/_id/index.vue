@@ -156,13 +156,14 @@
                                       </span>
                                     </p>
                                     <v-dialog
-                                      v-if="getQrcode_hash(order.ec_order_id,order_detail.order_detail_id,index)"
+                                      v-for="hash_detail of hash_list"
+                                      :key="hash_detail.qrcode_string"
                                       max-width="1200"
                                       transition="dialog-bottom-transition"
                                     > 
                                       <template v-slot:activator="{ on, attrs }">
-                                        <div>
-                                          <div style="display:inline" v-show="order_detail.order_detail_id == ec_order_id_key && index == order_detail_id_no && qrcode_type == 1">
+                                        <div v-if="order.ec_order_id == hash_detail.ec_order_id && order_detail.order_detail_id == hash_detail.order_detail_id && index == hash_detail.order_no">
+                                          <div style="display:inline" v-show="hash_detail.qrcode_type == 1">
                                             <v-btn
                                               class="qr-code-btn"
                                               v-bind="attrs"
@@ -178,10 +179,11 @@
                                               @click="getQrcode(order.ec_order_id,order_detail.order_detail_id,index), value = 1"
                                             >譲渡/分配</v-btn>
                                           </div>
-                                          <div style="display:inline" v-show="order_detail.order_detail_id == ec_order_id_key && index == order_detail_id_no && qrcode_type ==2">
+                                          <div style="display:inline" v-show="hash_detail.qrcode_type ==2">
+                                             &nbsp; &nbsp; &nbsp;
                                             <span
                                               @click="value = 3"
-                                            >譲渡/分配済み</span>
+                                            >譲渡/分配済み</span> &nbsp; &nbsp; &nbsp;
                                             <v-btn
                                               class="share-cancel-btn"
                                               v-bind="attrs"
@@ -282,7 +284,8 @@
                                                 v-clipboard:copy="message"
                                                 v-clipboard:success="onCopy"
                                                 v-clipboard:error="onError"
-                                                @click="update_disable(order.ec_order_id,order_detail.order_detail_id,index), Copy(), dialog.value = false"
+                                                @click="update_disable(order.ec_order_id,order_detail.order_detail_id,index), Copy(), getHashDtails(), dialog.value = false"
+                                                @change="getHashDtails()"
                                               >
                                                 URLをコピーする
                                               </v-btn>
@@ -324,7 +327,8 @@
                                               <v-btn
                                                 class="share-cancel-y-btn"
                                                 text
-                                                @click="update_enable(order.ec_order_id,order_detail.order_detail_id,index), dialog.value = false"
+                                                @click="update_enable(order.ec_order_id,order_detail.order_detail_id,index), getHashDtails(), dialog.value = false"
+                                                @change="getHashDtails()"
                                               >
                                                 はい
                                               </v-btn>
@@ -750,6 +754,7 @@ export default {
     seat_reserved_list: [],
     seat_blackAndSaved_list: [],
     order_list: [],
+    hash_list: [],
     valid: true,
     can_order: false,
     success_message: "",
@@ -797,6 +802,7 @@ export default {
     let urlReserved = "/rcms-api/1/seat_reserved_list"
     let urlBlack = "/rcms-api/1/seat_black_list"
     let urlOrdered = "/rcms-api/1/ordered_order_note?topics_id=" + topic_id
+    this.getHashDtails()
     this.$auth.ctx.$axios.get(urlBlack)
     .then(function (res) {
       let seatBlack = res.data.list
@@ -809,7 +815,6 @@ export default {
           self.seat_blackAndSaved_list.push(s)
         }
       });
-
       return self.$auth.ctx.$axios.get(urlOrdered)
     })
     .then(function (res) {
@@ -898,6 +903,14 @@ export default {
     })
   },
   methods: {
+    async getHashDtails(){
+      let self = this
+      let topic_id = this.$route.params.id
+      let url_o = "/rcms-api/1/order_list?is_canceled=0&without_payment_error=1&topics_id=" + topic_id
+      self.$auth.ctx.$axios.get(url_o).then(function (res_o) {
+        self.hash_list = res_o.data.hash_list
+      })
+    },
     getSeats(zone, product, index) {
       product['seat_list'+index] = []
       this.seat_reserved_list.forEach(reserved => {
@@ -955,11 +968,11 @@ export default {
         mode: "enable"
       })
       .then(() => {
-        let hash = `/rcms-api/1/qrcode/url?ec_order_id=${ec_order_id}&order_detail_id=${order_detail_id}&no=${no}`
-        self.$auth.ctx.$axios.get(hash).then(function (response) {
-        self.qrcode_type = response.data.data.qrcode_type
-        self.ec_order_id_key = response.data.data.key.substring(0,4)
-        self.order_detail_id_no = response.data.data.key.substring(8,10)
+        let self = this
+        let topic_id = this.$route.params.id
+        let url_o = "/rcms-api/1/order_list?is_canceled=0&without_payment_error=1&topics_id=" + topic_id
+        self.$auth.ctx.$axios.get(url_o).then(function (res_o) {
+          self.hash_list = res_o.data.hash_list
         })
         self.$store.dispatch(
         "snackbar/setMessage",
@@ -986,11 +999,11 @@ export default {
         mode: "disable"
       })
       .then(() => {
-        let hash = `/rcms-api/1/qrcode/url?ec_order_id=${ec_order_id}&order_detail_id=${order_detail_id}&no=${no}`
-        self.$auth.ctx.$axios.get(hash).then(function (response) {
-        self.qrcode_type = response.data.data.qrcode_type
-        self.ec_order_id_key = response.data.data.key.substring(0,4)
-        self.order_detail_id_no = response.data.data.key.substring(8,10)
+        let self = this
+        let topic_id = this.$route.params.id
+        let url_o = "/rcms-api/1/order_list?is_canceled=0&without_payment_error=1&topics_id=" + topic_id
+        self.$auth.ctx.$axios.get(url_o).then(function (res_o) {
+          self.hash_list = res_o.data.hash_list
         })
         self.$store.dispatch(
         "snackbar/setMessage",
@@ -1015,27 +1028,6 @@ export default {
         self.path = window.location.origin + "/"+  "tools/qr_ticket/?" + "qrcode_string="+ self.qrcode_string + "&topics_id=" + self.$route.params.id;
       })
     },
-    async getQrcode_hash(ec_order_id,order_detail_id,no){
-      'use strict'
-      let self = this
-      self.order_qrcodes = []
-      let hash = `/rcms-api/1/qrcode/url?ec_order_id=${ec_order_id}&order_detail_id=${order_detail_id}&no=${no}`
-      self.$auth.ctx.$axios.get(hash).then(function (response) {
-         let qrcode_type = response.data.data.qrcode_type
-         self.qrcode_type = qrcode_type
-         let ec_order_id_key = response.data.data.key.substring(0,4)
-         self.ec_order_id_key = ec_order_id_key
-         let order_detail_id_no = response.data.data.key.substring(8,10)
-         self.order_detail_id_no = order_detail_id_no
-      })
-    },
-    // async hash_check(hash){
-    //   let self = this
-    //   let check_message = `rcms-api/1/qrcode/hash?hash=${hash}`
-    //   self.$auth.ctx.$axios.get(check_message).then(function (response) {
-    //     self.order_detail_id = response.data.data.order_detail_id
-    //   })
-    // },
     Copy: function() {
       self = this
       let url = document.querySelector('#copyObj')
