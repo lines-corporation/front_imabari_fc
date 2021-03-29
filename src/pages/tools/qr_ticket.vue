@@ -13,11 +13,18 @@
         <vue-qrcode :value="prodcut_qr(order.ec_order_id + ':' + 'imabari' + ':' + order_detail.order_detail_id + ':' + index)" tag="img" />
       </p>
     </v-card-text> -->
-      
 　   <v-container>
        <v-card-text class="c-txt" style="text-align:center;">
          <p> {{ product_name }} </p>
-         <p> {{ note }} </p>
+         
+         <span v-if="product_name.search('自由席') == -1 && note != 0 && note != null">
+           <span v-if="no == 1" >ゾーン {{ note.split('-')[0] }} / 座席 {{ note.split('-')[1].substring(0,3) }}</span> 
+           <span v-if="no != 1">
+             ゾーン {{ note.split('-')[no-1].substring(3,6).replace(",","") }} / 座席 {{ note.split('-')[no].substring(0,3).replace(",","") }}
+           </span>
+         </span>
+
+
          <p style="text-align:center;">
            <vue-qrcode
              v-if="order_detail_id != null && order_id != null"
@@ -67,7 +74,7 @@ export default {
         self.$store.dispatch("snackbar/snackOn")
         self.loading = false
         } else {
-          self.hash_code = md5(self.ec_order_id + ":imabari:" + self.order_detail_id + ':' + self.no) 
+          self.hash_code = md5(6159 + ":" + 5962 + ':' + 1) 
         }
       })
     }
