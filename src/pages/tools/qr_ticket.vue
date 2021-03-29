@@ -16,6 +16,8 @@
       
 　   <v-container>
        <v-card-text class="c-txt" style="text-align:center;">
+         <p> {{ product_name }} </p>
+         <p> {{ note }} </p>
          <p style="text-align:center;">
            <vue-qrcode
              v-if="order_detail_id != null && order_id != null"
@@ -40,6 +42,7 @@ export default {
   },
   data: () => ({
     hash_code:0,
+    order_id: 0,
     ec_order_id:0,
     order_detail_id:0,
     no: 0,
@@ -58,6 +61,7 @@ export default {
         self.product_name = response.data.data.product_name
         self.note = response.data.data.note
         self.no = response.data.data.no
+        console.log(response)
         if(self.order_detail_id == null || self.order_id  == null) {
         self.$store.dispatch("snackbar/setError", "HASHの存在しません")
         self.$store.dispatch("snackbar/snackOn")
