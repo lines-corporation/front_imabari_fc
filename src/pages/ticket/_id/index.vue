@@ -164,7 +164,7 @@
                                       <template v-slot:activator="{ on, attrs }">
                                         <div v-if="order.ec_order_id == hash_detail.ec_order_id && order_detail.order_detail_id == hash_detail.order_detail_id && index == hash_detail.order_no">
                                           
-                                          <div style="display:inline" v-show="hash_detail.qrcode_type ==1">
+                                          <div style="display:inline" v-show="hash_detail.qrcode_type == 2">
                                              &nbsp; &nbsp; &nbsp;
                                             <span
                                               @click="value = 3"
@@ -177,7 +177,7 @@
                                               @click="value = 2"
                                             >譲渡/分配取消し</v-btn>
                                           </div>
-                                          <div style="display:inline" v-show="hash_detail.qrcode_type == 2">
+                                          <div style="display:inline" v-show="hash_detail.qrcode_type == 1">
                                             <v-btn
                                               class="qr-code-btn"
                                               v-bind="attrs"
