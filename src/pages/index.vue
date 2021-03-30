@@ -203,7 +203,7 @@
                           日付
                         </th>
                         <th class="text-left">
-                          チケット名
+                          イベント名
                         </th>
                         <th class="text-left">
                           会場
