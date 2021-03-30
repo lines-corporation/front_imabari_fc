@@ -1,31 +1,18 @@
 <template>
   <div class="container shop-wrap shop-cart">
-    <!-- <v-card-text style="text-align:center">
-      <br />
-      <p style="text-align:center"> {{  }} </p>
-      <p style="text-align:center" v-if="prodcut_nm(order_detail.product_id).search('自由席') == -1 && order.note != 0 && order.note != null ">
-        <span v-if="index == 1" >ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1].substring(0,3) }}</span> 
-        <span v-if="index != 1">
-          ゾーン {{ order.note.split('-')[index-1].substring(3,6).replace(",","") }} / 座席 {{ order.note.split('-')[index].substring(0,3).replace(",","") }}
-        </span>
-      </p>
-      <p>
-        <vue-qrcode :value="prodcut_qr(order.ec_order_id + ':' + 'imabari' + ':' + order_detail.order_detail_id + ':' + index)" tag="img" />
-      </p>
-    </v-card-text> -->
 　   <v-container>
        <v-card-text class="c-txt" style="text-align:center;">
-         <p> {{ product_name }} </p>
+         <p v-if="product_name != null"> {{ subject }} </p><br/>
+         <p v-if="product_name != null"> {{ product_name }} </p>
          
          <span v-if="product_name != null && note != 0 && note != null">
            <span v-if="no == 1" >ゾーン {{ note.split('-')[0] }} / 座席 {{ note.split('-')[1].substring(0,3) }}</span> 
            <span v-if="no != 1">
              ゾーン {{ note.split('-')[no-1].substring(3,6).replace(",","") }} / 座席 {{ note.split('-')[no].substring(0,3).replace(",","") }}
            </span>
-         </span>
-
-
-         <p style="text-align:center;">
+         </span> <br/> <br/>
+         <p v-if="product_name != null && note != 0 && note != null" > {{ order_id }} </p>
+         <p style="text-align:center;" v-if="product_name != null && note != 0 && note != null">
            <vue-qrcode
              v-if="order_detail_id != null && order_id != null"
              style="text-align:center;"
@@ -55,6 +42,7 @@ export default {
     no: 0,
     product_name: "",
     note: "",
+    subject: ""
   }),
   methods: {
     async hash_check(){
@@ -63,6 +51,7 @@ export default {
       self.topics_id = self.$route.query.topics_id
       let check_message = `rcms-api/1/qrcode/hash?hash=${self.qrcode_string}&topics_id=${self.topics_id}`
       self.$auth.ctx.$axios.get(check_message).then(function (response) {
+        self.subject = response.data.data.subject
         self.order_id = response.data.data.order_id
         self.order_detail_id = response.data.data.order_detail_id
         self.product_name = response.data.data.product_name
