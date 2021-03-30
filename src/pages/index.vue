@@ -206,25 +206,25 @@
                           チケット名
                         </th>
                         <th class="text-left">
-                          席種
+                          会場
                         </th>
                         <th class="text-left" />
                       </tr>
                     </thead>
                     <tbody>
                       <router-link
-                        v-for="item in my_order_ticket_list"
-                        :key="item.product_id"
-                        :to="'/ticket/' + item.topics_id"
+                        v-for="(item,key) in ticket_result"
+                        :key="key"
+                        :to="'/ticket/' + item.id"
                         tag="tr"
-                      >
-                        <td class="date" v-if="item.order_list.filter(item => item.payment_status != 410).length > 0">
-                          {{ item.product_data.ymd }}
+                      > 
+                        <td class="date">
+                          {{ item.ymd }}
                         </td>
-                        <td v-if="item.order_list.filter(item => item.payment_status != 410).length > 0">{{ item.topics_name }}</td>
-                        <td v-if="item.order_list.filter(item => item.payment_status != 410).length > 0">{{ item.subject }}</td>
-                        <td class="arw" v-if="item.order_list.filter(item => item.payment_status != 410).length > 0">
-                          <v-btn icon :to="'/ticket/' + item.topics_id" nuxt>
+                        <td>{{ item.topics_name }}</td>
+                        <td>{{ item.place_name }}</td>
+                        <td class="arw" >
+                          <v-btn icon :to="'/ticket/' + item.id" nuxt>
                             <v-icon>mdi-chevron-right</v-icon>
                           </v-btn>
                         </td>
@@ -301,6 +301,16 @@ export default {
   data: () => ({
     ticket_list: [],
     my_order_ticket_list: [],
+    order_ticket_list:[],
+    ticket_list:[],
+    topics_name: "",
+    ymd: 0,
+    subject: "",
+    place_name: [],
+    id: 0,
+    buy_finish_ticket: [],
+    ticket_sort: [],
+    ticket_result: [],
     topics_list1: [],
     loading: false,
     show_pwd1: false,
@@ -388,23 +398,38 @@ export default {
           .then(function (response) {
             self.topics_list1 = response.data.list
           })
-
+        self.my_order_ticket_list = []
         this.$auth.ctx.$axios
           .get("/rcms-api/1/product_list?my_order_flg=1")
           .then(function (response) {
-            self.my_order_ticket_list = response.data.list
-          })
-
-        self.ticket_list = []
-        this.$auth.ctx.$axios
-          .get("/rcms-api/1/ticket_list")
-          .then(function (response) {
-            for (const p_list of response.data.list) {
-              if (p_list.product_ids.length > 0) {
-                self.ticket_list.push(p_list)
-              }
+           for (const order_ticket_list of response.data.list) {
+            if (order_ticket_list.order_list.filter(item => item.payment_status != 410).length > 0) {
+              self.my_order_ticket_list.push(order_ticket_list)
             }
-          })
+          }
+          let my_order_ticket = self.my_order_ticket_list || []
+          for(const my_order of my_order_ticket){
+            let obj = {
+              ymd: my_order.product_data.ymd,
+              topics_name: my_order.topics_name,
+              id: my_order.topics_id,
+              place_name: my_order.product_data.ext_col_01,
+            }
+           self.order_ticket_list[my_order.topics_id] = obj
+          }
+          let buy_finish_ticket = self.order_ticket_list || []
+          self.ticket_sort = buy_finish_ticket.sort(item => item.id)
+          self.ticket_result = self.ticket_sort.filter(item => item.ymd != null)
+        })
+         this.$auth.ctx.$axios
+        .get("/rcms-api/1/ticket_list")
+        .then(function (response) {
+          for (const p_list of response.data.list) {
+            if (p_list.product_ids.length > 0) {
+              self.ticket_list.push(p_list)
+            }
+          }
+        })
       }
     },
     getLogin(info){
