@@ -163,7 +163,21 @@
                                     > 
                                       <template v-slot:activator="{ on, attrs }">
                                         <div v-if="order.ec_order_id == hash_detail.ec_order_id && order_detail.order_detail_id == hash_detail.order_detail_id && index == hash_detail.order_no">
-                                          <div style="display:inline" v-show="hash_detail.qrcode_type == 1">
+                                          
+                                          <div style="display:inline" v-show="hash_detail.qrcode_type ==1">
+                                             &nbsp; &nbsp; &nbsp;
+                                            <span
+                                              @click="value = 3"
+                                            >譲渡/分配済み</span> &nbsp; &nbsp; &nbsp;
+                                            <v-btn
+                                              class="share-cancel-btn"
+                                              v-bind="attrs"
+                                              outlinedlargefabcolor="indigo"
+                                              v-on="on"
+                                              @click="value = 2"
+                                            >譲渡/分配取消し</v-btn>
+                                          </div>
+                                          <div style="display:inline" v-show="hash_detail.qrcode_type == 2">
                                             <v-btn
                                               class="qr-code-btn"
                                               v-bind="attrs"
@@ -178,19 +192,6 @@
                                               v-on="on"
                                               @click="getQrcode(order.ec_order_id,order_detail.order_detail_id,index), value = 1"
                                             >譲渡/分配</v-btn>
-                                          </div>
-                                          <div style="display:inline" v-show="hash_detail.qrcode_type ==2">
-                                             &nbsp; &nbsp; &nbsp;
-                                            <span
-                                              @click="value = 3"
-                                            >譲渡/分配済み</span> &nbsp; &nbsp; &nbsp;
-                                            <v-btn
-                                              class="share-cancel-btn"
-                                              v-bind="attrs"
-                                              outlinedlargefabcolor="indigo"
-                                              v-on="on"
-                                              @click="value = 2"
-                                            >譲渡/分配取消し</v-btn>
                                           </div>
                                         </div>
                                       </template>
@@ -284,7 +285,7 @@
                                                 v-clipboard:copy="message"
                                                 v-clipboard:success="onCopy"
                                                 v-clipboard:error="onError"
-                                                @click="update_disable(order.ec_order_id,order_detail.order_detail_id,index), Copy(), getHashDtails(), dialog.value = false"
+                                                @click="update_enable(order.ec_order_id,order_detail.order_detail_id,index), Copy(), getHashDtails(), dialog.value = false"
                                                 @change="getHashDtails()"
                                               >
                                                 URLをコピーする
@@ -327,7 +328,7 @@
                                               <v-btn
                                                 class="share-cancel-y-btn"
                                                 text
-                                                @click="update_enable(order.ec_order_id,order_detail.order_detail_id,index), getHashDtails(), dialog.value = false"
+                                                @click="update_disable(order.ec_order_id,order_detail.order_detail_id,index), getHashDtails(), dialog.value = false"
                                                 @change="getHashDtails()"
                                               >
                                                 はい
@@ -958,14 +959,14 @@ export default {
       }
       return ""
     },
-    async update_enable(ec_order_id,order_detail_id,no){
+    async update_disable(ec_order_id,order_detail_id,no){
       let self = this
       self.$auth.ctx.$axios
       .post("/rcms-api/1/qrcode/update", {
         ec_order_id: ec_order_id,
         order_detail_id: order_detail_id,
         no: no,
-        mode: "enable"
+        mode: "disable"
       })
       .then(() => {
         let self = this
@@ -989,14 +990,14 @@ export default {
         self.loading = false
       })
     },
-    async update_disable(ec_order_id,order_detail_id,no){
+    async update_enable(ec_order_id,order_detail_id,no){
       let self = this
       self.$auth.ctx.$axios
       .post("/rcms-api/1/qrcode/update", {
         ec_order_id: ec_order_id,
         order_detail_id: order_detail_id,
         no: no,
-        mode: "disable"
+        mode: "enable"
       })
       .then(() => {
         let self = this
