@@ -69,7 +69,7 @@ export default {
         self.note = response.data.data.note
         self.no = response.data.data.no
         console.log(response)
-        if(self.order_detail_id == null || self.order_id  == null) {
+        if(self.order_detail_id == null || self.order_id  == null || product_name == null || note == null) {
         self.$store.dispatch("snackbar/setError", "HASHの存在しません")
         self.$store.dispatch("snackbar/snackOn")
         self.loading = false
