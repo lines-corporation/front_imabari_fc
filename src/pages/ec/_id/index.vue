@@ -156,7 +156,7 @@
         <v-card elevation="2" tile>
           <v-card-title>商品説明</v-card-title>
           <v-card-text>
-            <div>{{ description }}</div>
+            <p v-html = "description" />
           </v-card-text>
         </v-card>
       </v-row>
@@ -195,7 +195,7 @@ export default {
     imageUrl: null,
     images: [],
     cartItems: [],
-    description: ``,
+    description: "",
   }),
   computed: {
     user() {
