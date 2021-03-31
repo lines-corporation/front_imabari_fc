@@ -213,6 +213,7 @@
                                           </v-toolbar>
                                           <v-card-text style="text-align:center">
                                             <br />
+                                            <p> {{ item.ext_col_03 }} </p>
                                             <p style="text-align:center" v-text="prodcut_nm(order_detail.product_id)" />
                                             <p style="text-align:center" v-if="prodcut_nm(order_detail.product_id).search('自由席') == -1 && order.note != 0 && order.note != null ">
                                               <span v-if="index == 1" >ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1].substring(0,3) }}</span> 
@@ -220,6 +221,7 @@
                                                 ゾーン {{ order.note.split('-')[index-1].substring(3,6).replace(",","") }} / 座席 {{ order.note.split('-')[index].substring(0,3).replace(",","") }}
                                               </span>
                                             </p>
+                                            <p> {{ order.ec_order_id }} </p>
                                             <p>
                                               <vue-qrcode :value="prodcut_qr(order.ec_order_id + ':' + 'imabari' + ':' + order_detail.order_detail_id + ':' + index)" tag="img" />
                                             </p>
@@ -252,9 +254,16 @@
                                             outlined
                                             >
                                               <div style="text-align:left">
-                                                <p style="text-align:left"> イベント日時：{{ item.ymd.replaceAll("-","/") }} </p>
-                                                <p style="text-align:left"> {{ item.ext_col_01 }}  {{ item.ext_col_02}} </p>
+                                                <p style="text-align:left"> {{ item.ext_col_03 }} </p>
                                                 <span>  券種： </span><span v-text="prodcut_nm(order_detail.product_id)"></span><br/><br/>
+                                                <p style="text-align:left" v-if="prodcut_nm(order_detail.product_id).search('自由席') == -1 && order.note != 0 && order.note != null ">
+                                                   &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
+                                                  <span v-if="index == 1" >ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1].substring(0,3) }}</span> 
+                                                  <span v-if="index != 1">
+                                                    ゾーン {{ order.note.split('-')[index-1].substring(3,6).replace(",","") }} / 座席 {{ order.note.split('-')[index].substring(0,3).replace(",","") }}
+                                                  </span>
+                                                </p>
+                                                <p> {{ order.ec_order_id }} </p>
                                                 <p>  {{ path }} </p>
                                               </div>
                                             </v-card>
