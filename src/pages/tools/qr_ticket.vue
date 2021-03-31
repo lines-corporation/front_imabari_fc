@@ -1,18 +1,18 @@
 <template>
   <div class="container shop-wrap shop-cart">
 　   <v-container>
-       <v-card-text class="c-txt" style="text-align:center;">
-         <p v-if="product_name != null && note != 0 && note != null"> イベント名:{{ subject }} </p>
-         <p v-if="product_name != null && note != 0 && note != null"> 券種:{{ product_name }} </p>
-         
-         <span v-if="product_name != null && note != 0 && note != null">
+       <v-card-text v-if="product_name != null" class="c-txt" style="text-align:center;">
+         <p v-if="order_detail_id != null && order_id != null && no != null"> {{ `イベント名:` + subject }} </p>
+         <p v-if="order_detail_id != null && order_id != null && no != null"> {{ `券種:` + product_name }} </p>
+         <span  v-if="product_name.search('自由席') == -1 && note != 0 && note != null ">
            <span v-if="no == 1" >座席番号:ゾーン {{ note.split('-')[0] }} / 座席 {{ note.split('-')[1].substring(0,3) }}</span> 
-           <span v-if="no != 1">
-             座席番号:ゾーン {{ note.split('-')[no-1].substring(3,6).replace(",","") }} / 座席 {{ note.split('-')[no].substring(0,3).replace(",","") }}
+           <span v-if="no > 1">
+             {{ `座席番号:ゾーン` + note.split('-')[no-1].substring(3,6).replace(",","") }} / 座席 {{ note.split('-')[no].substring(0,3).replace(",","") }}
            </span>
-         </span> <br/> <br/>
-         <p v-if="product_name != null && note != 0 && note != null" > 注文番号:{{ order_id }} </p>
-         <p style="text-align:center;" v-if="product_name != null && note != 0 && note != null">
+            <br/> <br/>
+         </span>
+         <p v-if="order_detail_id != null && order_id != null && no != null" > 注文番号:{{ order_id }} </p>
+         <p style="text-align:center;" v-if="order_detail_id != null && order_id != null">
            <vue-qrcode
              v-if="order_detail_id != null && order_id != null"
              style="text-align:center;"
@@ -35,14 +35,14 @@ export default {
     md5
   },
   data: () => ({
-    hash_code:0,
-    order_id: 0,
-    ec_order_id:0,
-    order_detail_id:0,
-    no: 0,
-    product_name: "",
-    note: "",
-    subject: ""
+    hash_code:null,
+    order_id: null,
+    ec_order_id:null,
+    order_detail_id:null,
+    no: null,
+    product_name: null,
+    note: null,
+    subject: null
   }),
   methods: {
     async hash_check(){
@@ -57,8 +57,8 @@ export default {
         self.product_name = response.data.data.product_name
         self.note = response.data.data.note
         self.no = response.data.data.no
-        console.log(response)
-        if(self.order_detail_id == null || self.order_id  == null || product_name == null || note == null) {
+        console.log(self.product_name)
+        if(self.order_detail_id == null || self.order_id  == null) {
         self.$store.dispatch("snackbar/setError", "譲渡/分配の取消しが実施されてURLが無効になっています")
         self.$store.dispatch("snackbar/snackOn")
         self.loading = false
