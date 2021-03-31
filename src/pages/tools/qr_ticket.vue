@@ -2,16 +2,16 @@
   <div class="container shop-wrap shop-cart">
 　   <v-container>
        <v-card-text class="c-txt" style="text-align:center;">
-         <p v-if="product_name != null"> {{ subject }} </p><br/>
-         <p v-if="product_name != null"> {{ product_name }} </p>
+         <p v-if="product_name != null"> イベント名:{{ subject }} </p>
+         <p v-if="product_name != null"> 券種:{{ product_name }} </p>
          
          <span v-if="product_name != null && note != 0 && note != null">
-           <span v-if="no == 1" >ゾーン {{ note.split('-')[0] }} / 座席 {{ note.split('-')[1].substring(0,3) }}</span> 
+           <span v-if="no == 1" >座席番号:ゾーン {{ note.split('-')[0] }} / 座席 {{ note.split('-')[1].substring(0,3) }}</span> 
            <span v-if="no != 1">
-             ゾーン {{ note.split('-')[no-1].substring(3,6).replace(",","") }} / 座席 {{ note.split('-')[no].substring(0,3).replace(",","") }}
+             座席番号:ゾーン {{ note.split('-')[no-1].substring(3,6).replace(",","") }} / 座席 {{ note.split('-')[no].substring(0,3).replace(",","") }}
            </span>
          </span> <br/> <br/>
-         <p v-if="product_name != null && note != 0 && note != null" > {{ order_id }} </p>
+         <p v-if="product_name != null && note != 0 && note != null" > 注文番号:{{ order_id }} </p>
          <p style="text-align:center;" v-if="product_name != null && note != 0 && note != null">
            <vue-qrcode
              v-if="order_detail_id != null && order_id != null"

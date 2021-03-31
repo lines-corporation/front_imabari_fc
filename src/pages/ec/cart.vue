@@ -25,13 +25,11 @@
             <p v-if="product.size">size : {{ product.size }}</p>
             <p v-if="product.quantity">{{ product.quantity }}個</p>
             </div>
-
           </v-col>
 		  <v-col class="d-flex flex-row-reverse c-del" >
 		    <v-btn @click="removeProduct(product.id)">削除</v-btn>
 		  </v-col>
         </v-row>
-
         <v-divider></v-divider>
       </div>
 

@@ -131,6 +131,11 @@ export default {
           title: "規約等",
           to: "/kiyaku",
         },
+        {
+          icon: "mdi-history",
+          title: "購入履歴",
+          to: "/ec/histories",
+        },
       ],
       miniVariant: false,
       right: true,
