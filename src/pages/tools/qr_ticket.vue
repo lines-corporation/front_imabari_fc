@@ -2,8 +2,8 @@
   <div class="container shop-wrap shop-cart">
 　   <v-container>
        <v-card-text class="c-txt" style="text-align:center;">
-         <p v-if="product_name != null"> イベント名:{{ subject }} </p>
-         <p v-if="product_name != null"> 券種:{{ product_name }} </p>
+         <p v-if="product_name != null && note != 0 && note != null"> イベント名:{{ subject }} </p>
+         <p v-if="product_name != null && note != 0 && note != null"> 券種:{{ product_name }} </p>
          
          <span v-if="product_name != null && note != 0 && note != null">
            <span v-if="no == 1" >座席番号:ゾーン {{ note.split('-')[0] }} / 座席 {{ note.split('-')[1].substring(0,3) }}</span> 
