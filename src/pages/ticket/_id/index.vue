@@ -213,7 +213,7 @@
                                           </v-toolbar>
                                           <v-card-text style="text-align:center">
                                             <br />
-                                            <p> {{ item.ext_col_03 }} </p>
+                                            <p> {{ item.subject }} </p>
                                             <p style="text-align:center" v-text="prodcut_nm(order_detail.product_id)" />
                                             <p style="text-align:center" v-if="prodcut_nm(order_detail.product_id).search('自由席') == -1 && order.note != 0 && order.note != null ">
                                               <span v-if="index == 1" >ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1].substring(0,3) }}</span> 
@@ -254,7 +254,7 @@
                                             outlined
                                             >
                                               <div style="text-align:left">
-                                                <p style="text-align:left"> {{ item.ext_col_03 }} </p>
+                                                <p style="text-align:left"> {{ item.subject }} </p>
                                                 <span>  券種： </span><span v-text="prodcut_nm(order_detail.product_id)"></span><br/><br/>
                                                 <p style="text-align:left" v-if="prodcut_nm(order_detail.product_id).search('自由席') == -1 && order.note != 0 && order.note != null ">
                                                    &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
