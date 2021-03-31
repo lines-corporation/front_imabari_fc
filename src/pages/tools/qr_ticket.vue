@@ -59,7 +59,7 @@ export default {
         self.no = response.data.data.no
         console.log(response)
         if(self.order_detail_id == null || self.order_id  == null || product_name == null || note == null) {
-        self.$store.dispatch("snackbar/setError", "HASHの存在しません")
+        self.$store.dispatch("snackbar/setError", "譲渡/分配の取消しが実施されてURLが無効になっています")
         self.$store.dispatch("snackbar/snackOn")
         self.loading = false
         } else {
