@@ -24,12 +24,6 @@
 
         <v-divider></v-divider>
       </div>
-
-
-
-
-
-
       <v-row>
         <v-col cols="12">
           <v-btn to="/ec/cart" nuxt>戻る</v-btn>

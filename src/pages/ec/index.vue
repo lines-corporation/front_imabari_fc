@@ -1,16 +1,20 @@
 <template>
   <div class="shop-wrap">
     <!-- バナー -->
-    <v-carousel
-      cycle
-      hide-delimiter-background
-    >
-      <v-carousel-item 
-        v-for="(item,i) in items"
-        :key="i"
-        :src="item.url"
-      ></v-carousel-item >
-    </v-carousel>
+    <v-col sm="12">
+      <v-carousel
+        class="banner-size"
+        hide-delimiters
+        height="100%"
+      >
+        <v-carousel-item
+          v-for="(item,i) in items"
+          :key="i"
+        >
+        <img :src="item.url" width=100%>
+        </v-carousel-item >
+      </v-carousel>
+    </v-col>
    <!-- 購入履歴へ -->
     <v-row class="d-msg float-sm-right">
       <v-col cols="12">

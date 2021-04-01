@@ -954,11 +954,11 @@ footer .no-gutters{
 	    padding: 10px 7px 30px;
 	}
 	.shop-wrap .v-window.v-carousel{
-		margin-bottom: 20px;
-		height: 250px !important;
+		margin-bottom: 0px;
+		height: auto;
 	}
 	.shop-wrap .theme--dark.v-image{
-		height: 250px !important;
+		height: auto;
 	}
 	.shop-wrap .v-list-item__action{
 		margin: 10px 0 !important;
