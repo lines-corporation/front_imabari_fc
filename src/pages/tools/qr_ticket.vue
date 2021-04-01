@@ -2,7 +2,7 @@
   <div class="container shop-wrap shop-cart">
 　   <v-container>
        <v-card-text v-if="product_name != null" class="c-txt" style="text-align:center;">
-         <p v-if="order_detail_id != null && order_id != null && no != null"> {{ `イベント名:` + subject }} </p>
+         <p v-if="order_detail_id != null && order_id != null && no != null"> <b>{{ `イベント名:` + subject }}</b> </p>
          <p v-if="order_detail_id != null && order_id != null && no != null"> {{ `券種:` + product_name }} </p>
          <span  v-if="product_name.search('自由席') == -1 && note != 0 && note != null ">
            <span v-if="no == 1" >座席番号:ゾーン {{ note.split('-')[0] }} / 座席 {{ note.split('-')[1].substring(0,3) }}</span> 
