@@ -158,7 +158,8 @@
                                     <v-dialog
                                       v-for="hash_detail of hash_list"
                                       :key="hash_detail.qrcode_string"
-                                      max-width="1200"
+                                      max-width="1272"
+                                      fullscreen
                                       transition="dialog-bottom-transition"
                                     > 
                                       <template v-slot:activator="{ on, attrs }">
@@ -263,7 +264,7 @@
                                                   </span>
                                                 </p>
                                                 <p> 注文番号:{{ order.ec_order_id }} </p>
-                                                <p>  URL:{{ path }} </p>
+                                                <p>  {{ path }} </p>
                                               </div>
                                             </v-card>
                                             <v-card
