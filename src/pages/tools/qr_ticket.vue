@@ -63,7 +63,7 @@ export default {
         self.$store.dispatch("snackbar/snackOn")
         self.loading = false
         } else {
-          self.hash_code = md5(self.ec_order_id + ":imabari:" + self.order_detail_id + ':' + self.no) 
+          self.hash_code = self.qrcode_string
         }
       })
     }
