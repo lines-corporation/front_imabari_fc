@@ -164,11 +164,11 @@
                                       <template v-slot:activator="{ on, attrs }">
                                         <div v-if="order.ec_order_id == hash_detail.ec_order_id && order_detail.order_detail_id == hash_detail.order_detail_id && index == hash_detail.order_no">
                                           
-                                          <div style="display:inline" v-show="hash_detail.qrcode_type == 2">
-                                             &nbsp; &nbsp; &nbsp;
+                                          <div v-show="hash_detail.qrcode_type == 2">
+                                             &nbsp;&nbsp;&nbsp;&nbsp;
                                             <span
                                               @click="value = 3"
-                                            >譲渡/分配済み</span> &nbsp; &nbsp; &nbsp;
+                                            >譲渡/分配済み</span><br/>
                                             <v-btn
                                               class="share-cancel-btn"
                                               v-bind="attrs"
@@ -177,14 +177,14 @@
                                               @click="value = 2"
                                             >譲渡/分配取消し</v-btn>
                                           </div>
-                                          <div style="display:inline" v-show="hash_detail.qrcode_type == 1">
+                                          <div v-show="hash_detail.qrcode_type == 1">
                                             <v-btn
                                               class="qr-code-btn"
                                               v-bind="attrs"
                                               outlinedlargefabcolor="indigo"
                                               v-on="on"
                                               @click="value = 4"
-                                            >QRコードを表示</v-btn>
+                                            >QRコードを表示</v-btn><br/>
                                             <v-btn
                                               class="share-btn"
                                               v-bind="attrs"
@@ -1263,17 +1263,19 @@ export default {
   background-color: rgb(255 255 255 / 12%) !important;
   border-color: #1976d2 !important;
   border-style: solid !important;
+  margin-top: 5px;
   border-width: 3px;
   box-shadow: none;
-  padding: 0px 9px !important;
+  padding: 0px 1.55px !important;
 }
 .share-cancel-btn {
   background-color: #FFF100 !important;
   border-color: #1976d2 !important;
   border-style: solid !important;
+  margin-top: 5px;
   border-width: 3px;
   box-shadow: none;
-  padding: 0px 5px !important;
+  padding: 0px 1px !important;
 }
 .share-cancel-y-btn{
   background-color: #FFF100 !important;
@@ -1288,9 +1290,10 @@ export default {
   border-color: #1976d2 !important;
   border-style: solid !important;
   border-width: 3px;
+  margin-top: 5px;
   color: white;
   box-shadow: none;
-  padding: 0px 30px !important;
+  padding: 0px 23.85px !important;
 }
 .share-transfer-btn {
   background-color: #171C61 !important;
