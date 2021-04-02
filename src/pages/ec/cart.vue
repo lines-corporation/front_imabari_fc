@@ -34,12 +34,31 @@
       </div>
 
     <!-- 支払い方法 TODO これはコンポーネント化する -->
-    <v-row v-if="seasonPassFlg">
-      <span>シーズンパスのご希望の席を入力してください。（指定席を選択の場合）<br> 購入者様以外の方の分をご購入の場合は、ご利用される方の①お名前②年齢③性別④電話番号をご記入ください。</span>
-    </v-row>
-    <v-row v-else>
-      <span>※ご要望等ありましたら入力してください。</span>
-    </v-row>
+    <div v-if="seasonPassFlg && products.length == 1">
+      <v-row>
+        <span>シーズンパスのご希望の席を入力してください。（指定席を選択の場合）<br> 購入者様以外の方の分をご購入の場合は、ご利用される方の①お名前②年齢③性別④電話番号をご記入ください。</span>
+      </v-row>
+    </div>
+    <div v-else-if="seasonPassBesidesFlg && products.length == 1">
+      <v-row>
+        <span>※ご要望等ありましたら入力してください。</span>
+      </v-row>
+    </div>
+    <div v-else-if="products.length > 1">
+      <v-row>
+        <span>シーズンパスのご希望の席を入力してください。（指定席を選択の場合）<br> 購入者様以外の方の分をご購入の場合は、ご利用される方の①お名前②年齢③性別④電話番号をご記入ください。</span>
+      </v-row>
+      <v-row>
+        <v-textarea
+          name="input-7-1"
+          filled
+          v-model="order_note"
+        ></v-textarea>
+      </v-row>
+      <v-row>
+        <span>※ご要望等ありましたら入力してください。</span>
+      </v-row>
+    </div>
     <v-row>
       <v-textarea
         name="input-7-1"
@@ -405,6 +424,7 @@ export default {
       totalPrice: 0,
       deliv_fee: 0, // 送料
       seasonPassFlg: false, // シーズンパスの場合には入力項目が少し変わる
+      seasonPassBesidesFlg: false,// シーズンパス以外の場
       // seasonPassRemarks: "",
       order_note: "",
       rules: {
@@ -438,6 +458,7 @@ export default {
       // kurocoからデータを取得してみる
       self.products = []
       self.seasonPassFlg = false
+      self.seasonPassBesidesFlg = false
       self.flag = Object.values(JSON.parse(JSON.stringify(self.$auth.user.group_ids)))[0] != "無料会員"
       let tdfk_cd = self.address_elected == 'new-address' ? self.tdfk_cd : self.$auth.user.tdfk_cd
       let response = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${self.$auth.user.ec_cart_id}?tdfk_cd=${tdfk_cd}`)
@@ -454,7 +475,10 @@ export default {
             // シーズンパス稼働波の判定
             if(productInfoResponse.data.details.product_data.contents_type == process.env.SEASON_PASS_CATEGORY_ID) {
               self.seasonPassFlg = true
+            } else {
+              self.seasonPassBesidesFlg = true
             }
+            console.log(productInfoResponse.data.details.product_data.contents_type)
             self.products.push({
               id:       item.product_id,
               quantity: item.quantity,

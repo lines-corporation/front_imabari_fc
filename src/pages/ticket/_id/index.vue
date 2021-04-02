@@ -159,7 +159,6 @@
                                       v-for="hash_detail of hash_list"
                                       :key="hash_detail.qrcode_string"
                                       max-width="1272"
-                                      fullscreen
                                       transition="dialog-bottom-transition"
                                     > 
                                       <template v-slot:activator="{ on, attrs }">
