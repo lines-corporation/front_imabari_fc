@@ -1263,7 +1263,7 @@ export default {
   background-color: rgb(255 255 255 / 12%) !important;
   border-color: #1976d2 !important;
   border-style: solid !important;
-  margin-top: 10px;
+  margin-top: 3px;
   border-width: 3px;
   box-shadow: none;
   padding: 0px 1.55px !important;
@@ -1272,7 +1272,7 @@ export default {
   background-color: #FFF100 !important;
   border-color: #1976d2 !important;
   border-style: solid !important;
-  margin-top: 10px;
+  margin-top: 3px;
   border-width: 3px;
   box-shadow: none;
   padding: 0px 1px !important;
