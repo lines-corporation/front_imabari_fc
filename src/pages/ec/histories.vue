@@ -20,7 +20,15 @@
               <v-icon>mdi-cart</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title v-text="date"></v-list-item-title>
+              <div  style="display: inline-block;" >
+                <div v-text="date" style="display: inline-block;"></div> &nbsp;&nbsp;&nbsp;&nbsp;
+                <div v-if="history.labels == `マニュアル決済`" style="display: inline-block;">
+                  (ECサイト以外で購入)
+                </div>
+                <div v-else style="display: inline-block;">
+                  (ECサイト購入)
+                </div>
+              </div>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
@@ -37,7 +45,6 @@
 </template>
 
 <script>
-
 export default {
   auth: false,
   data: () => ({
