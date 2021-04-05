@@ -13,7 +13,10 @@
             :key="date"
             @click="moveHistoryPage(history.ids)"
           >
-            <v-list-item-icon>
+            <v-list-item-icon v-if="history.labels == `マニュアル決済`">
+              <v-icon>mdi-cash-register</v-icon>
+            </v-list-item-icon>
+            <v-list-item-icon v-else>
               <v-icon>mdi-cart</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
@@ -34,10 +37,17 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import { mdiCashRegister } from '@mdi/js';
+Vue.use(mdiCashRegister)
+
 export default {
+  components: {
+   mdiCashRegister
+  },
   auth: false,
   data: () => ({
-    histories: {}
+    histories: {},
   }),
   computed: {
     user() {
@@ -59,7 +69,8 @@ export default {
           self.histories[date].ids.push(history.ec_order_id)
         } else {
           self.$set(self.histories, date, {
-            ids: [history.ec_order_id]
+            ids: [history.ec_order_id],
+            labels: history.payment_method.label
           })
         }
       })
