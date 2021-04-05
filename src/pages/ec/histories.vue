@@ -13,8 +13,8 @@
             :key="date"
             @click="moveHistoryPage(history.ids)"
           >
-            <v-list-item-icon v-if="history.labels == `マニュアル決済`">
-              <v-icon>mdi-cash-register</v-icon>
+            <v-list-item-icon  class="history-icon" v-if="history.labels == `マニュアル決済`">
+              <v-img :src="require('@/assets/images/mpos.png')" class="history-icon"></v-img>
             </v-list-item-icon>
             <v-list-item-icon v-else>
               <v-icon>mdi-cart</v-icon>
@@ -37,14 +37,8 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import { mdiCashRegister } from '@mdi/js';
-Vue.use(mdiCashRegister)
 
 export default {
-  components: {
-   mdiCashRegister
-  },
   auth: false,
   data: () => ({
     histories: {},
@@ -84,3 +78,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.history-icon {
+ width: 5px !important;
+}
+</style>
