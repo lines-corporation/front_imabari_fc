@@ -992,7 +992,7 @@ export default {
       .catch(function (error) {
         self.$store.dispatch(
           "snackbar/setError",
-          "失敗する"
+          "エラーが発生しました。再度お試しください"
         )
         self.$store.dispatch("snackbar/snackOn")
         self.loading = false
@@ -1023,7 +1023,7 @@ export default {
       .catch(function (error) {
         self.$store.dispatch(
           "snackbar/setError",
-          "失敗する"
+          "エラーが発生しました。再度お試しください"
         )
         self.$store.dispatch("snackbar/snackOn")
         self.loading = false
