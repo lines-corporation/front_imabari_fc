@@ -59,7 +59,7 @@ export default {
     async hash_check(){
       let self = this
       self.qrcode_string = self.$route.query.qrcode_string
-      self.topics_id = window.location.pathname.substring(8,12)
+      self.topics_id = window.location.pathname.replace(/[^\d]/g,'')
       let check_message = `rcms-api/1/qrcode/hash?hash=${self.qrcode_string}&topics_id=${self.topics_id}`
       self.$auth.ctx.$axios.get(check_message).then(function (response) {
         self.subject = response.data.data.subject
