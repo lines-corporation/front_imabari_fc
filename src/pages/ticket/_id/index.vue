@@ -158,6 +158,7 @@
                                     <v-dialog
                                       v-for="hash_detail of hash_list"
                                       :key="hash_detail.qrcode_string"
+                                      persistent
                                       max-width="1272"
                                       transition="dialog-bottom-transition"
                                     > 
@@ -183,7 +184,7 @@
                                               v-bind="attrs"
                                               outlinedlargefabcolor="indigo"
                                               v-on="on"
-                                              @click="value = 4"
+                                              @click="getQrcode1(order.ec_order_id,order_detail.order_detail_id,index), value = 4"
                                             >QRコードを表示</v-btn><br/>
                                             <v-btn
                                               class="share-btn"
@@ -196,7 +197,7 @@
                                         </div>
                                       </template>
                                       <template v-slot:default="dialog">
-                                        <v-card v-if="value == 4">
+                                        <!-- <v-card v-if="value == 4">
                                           <v-toolbar
                                             color="primary"
                                             dark
@@ -226,9 +227,9 @@
                                               <vue-qrcode :value="prodcut_qr(order.ec_order_id + ':' + 'imabari' + ':' + order_detail.order_detail_id + ':' + index)" tag="img" />
                                             </p>
                                           </v-card-text>
-                                        </v-card>
+                                        </v-card> -->
 
-                                        <v-card v-else-if="value == 1">
+                                        <v-card v-if="value == 1">
                                           <v-toolbar
                                             color="primary"
                                             dark
@@ -771,6 +772,8 @@ export default {
     ec_payment_id: "61",
     order_products: [],
     qrcode_string: "",
+    qrcode_string2: "",
+    qrcode_string1: "",
     path: "",
     purchase_cnt:0,
     from_order_products:null,
@@ -1033,8 +1036,16 @@ export default {
       let self = this
       let hash = `/rcms-api/1/qrcode/url?ec_order_id=${ec_order_id}&order_detail_id=${order_detail_id}&no=${no}`
       self.$auth.ctx.$axios.get(hash).then(function (response) {
-        self.qrcode_string = response.data.data.qrcode_string
-        self.path = window.location.origin + "/"+  "tools/qr_ticket/?" + "qrcode_string="+ self.qrcode_string + "&topics_id=" + self.$route.params.id;
+        self.qrcode_string2 = response.data.data.qrcode_string2
+        self.path = window.location.origin + "/"+  "tools/qr_ticket/?" + "qrcode_string="+ self.qrcode_string2 + "&topics_id=" + self.$route.params.id;
+      })
+    },
+    async getQrcode1(ec_order_id,order_detail_id,no){
+      let self = this
+      let hash = `/rcms-api/1/qrcode/url?ec_order_id=${ec_order_id}&order_detail_id=${order_detail_id}&no=${no}`
+      self.$auth.ctx.$axios.get(hash).then(function (response) {
+        self.qrcode_string1 = response.data.data.qrcode_string1
+        self.$router.push(`/ticket/${self.$route.params.id}/qr_display/?qrcode_string=${self.qrcode_string1}&topics_id=${self.$route.params.id}`)
       })
     },
     Copy: function() {

@@ -21,6 +21,16 @@
            />
          </p>
        </v-card-text>
+       <v-card-actions class="justify-end">
+        <v-btn
+          class="close-btn"
+          text
+          :to="'/ticket/' + topics_id"
+          nuxt
+        >
+          閉じる
+        </v-btn>
+       </v-card-actions>
     </v-container>
   </div>
 </template>
@@ -37,9 +47,8 @@ export default {
   data: () => ({
     hash_code:null,
     order_id: null,
-    topics_id: "",
     ec_order_id:null,
-    qrcode_string: "",
+    topics_id: "",
     order_detail_id:null,
     no: null,
     product_name: null,
@@ -74,3 +83,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.close-btn{
+  padding: 0px 53px !important;
+}
+</style>
