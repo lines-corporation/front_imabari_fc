@@ -527,7 +527,7 @@
                         </thead>
                         <tbody v-for="t in product_list" :key="t.product_id">
                           <template>
-                            <tr>
+                            <tr v-if="t.stock > 0">
                               <td>{{ t.subject }}</td>
                               <td>
                                 <span>{{ t.price_02 }}円</span> <br/>
@@ -544,9 +544,9 @@
                                   single-line
                                   outlined
                                 />
-                                <p v-if="t.stock == 0">
+                                <!-- <p v-if="t.stock == 0">
                                   完売
-                                </p>
+                                </p> -->
                               </td>
                             </tr>
                             <template v-if="order_products[t.product_id] > 0 && seat_reserved_product.has(t.class_options[19].ec_class_option_id+'')">
