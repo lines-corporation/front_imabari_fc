@@ -1045,7 +1045,7 @@ export default {
       let hash = `/rcms-api/1/qrcode/url?ec_order_id=${ec_order_id}&order_detail_id=${order_detail_id}&no=${no}`
       self.$auth.ctx.$axios.get(hash).then(function (response) {
         self.qrcode_string1 = response.data.data.qrcode_string1
-        self.$router.push(`/ticket/${self.$route.params.id}/qr_display/?qrcode_string=${self.qrcode_string1}&topics_id=${self.$route.params.id}`)
+        self.$router.push(`/ticket/${self.$route.params.id}/qr_display/?qrcode_string=${self.qrcode_string1}`)
       })
     },
     Copy: function() {
