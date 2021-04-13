@@ -261,12 +261,12 @@
                         :to="'/ticket/' + item.topics_id"
                         tag="tr"
                       >
-                        <td v-if="item.subject.search('シーズンパス') == -1" class="date">
+                        <td v-if="item.subject != `2021シーズンパス` && item.subject != `2021 シーズンチケット`" class="date">
                           {{ item.ymd }}
                         </td>
-                        <td v-if="item.subject.search('シーズンパス') == -1">{{ item.subject }}</td>
-                        <td v-if="item.subject.search('シーズンパス') == -1">{{ item.ext_col_01 }}</td>
-                        <td v-if="item.subject.search('シーズンパス') == -1" class="arw">
+                        <td v-if="item.subject != `2021シーズンパス` && item.subject != `2021 シーズンチケット`" >{{ item.subject }}</td>
+                        <td v-if="item.subject != `2021シーズンパス` && item.subject != `2021 シーズンチケット`">{{ item.ext_col_01 }}</td>
+                        <td v-if="item.subject != `2021シーズンパス` && item.subject != `2021 シーズンチケット`" class="arw">
                           <v-btn icon :to="'/ticket/' + item.topics_id" nuxt>
                             <v-icon>mdi-chevron-right</v-icon>
                           </v-btn>
