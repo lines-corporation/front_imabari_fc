@@ -261,12 +261,12 @@
                         :to="'/ticket/' + item.topics_id"
                         tag="tr"
                       >
-                        <td class="date">
+                        <td v-if="item.subject.search('シーズンパス') == -1" class="date">
                           {{ item.ymd }}
                         </td>
-                        <td>{{ item.subject }}</td>
-                        <td>{{ item.ext_col_01 }}</td>
-                        <td class="arw">
+                        <td v-if="item.subject.search('シーズンパス') == -1">{{ item.subject }}</td>
+                        <td v-if="item.subject.search('シーズンパス') == -1">{{ item.ext_col_01 }}</td>
+                        <td v-if="item.subject.search('シーズンパス') == -1" class="arw">
                           <v-btn icon :to="'/ticket/' + item.topics_id" nuxt>
                             <v-icon>mdi-chevron-right</v-icon>
                           </v-btn>
