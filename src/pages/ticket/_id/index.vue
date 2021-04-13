@@ -50,14 +50,14 @@
                   {{ item.ext_col_04 }}
                 </v-col>
               </v-row>
-              <v-row>
+              <!-- <v-row>
                 <v-col cols="4">
                   <v-subheader>当日受付時間</v-subheader>
                 </v-col>
                 <v-col cols="8">
                   {{ item.ext_col_05 }}
                 </v-col>
-              </v-row>
+              </v-row> -->
               <v-row>
                 <v-col cols="4">
                   <v-subheader>試合会場開場時間</v-subheader>
