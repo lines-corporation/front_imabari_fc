@@ -3,7 +3,7 @@
 　   <v-container>
        <v-card-text v-if="product_name != null" class="c-txt" style="text-align:center;">
          <p v-if="order_detail_id != null && order_id != null && no != null"> <b>{{ `イベント名:` + subject }}</b> </p>
-         <p v-if="order_detail_id != null && order_id != null && no != null"> {{ `券種:` + product_name }} </p>
+         <p style="font-size:18px;" v-if="order_detail_id != null && order_id != null && no != null"> <b>{{ `券種:` + product_name }}</b> </p>
          <span  v-if="product_name.search('自由席') == -1 && note != 0 && note != null ">
            <span v-if="no == 1" >座席番号:ゾーン {{ note.split('-')[0] }} / 座席 {{ note.split('-')[1].substring(0,3) }}</span> 
            <span v-if="no > 1">
@@ -20,6 +20,23 @@
              tag="img"
            />
          </p>
+       </v-card-text>
+       <v-card-actions class="justify-end">
+        <v-btn
+          class="update-btn"
+          depressed
+          color="primary"
+          text
+          @click="reload"
+          nuxt
+        >
+          画面を更新
+        </v-btn>
+       </v-card-actions>
+       <v-card-text v-if="product_name != null" class="c-txt" style="text-align:center;"><br/>
+         <span v-if="order_detail_id != null && order_id != null && no != null"> チケット状態の確認をさせて頂く場合がございます。 </span><br/>
+         <span v-if="order_detail_id != null && order_id != null && no != null"> スタジアム入場後に画面更新ボタンを押下して、 </span><br/>
+         <span v-if="order_detail_id != null && order_id != null && no != null"> QRコードの状態を更新して下さい。 </span><br/><br/>
        </v-card-text>
        <v-card-actions class="justify-end">
         <v-btn
@@ -76,6 +93,9 @@ export default {
           self.hash_code = self.qrcode_string
         }
       })
+    },
+    async reload(){
+      window.location.reload()
     }
   },
   mounted() {
@@ -86,5 +106,9 @@ export default {
 <style scoped>
 .close-btn{
   padding: 0px 53px !important;
+}
+.update-btn{
+  background: #1976d2 !important;
+  padding: 0px 37.75px !important;
 }
 </style>
