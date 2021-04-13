@@ -552,7 +552,7 @@ footer .no-gutters{
 }
 
 .shop-wrap .v-card__actions .v-btn.v-size--default{
-	background: #FFF100;
+	background: #FFF100 !important;
 	border: none !important;
 	padding: 4px;
 	min-width: 120px;
@@ -590,7 +590,7 @@ footer .no-gutters{
 	font-weight: bold;
 }
 .shop-wrap .theme--light.v-btn{
-	background: #FFF;
+	background: #FFF !important;
 	border: 1px solid #171C61;
 	color: #171C61 !important; 	
 	box-shadow: none !important;		
