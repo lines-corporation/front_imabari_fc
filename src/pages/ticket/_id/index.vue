@@ -50,14 +50,6 @@
                   {{ item.ext_col_04 }}
                 </v-col>
               </v-row>
-              <!-- <v-row>
-                <v-col cols="4">
-                  <v-subheader>当日受付時間</v-subheader>
-                </v-col>
-                <v-col cols="8">
-                  {{ item.ext_col_05 }}
-                </v-col>
-              </v-row> -->
               <v-row>
                 <v-col cols="4">
                   <v-subheader>試合会場開場時間</v-subheader>
@@ -163,8 +155,7 @@
                                       transition="dialog-bottom-transition"
                                     > 
                                       <template v-slot:activator="{ on, attrs }">
-                                        <div v-if="order.ec_order_id == hash_detail.ec_order_id && order_detail.order_detail_id == hash_detail.order_detail_id && index == hash_detail.order_no">
-                                          
+                                        <div v-if="timeFlag && order.ec_order_id == hash_detail.ec_order_id && order_detail.order_detail_id == hash_detail.order_detail_id && index == hash_detail.order_no">
                                           <div v-show="hash_detail.qrcode_type == 2">
                                              &nbsp;&nbsp;&nbsp;&nbsp;
                                             <span
@@ -197,38 +188,6 @@
                                         </div>
                                       </template>
                                       <template v-slot:default="dialog">
-                                        <!-- <v-card v-if="value == 4">
-                                          <v-toolbar
-                                            color="primary"
-                                            dark
-                                          >
-                                            <v-spacer></v-spacer>
-                                            <v-card-actions class="justify-end">
-                                              <v-btn
-                                                text
-                                                @click="dialog.value = false"
-                                              >
-                                                閉じる
-                                              </v-btn>
-                                            </v-card-actions>
-                                          </v-toolbar>
-                                          <v-card-text style="text-align:center">
-                                            <br />
-                                            <p> <b>イベント名:{{ item.subject }} </b></p>
-                                            <span>  券種: </span><span v-text="prodcut_nm(order_detail.product_id)"></span><br/><br/>
-                                            <p style="text-align:center" v-if="prodcut_nm(order_detail.product_id).search('自由席') == -1 && order.note != 0 && order.note != null ">
-                                              <span v-if="index == 1" >座席番号:ゾーン {{ order.note.split('-')[0] }} / 座席 {{ order.note.split('-')[1].substring(0,3) }}</span> 
-                                              <span v-if="index != 1">
-                                                座席番号:ゾーン {{ order.note.split('-')[index-1].substring(3,6).replace(",","") }} / 座席 {{ order.note.split('-')[index].substring(0,3).replace(",","") }}
-                                              </span>
-                                            </p>
-                                            <p> 注文番号:{{ order.ec_order_id }} </p>
-                                            <p>
-                                              <vue-qrcode :value="prodcut_qr(order.ec_order_id + ':' + 'imabari' + ':' + order_detail.order_detail_id + ':' + index)" tag="img" />
-                                            </p>
-                                          </v-card-text>
-                                        </v-card> -->
-
                                         <v-card v-if="value == 1">
                                           <v-toolbar
                                             color="primary"
@@ -716,6 +675,7 @@ import preview from 'vue-photo-preview'
 import 'vue-photo-preview/dist/skin.css'
 import VueClipboard from 'vue-clipboard2'
 import md5 from "js-md5"
+import moment from 'moment'
 VueClipboard.config.autoSetContainer = true
 Vue.use(preview)
 Vue.use(VueClipboard)
@@ -725,7 +685,8 @@ export default {
   components: {
     VueQrcode,
     md5,
-    VueClipboard
+    VueClipboard,
+    moment
   },
   data: () => ({
     zoneImg: {
@@ -805,7 +766,10 @@ export default {
         dark: "#000000FF",
         light: "#FFFFFFFF"
       }
-    }
+    },
+    paymentTime: "",
+    time: "",
+    timeFlag: ""
   }),
   mounted() {
     let self = this
@@ -868,6 +832,9 @@ export default {
 
       self.$auth.ctx.$axios.get(url).then(function (response) {
         self.item = response.data.details
+        self.ymd = response.data.details.ymd.replaceAll("-","/")
+        let paymentTime = parseInt(new Date(self.ymd).getTime());
+        let time = parseInt(new Date().getTime());
         self.topics_id = self.item.topics_id
         let url_p = "/rcms-api/1/product_list?topics_id=" + self.topics_id
         self.$auth.ctx.$axios.get(url_p).then(function (res_p) {
@@ -892,6 +859,11 @@ export default {
             self.flag = false
           } else {
             self.flag = true
+          }
+          if((time - paymentTime > 0 && self.topics_id == "1036") || time - paymentTime < 0){
+            self.timeFlag = true
+          } else {
+            self.timeFlag = false
           }
         })
 
@@ -1048,6 +1020,7 @@ export default {
         self.$router.push(`/ticket/${self.$route.params.id}/qr_display/?qrcode_string=${self.qrcode_string1}`)
       })
     },
+
     Copy: function() {
       self = this
       let url = document.querySelector('#copyObj')
