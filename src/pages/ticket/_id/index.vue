@@ -769,7 +769,8 @@ export default {
     },
     paymentTime: "",
     time: "",
-    timeFlag: ""
+    timeFlag: "",
+    todayTime: ""
   }),
   mounted() {
     let self = this
@@ -834,7 +835,8 @@ export default {
         self.item = response.data.details
         self.ymd = response.data.details.ymd.replaceAll("-","/")
         let paymentTime = parseInt(new Date(self.ymd).getTime());
-        let time = parseInt(new Date().getTime());
+        let todayTime = moment(new Date().getTime()).format('L');
+        let time = parseInt(new Date(todayTime).getTime());
         self.topics_id = self.item.topics_id
         let url_p = "/rcms-api/1/product_list?topics_id=" + self.topics_id
         self.$auth.ctx.$axios.get(url_p).then(function (res_p) {
