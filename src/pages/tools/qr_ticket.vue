@@ -1,27 +1,48 @@
 <template>
-  <div class="container shop-wrap shop-cart">
-　   <v-container>
-       <v-card-text v-if="product_name != null" class="c-txt" style="text-align:center;">
-         <p v-if="order_detail_id != null && order_id != null && no != null"> <b>{{ `イベント名:` + subject }}</b> </p>
-         <p v-if="order_detail_id != null && order_id != null && no != null"> {{ `券種:` + product_name }} </p>
-         <span  v-if="product_name.search('自由席') == -1 && note != 0 && note != null ">
-           <span v-if="no == 1" >座席番号:ゾーン {{ note.split('-')[0] }} / 座席 {{ note.split('-')[1].substring(0,3) }}</span> 
-           <span v-if="no > 1">
-             {{ `座席番号:ゾーン` + note.split('-')[no-1].substring(3,6).replace(",","") }} / 座席 {{ note.split('-')[no].substring(0,3).replace(",","") }}
-           </span>
-            <br/> <br/>
-         </span>
-         <p v-if="order_detail_id != null && order_id != null && no != null" > 注文番号:{{ order_id }} </p>
-         <p style="text-align:center;" v-if="order_detail_id != null && order_id != null">
-           <vue-qrcode
-             v-if="order_detail_id != null && order_id != null"
-             style="text-align:center;"
-             :value="hash_code"
-             tag="img"
-           />
-         </p>
-       </v-card-text>
-    </v-container>
+  <div class="container">
+    <div class="article-page ticket-box">
+      <div class="theme--light v-stepper">
+        <div class="v-stepper__content">
+          <v-container>
+            <v-card-text v-if="product_name != null" class="c-txt" style="text-align:center;">
+              <p v-if="order_detail_id != null && order_id != null && no != null"> <b>{{ `イベント名:` + subject }}</b> </p>
+              <p style="font-size:18px;" v-if="order_detail_id != null && order_id != null && no != null"> <b>{{ `券種:` + product_name }}</b> </p>
+              <span  v-if="product_name.search('自由席') == -1 && note != 0 && note != null ">
+                <span v-if="no == 1" >座席番号:ゾーン {{ note.split('-')[0] }} / 座席 {{ note.split('-')[1].substring(0,3) }}</span> 
+                <span v-if="no > 1">
+                  {{ `座席番号:ゾーン` + note.split('-')[no-1].substring(3,6).replace(",","") }} / 座席 {{ note.split('-')[no].substring(0,3).replace(",","") }}
+                </span>
+                 <br/> <br/>
+              </span>
+              <p v-if="order_detail_id != null && order_id != null && no != null" > 注文番号:{{ order_id }} </p>
+              <span style="text-align:center;" v-if="order_detail_id != null && order_id != null">
+                <vue-qrcode
+                  v-if="order_detail_id != null && order_id != null"
+                  style="text-align:center;"
+                  :value="hash_code"
+                  tag="img"
+                />
+              </span>
+            </v-card-text>
+            <v-card-actions class="justify-center">
+             <v-btn
+               class="update-btn"
+               text
+               @click="reload"
+               nuxt
+             >
+               画面を更新
+             </v-btn>
+            </v-card-actions>
+            <v-card-text v-if="product_name != null" class="c-txt" style="text-align:center;"><br/>
+              <span v-if="order_detail_id != null && order_id != null && no != null"> チケット状態の確認をさせて頂く場合がございます。 </span><br/>
+              <span v-if="order_detail_id != null && order_id != null && no != null"> スタジアム入場後に画面更新ボタンを押下して、 </span><br/>
+              <span v-if="order_detail_id != null && order_id != null && no != null"> QRコードの状態を更新して下さい。 </span><br/><br/>
+            </v-card-text>
+          </v-container>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -67,6 +88,9 @@ export default {
           self.hash_code = self.qrcode_string
         }
       })
+    },
+    async reload(){
+      window.location.reload()
     }
   },
   mounted() {
@@ -74,3 +98,23 @@ export default {
   }
 }
 </script>
+<style scoped>
+.close-btn{
+  background-color: rgb(255 255 255 / 12%) !important;
+  border-color: #1976d2 !important;
+  border-style: solid !important;
+  margin-top: 3px;
+  border-width: 3px;
+  box-shadow: none;
+  padding: 0px 49.95px !important;
+}
+.v-application .primary--text {
+  color:aliceblue !important;
+}
+.update-btn{
+  background-color: #171C61 !important;
+  color:aliceblue !important;
+  padding: 0px 37px !important;
+}
+</style>
+
