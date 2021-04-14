@@ -34,10 +34,10 @@
                画面を更新
              </v-btn>
             </v-card-actions>
-            <v-card-text v-if="product_name != null" class="c-txt" style="text-align:center;"><br/>
-              <span v-if="order_detail_id != null && order_id != null && no != null"> チケット状態の確認をさせて頂く場合がございます。 </span><br/>
-              <span v-if="order_detail_id != null && order_id != null && no != null"> スタジアム入場後に画面更新ボタンを押下して、 </span><br/>
-              <span v-if="order_detail_id != null && order_id != null && no != null"> QRコードの状態を更新して下さい。 </span><br/><br/>
+            <v-card-text class="c-txt" style="text-align:center;"  v-if="order_detail_id != null && order_id != null && no != null"><br/>
+              <span> チケット状態の確認をさせて頂く場合がございます。 </span><br/>
+              <span> スタジアム入場後に画面更新ボタンを押下して、 </span><br/>
+              <span> QRコードの状態を更新して下さい。 </span><br/><br/>
             </v-card-text>
           </v-container>
         </div>
@@ -99,18 +99,6 @@ export default {
 }
 </script>
 <style scoped>
-.close-btn{
-  background-color: rgb(255 255 255 / 12%) !important;
-  border-color: #1976d2 !important;
-  border-style: solid !important;
-  margin-top: 3px;
-  border-width: 3px;
-  box-shadow: none;
-  padding: 0px 49.95px !important;
-}
-.v-application .primary--text {
-  color:aliceblue !important;
-}
 .update-btn{
   background-color: #171C61 !important;
   color:aliceblue !important;
