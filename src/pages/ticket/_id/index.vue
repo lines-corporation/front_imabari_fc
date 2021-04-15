@@ -155,8 +155,8 @@
                                       transition="dialog-bottom-transition"
                                     > 
                                       <template v-slot:activator="{ on, attrs }">
-                                        <div v-if="timeFlag && order.ec_order_id == hash_detail.ec_order_id && order_detail.order_detail_id == hash_detail.order_detail_id && index == hash_detail.order_no">
-                                          <div v-show="hash_detail.qrcode_type == 2">
+                                        <div v-if="order.ec_order_id == hash_detail.ec_order_id && order_detail.order_detail_id == hash_detail.order_detail_id && index == hash_detail.order_no">
+                                          <div v-show="hash_detail.qrcode_type == 2 && timeFlag">
                                              &nbsp;&nbsp;&nbsp;&nbsp;
                                             <span
                                               @click="value = 3"
@@ -169,7 +169,7 @@
                                               @click="value = 2"
                                             >譲渡/分配取消し</v-btn>
                                           </div>
-                                          <div v-show="hash_detail.qrcode_type == 1">
+                                          <div v-show="hash_detail.qrcode_type == 1 && timeFlag">
                                             <v-btn
                                               class="qr-code-btn"
                                               v-bind="attrs"
