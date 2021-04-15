@@ -79,7 +79,7 @@ export default {
                 id:       order.product_id,
                 quantity: order.quantity,
                 title:    productInfoResponse.data.details.topics_name,
-                price:    productInfoResponse.data.details.product_data.ext_col_04,
+                price:    response.data.details.payment_total,
                 size:     productInfoResponse.data.details.product_name,
                 image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
               })
