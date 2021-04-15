@@ -65,7 +65,7 @@ export default {
       self.histories = {}
       let resumeResult = response.data.list.filter((item) => item.generic_payment_status.label == "注文済み" || item.generic_payment_status.label == "未入金状態" || item.generic_payment_status.label == "決済完了")
       resumeResult.forEach((history, index) => {
-        const date = history.inst_ymdhi.replace(" +0900", "")
+        const date = history.inst_ymdhi.replace("+09:00", "").replace("T", " ").substring(0,16)
         if(self.histories[date]) {
           self.histories[date].ids.push(history.ec_order_id)
         } else {

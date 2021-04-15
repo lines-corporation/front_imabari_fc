@@ -68,7 +68,7 @@ export default {
       let self = this
       ids.forEach(async (id) => {
         const response = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/history/${id}`)
-        self.purchaseDate = response.data.details.inst_ymdhi.replace(" +0900", "")
+        self.purchaseDate = response.data.details.inst_ymdhi.replace("+09:00", "").replace("T", " ").substring(0,16)
         self.note = response.data.details.note
         self.generic_payment_status = response.data.details.generic_payment_status.label
         self.totalPaymentPrice = parseInt(response.data.details.total)
