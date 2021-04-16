@@ -52,7 +52,8 @@ export default {
     totalPaymentPrice: 0,
     note: "",
     products: [],
-    generic_payment_status: ""
+    generic_payment_status: "",
+    file_url: ""
   }),
   computed: {
     user() {
@@ -82,6 +83,14 @@ export default {
                 price:    response.data.details.payment_total,
                 size:     productInfoResponse.data.details.product_name,
                 image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
+              })
+            } else {
+              self.products.push({
+                id:       order.product_id,
+                quantity: order.quantity,
+                title:    productInfoResponse.data.details.topics_name,
+                price:    response.data.details.payment_total,
+                size:     productInfoResponse.data.details.product_name,
               })
             }
           })

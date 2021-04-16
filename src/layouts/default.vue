@@ -132,6 +132,11 @@ export default {
           to: "/kiyaku",
         },
         {
+          icon: "mdi-cart-outline",
+          title: "ECサイト",
+          to: "/ec",
+        },
+        {
           icon: "mdi-history",
           title: "購入履歴",
           to: "/ec/histories",
