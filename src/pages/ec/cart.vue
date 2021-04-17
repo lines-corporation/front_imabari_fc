@@ -68,7 +68,7 @@
         <v-radio-group v-model="ecPaymentId">
           <v-radio label="カード決済" value="61" />
           <v-radio label="銀行振り込み" value="60" />
-          <v-radio label="コンビニ払い" value="59" />
+          <!-- <v-radio label="コンビニ払い" value="59" /> -->
         </v-radio-group>
         <p v-if="ecPaymentId == '60'" class="body-1">
           ■振込先 <br>
