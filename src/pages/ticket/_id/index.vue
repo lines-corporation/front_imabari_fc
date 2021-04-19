@@ -862,7 +862,7 @@ export default {
           } else {
             self.flag = true
           }
-          if((time - paymentTime > 0 && self.topics_id == "1036") || time - paymentTime < 0){
+          if((time - paymentTime > 0 && self.topics_id == "1036") || time - paymentTime <= 0){
             self.timeFlag = true
           } else {
             self.timeFlag = false
