@@ -1062,8 +1062,9 @@ export default {
         }else{
           rtn += "(キャンセル)"
         }
+      } else if(ec_payment_id==62) {
+        rtn += "mPos連携"
       }
-      
       return rtn
     },
     purchase() {
