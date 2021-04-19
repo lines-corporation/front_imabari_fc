@@ -127,7 +127,7 @@
                               </table>
                             </td>
                             <td>
-                              <div v-if="order.payment_status == 450 || order.payment_status == 150">
+                              <div v-if="order.payment_status == 450 || order.payment_status == 150 || order.payment_status == 1350">
                                 <tr
                                   v-for="order_detail in order.order_details"
                                   :key="order_detail.product_id"
@@ -1064,7 +1064,15 @@ export default {
         }
       } else if(ec_payment_id==62) {
         rtn += "mPos連携"
+        if(payment_status == 1350){
+          rtn += "(決済完了)"
+        }else if(payment_status == 1380){
+          rtn += "(キャンセル済み)"
+        }else{
+          rtn += "(決済失敗)"
+        }
       }
+      
       return rtn
     },
     purchase() {
