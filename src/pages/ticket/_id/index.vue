@@ -1014,7 +1014,7 @@ export default {
       self.$auth.ctx.$axios.get(hash).then(function (response) {
         self.qrcode_string2 = response.data.data.qrcode_string2
         self.cnt1 = response.data.data.cnt
-        self.path = window.location.origin + "/"+  "tools/qr_ticket/?" + "qrcode_string="+ self.qrcode_string2 + "&topics_id=" + self.$route.params.id + "&cnt=" + 1;
+        self.path = window.location.origin + "/"+  "tools/qr_ticket/?" + "qrcode_string="+ self.qrcode_string2 + "&topics_id=" + self.$route.params.id + "&cnt=" + self.cnt1;
       })
     },
     async getQrcode1(ec_order_id,order_detail_id,no){
