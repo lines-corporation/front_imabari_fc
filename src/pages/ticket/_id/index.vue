@@ -39,7 +39,7 @@
                   <v-subheader>イベント概要</v-subheader>
                 </v-col>
                 <v-col cols="8">
-                  {{ item.ext_col_03 }}
+                  <p class="p-label" v-html="item.ext_col_03" />
                 </v-col>
               </v-row>
               <v-row>
@@ -47,7 +47,7 @@
                   <v-subheader>試合詳細</v-subheader>
                 </v-col>
                 <v-col cols="8">
-                  {{ item.ext_col_04 }}
+                  <p class="p-label" v-html="item.ext_col_04" />
                 </v-col>
               </v-row>
               <v-row>
@@ -63,7 +63,7 @@
                   <v-subheader>注意事項</v-subheader>
                 </v-col>
                 <v-col cols="8">
-                  {{ item.ext_col_07 }}
+                  <p class="p-label" v-html="item.ext_col_07" />
                 </v-col>
               </v-row>
               <v-row>
@@ -1310,5 +1310,8 @@ export default {
   border-width: 3px;
   box-shadow: none;
   padding: 0px 53px !important;
+}
+.p-label{
+  margin-bottom: 0px;
 }
 </style>
