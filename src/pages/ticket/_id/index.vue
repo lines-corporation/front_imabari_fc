@@ -770,7 +770,9 @@ export default {
     paymentTime: "",
     time: "",
     timeFlag: "",
-    todayTime: ""
+    todayTime: "",
+    cnt: 0,
+    cnt1: 0
   }),
   mounted() {
     let self = this
@@ -1011,7 +1013,8 @@ export default {
       let hash = `/rcms-api/1/qrcode/url?ec_order_id=${ec_order_id}&order_detail_id=${order_detail_id}&no=${no}`
       self.$auth.ctx.$axios.get(hash).then(function (response) {
         self.qrcode_string2 = response.data.data.qrcode_string2
-        self.path = window.location.origin + "/"+  "tools/qr_ticket/?" + "qrcode_string="+ self.qrcode_string2 + "&topics_id=" + self.$route.params.id;
+        self.cnt1 = response.data.data.cnt
+        self.path = window.location.origin + "/"+  "tools/qr_ticket/?" + "qrcode_string="+ self.qrcode_string2 + "&topics_id=" + self.$route.params.id + "&cnt=" + 1;
       })
     },
     async getQrcode1(ec_order_id,order_detail_id,no){
@@ -1019,7 +1022,8 @@ export default {
       let hash = `/rcms-api/1/qrcode/url?ec_order_id=${ec_order_id}&order_detail_id=${order_detail_id}&no=${no}`
       self.$auth.ctx.$axios.get(hash).then(function (response) {
         self.qrcode_string1 = response.data.data.qrcode_string1
-        self.$router.push(`/ticket/${self.$route.params.id}/qr_display/?qrcode_string=${self.qrcode_string1}`)
+        self.cnt = response.data.data.cnt
+        self.$router.push(`/ticket/${self.$route.params.id}/qr_display/?qrcode_string=${self.qrcode_string1}&cnt=${self.cnt}`)
       })
     },
 

@@ -15,14 +15,20 @@
                  <br/> <br/>
               </span>
               <p v-if="order_detail_id != null && order_id != null && no != null" > 注文番号:{{ order_id }} </p>
-              <span style="text-align:center;" v-if="order_detail_id != null && order_id != null">
-                <vue-qrcode
-                  v-if="order_detail_id != null && order_id != null"
-                  style="text-align:center;"
-                  :value="hash_code"
-                  tag="img"
-                />
-              </span>
+              <div>
+                <div v-if="cnt == 0">
+                  <vue-qrcode
+                    style="text-align:center;"
+                    :value="hash_code"
+                    tag="img"
+                  />
+                </div>
+                <div align="center" v-else-if="cnt > 0">
+                  <section>
+                    <v-img :src="require('@/assets/images/used-qr.png')" width="148px"></v-img>
+                  </section>
+                </div>
+              </div>
             </v-card-text>
             <v-card-actions class="justify-center">
              <v-btn
@@ -73,13 +79,15 @@ export default {
     no: null,
     product_name: null,
     note: null,
-    subject: null
+    subject: null,
+    cnt: 0
   }),
   methods: {
     async hash_check(){
       let self = this
       self.qrcode_string = self.$route.query.qrcode_string
       self.topics_id = window.location.pathname.replace(/[^\d]/g,'')
+      self.cnt = self.$route.query.cnt
       let check_message = `rcms-api/1/qrcode/hash?hash=${self.qrcode_string}&topics_id=${self.topics_id}`
       self.$auth.ctx.$axios.get(check_message).then(function (response) {
         self.subject = response.data.data.subject
