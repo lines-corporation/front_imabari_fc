@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div v-if="topics_id" class="article-page ticket-box">
+    <div class="article-page ticket-box">
       <header>
         <h2 class="form-ttl">
           {{ item.subject }}

@@ -16,14 +16,14 @@
               </span>
               <p v-if="order_detail_id != null && order_id != null && no != null" > 注文番号:{{ order_id }} </p>
               <div>
-                <div v-if="cnt == 0">
+                <div v-if="cnt > 0">
                   <vue-qrcode
                     style="text-align:center;"
                     :value="hash_code"
                     tag="img"
                   />
                 </div>
-                <div align="center" v-else-if="cnt > 0">
+                <div align="center" v-else-if="cnt == 0">
                   <section>
                     <v-img :src="require('@/assets/images/used-qr.png')" width="148px"></v-img>
                   </section>
