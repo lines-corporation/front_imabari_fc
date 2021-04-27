@@ -213,13 +213,14 @@ export default {
         // 最後のページ response.data.pageInfo.lastIndex
         // 現在のページ response.data.pageInfo.pageNo
         response.data.list.forEach((product, index) => {
-          if(self.products[product.topics_id]) {
-            self.products[product.topics_id].data.push(product)
+          if(self.products[parseInt(new Date(product.product_data.inst_ymdhi).getTime())]) {
+            self.products[ parseInt(new Date(product.product_data.inst_ymdhi).getTime())].data.push(product)
           } else {
-            self.$set(self.products, product.topics_id,
+            self.$set(self.products, parseInt(new Date(product.product_data.inst_ymdhi).getTime()),
               {
                 name:      product.topics_name,
                 price:     product.product_data.ext_col_04,
+                inst_ymdhi: parseInt(new Date(product.product_data.inst_ymdhi).getTime()),
                 description: product.product_data.ext_col_01,
                 // 注意書き?
                 note: product.product_data.ext_col_02,
@@ -233,7 +234,15 @@ export default {
           self.pageNumber = 1
           self.count = 1
         }
-        self.displayLists = Object.values(self.products).slice(self.pageSize*(self.pageNumber -1), self.pageSize*(self.pageNumber))
+        function compare(property){
+        return function(a,b){
+          var value1 = a[property]
+          var value2 = b[property]
+          return value2 - value1
+          }
+        }
+        let resultsList = Object.values(self.products).sort(compare('inst_ymdhi'))
+        self.displayLists = resultsList.slice(self.pageSize*(self.pageNumber -1), self.pageSize*(self.pageNumber))
         self.page_length = Math.ceil(Object.values(self.products).length/self.pageSize)
       } else {
         let self = this
@@ -243,12 +252,13 @@ export default {
         self.flag = false
         let result = response.data.list.filter(item =>item.topics_name.indexOf(self.selectVal) != -1)
         result.forEach((product, index) => {
-          if(self.products[product.topics_id]) {
-            self.products[product.topics_id].data.push(product)
+          if(self.products[parseInt(new Date(product.product_data.inst_ymdhi).getTime())]) {
+            self.products[parseInt(new Date(product.product_data.inst_ymdhi).getTime())].data.push(product)
           } else {
-            self.$set(self.products, product.topics_id,
+            self.$set(self.products, parseInt(new Date(product.product_data.inst_ymdhi).getTime()),
               {
                 name:      product.topics_name,
+                inst_ymdhi: parseInt(new Date(product.product_data.inst_ymdhi).getTime()),
                 price:     product.product_data.ext_col_04,
                 description: product.product_data.ext_col_01,
                 // 注意書き?
@@ -263,7 +273,15 @@ export default {
           self.pageNumber = 1
           self.count = 1
         }
-        self.displayLists = Object.values(self.products).slice(self.pageSize*(self.pageNumber -1), self.pageSize*(self.pageNumber))
+        function compare(property){
+        return function(a,b){
+          var value1 = a[property]
+          var value2 = b[property]
+          return value2 - value1
+          }
+        }
+        let resultsList = Object.values(self.products).sort(compare('inst_ymdhi'))
+        self.displayLists = resultsList.slice(self.pageSize*(self.pageNumber -1), self.pageSize*(self.pageNumber))
         self.page_length = Math.ceil(Object.values(self.products).length/self.pageSize)
       }
     },
