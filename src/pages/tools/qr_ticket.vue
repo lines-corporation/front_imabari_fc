@@ -72,14 +72,13 @@ export default {
     product_name: null,
     note: null,
     subject: null,
-    cnt: 0
+    cnt: null
   }),
   methods: {
     async hash_check(){
       let self = this
       self.qrcode_string = self.$route.query.qrcode_string
       self.topics_id = self.$route.query.topics_id
-      self.cnt = self.$route.query.cnt
       let check_message = `rcms-api/1/qrcode/hash?hash=${self.qrcode_string}&topics_id=${self.topics_id}`
       self.$auth.ctx.$axios.get(check_message).then(function (response) {
         self.subject = response.data.data.subject
@@ -95,6 +94,10 @@ export default {
         } else {
           self.hash_code = self.qrcode_string
         }
+         let hash = `/rcms-api/1/qrcode/url?ec_order_id=${self.order_id}&order_detail_id=${self.order_detail_id}&no=${self.no}`
+         self.$auth.ctx.$axios.get(hash).then(function (response1) {
+           self.cnt = response1.data.data.cnt
+         })
       })
     },
     async reload(){

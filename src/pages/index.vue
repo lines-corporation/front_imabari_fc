@@ -147,7 +147,7 @@
                 </NuxtLink>
               </v-card-text>
             </v-card>
-            <v-card class="mx-auto" outlined>
+            <!-- <v-card class="mx-auto" outlined>
               <v-card-actions>
                 <br /><br /><br /><br />
                 <v-btn text color="deep-purple accent-4" to="/vapp">
@@ -160,7 +160,7 @@
                 </NuxtLink>
                 <br /><br />
               </v-card-text>
-            </v-card>
+            </v-card> -->
           </v-col>
           <v-col cols="12" sm="6">
             <v-card class="mx-auto" outlined>
@@ -261,12 +261,12 @@
                         :to="'/ticket/' + item.topics_id"
                         tag="tr"
                       >
-                        <td v-if="item.subject != `2021シーズンパス` && item.subject != `2021 シーズンチケット`" class="date">
+                        <td v-if="item.topics_id != 1036" class="date">
                           {{ item.ymd }}
                         </td>
-                        <td v-if="item.subject != `2021シーズンパス` && item.subject != `2021 シーズンチケット`" >{{ item.subject }}</td>
-                        <td v-if="item.subject != `2021シーズンパス` && item.subject != `2021 シーズンチケット`">{{ item.ext_col_01 }}</td>
-                        <td v-if="item.subject != `2021シーズンパス` && item.subject != `2021 シーズンチケット`" class="arw">
+                        <td v-if="item.topics_id != 1036">{{ item.subject }}</td>
+                        <td v-if="item.topics_id != 1036">{{ item.ext_col_01 }}</td>
+                        <td v-if="item.topics_id != 1036" class="arw">
                           <v-btn icon :to="'/ticket/' + item.topics_id" nuxt>
                             <v-icon>mdi-chevron-right</v-icon>
                           </v-btn>
@@ -287,9 +287,11 @@
 
 <script>
 import Vue from 'vue'
+import Qs from 'qs'
 import VueQrcode from "@chenfengyuan/vue-qrcode"
 import { Base64 } from 'js-base64'
 import CryptoJS from "crypto-js";
+import axios from '~/plugins/axios'
 Vue.use(CryptoJS)
 export default {
   components: {
@@ -329,21 +331,7 @@ export default {
     auth() {
       return this.$store.$auth
     },
-    can_upgrade() {
-      if (this.$auth.loggedIn) {
-        self.can_upgrade = true
-        const group_ids = JSON.parse(JSON.stringify(this.$auth.user.group_ids))
-        console.warn("************ group_ids *************")
-        console.warn(group_ids)
-        Object.keys(group_ids).forEach(function (key) {
-          if (["114", "111"].indexOf(key) !== -1) {
-            self.can_upgrade = false
-          }
-        })
-        return self.can_upgrade
-      }
-      return false
-    },
+   
     tester() {
       // チケット販売を許可していない場合には項目を表示しない
       if (!this.can_ticket_sales) { return false }
@@ -384,22 +372,38 @@ export default {
   },
   mounted() {
     this.getInfo()
+    this.can_upgrade()
   },
   created () {
    this.getCookie()
   },
   methods: {
+     can_upgrade() {
+      let self = this
+      if (self.$auth.loggedIn) {
+        self.can_upgrade = true
+        const group_ids = JSON.parse(JSON.stringify(self.$auth.user.group_ids))
+        console.warn("************ group_ids *************")
+        console.warn(group_ids)
+        Object.keys(group_ids).forEach(function (key) {
+          if (["114", "111"].indexOf(key) !== -1) {
+            self.can_upgrade = false
+          }
+        })
+        return self.can_upgrade
+      }
+      return false
+    },
     getInfo() {
       if (this.$auth.loggedIn) {
         let self = this
-
-        this.$auth.ctx.$axios
+        self.$auth.ctx.$axios
           .get("/rcms-api/1/infos")
           .then(function (response) {
             self.topics_list1 = response.data.list
           })
         self.my_order_ticket_list = []
-        this.$auth.ctx.$axios
+        self.$auth.ctx.$axios
           .get("/rcms-api/1/product_list?my_order_flg=1")
           .then(function (response) {
            for (const order_ticket_list of response.data.list) {
@@ -421,8 +425,7 @@ export default {
           self.ticket_sort = buy_finish_ticket.sort(item => item.id)
           self.ticket_result = self.ticket_sort.filter(item => item.ymd != null)
         })
-         this.$auth.ctx.$axios
-        .get("/rcms-api/1/ticket_list")
+        self.$auth.ctx.$axios.get("/rcms-api/1/ticket_list")
         .then(function (response) {
           for (const p_list of response.data.list) {
             if (p_list.product_ids.length > 0) {
@@ -490,29 +493,29 @@ export default {
     async login() {
       self = this
       self.loading = true
-      await this.$auth.ctx.$axios
-          .post("/rcms-api/1/login", {
+      self.form = {
           email: self.email,
           password: self.password,
           login_save: self.login_save,
-        })
+        }
+      await self.$auth
+        .loginWith("local", { data: self.form })
         .then(() => {
-        this.$auth.ctx.$axios.get("/rcms-api/1/profile").then(function (response) {
         const group_ids = JSON.parse(
-            JSON.stringify(response.data.group_ids)
-        )
-        let upgraded_flg = false
-        Object.keys(group_ids).forEach(function (key) {
-          if (key == 114 || key == 111 || key == 110 || key == 113) {
-            upgraded_flg = true
-          }
-        })
+            JSON.stringify(self.$auth.user.group_ids)
+          )
+          let upgraded_flg = false
+          Object.keys(group_ids).forEach(function (key) {
+            if (key == 114 || key == 111 || key == 110 || key == 113) {
+              upgraded_flg = true
+            }
+          })
         self.getInfo()
+        self.$router.push("/")
         self.$store.dispatch("snackbar/setMessage", "ログインしました")
         self.$store.dispatch("snackbar/snackOn")
         self.checkedPwd(self.email,self.password)
         location.reload()
-        })
         self.loading = false
       })
       .catch(() => {

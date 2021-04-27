@@ -560,7 +560,7 @@
                       <v-col cols="8">
                         <v-radio-group v-model="ec_payment_id">
                           <v-radio label="カード決済" value="61" />
-                          <!-- <v-radio label="銀行振り込み" value="60" /> -->
+                          <v-radio label="銀行振り込み" value="60" />
                         </v-radio-group>
                         <p v-if="ec_payment_id == '60'" class="body-1">
                           振込先がメールで送信されますので、そちらで振込先をご確認ください。
@@ -770,9 +770,7 @@ export default {
     paymentTime: "",
     time: "",
     timeFlag: "",
-    todayTime: "",
-    cnt: 0,
-    cnt1: 0
+    todayTime: ""
   }),
   mounted() {
     let self = this
@@ -1013,8 +1011,7 @@ export default {
       let hash = `/rcms-api/1/qrcode/url?ec_order_id=${ec_order_id}&order_detail_id=${order_detail_id}&no=${no}`
       self.$auth.ctx.$axios.get(hash).then(function (response) {
         self.qrcode_string2 = response.data.data.qrcode_string2
-        self.cnt1 = response.data.data.cnt
-        self.path = window.location.origin + "/"+  "tools/qr_ticket/?" + "qrcode_string="+ self.qrcode_string2 + "&topics_id=" + self.$route.params.id + "&cnt=" + self.cnt1;
+        self.path = window.location.origin + "/"+  "tools/qr_ticket/?" + "qrcode_string="+ self.qrcode_string2 + "&topics_id=" + self.$route.params.id;
       })
     },
     async getQrcode1(ec_order_id,order_detail_id,no){
@@ -1022,8 +1019,7 @@ export default {
       let hash = `/rcms-api/1/qrcode/url?ec_order_id=${ec_order_id}&order_detail_id=${order_detail_id}&no=${no}`
       self.$auth.ctx.$axios.get(hash).then(function (response) {
         self.qrcode_string1 = response.data.data.qrcode_string1
-        self.cnt = response.data.data.cnt
-        self.$router.push(`/ticket/${self.$route.params.id}/qr_display/?qrcode_string=${self.qrcode_string1}&cnt=${self.cnt}`)
+        self.$router.push(`/ticket/${self.$route.params.id}/qr_display/?qrcode_string=${self.qrcode_string1}`)
       })
     },
 
