@@ -486,7 +486,7 @@
                         </thead>
                         <tbody v-for="t in product_list" :key="t.product_id">
                           <template>
-                            <tr v-if="t.stock > 0">
+                            <tr>
                               <td>{{ t.subject }}</td>
                               <td>
                                 <span>{{ t.price_02 }}円</span> <br/>
@@ -494,7 +494,7 @@
                               </td>
                               <td>
                                 <v-select
-                                  v-if="t.stock > 0"
+                                  v-if="t.stock > 0 || t.stock_unlimited == 1"
                                   v-model="order_products[t.product_id]"
                                   :items="quantity_list"
                                   menu-props="auto"
@@ -503,9 +503,9 @@
                                   single-line
                                   outlined
                                 />
-                                <!-- <p v-if="t.stock == 0">
+                                <p v-if="t.stock == 0 && t.stock_unlimited == 0">
                                   完売
-                                </p> -->
+                                </p>
                               </td>
                             </tr>
                             <template v-if="order_products[t.product_id] > 0 && seat_reserved_product.has(t.class_options[19].ec_class_option_id+'')">
