@@ -400,7 +400,7 @@ export default {
      */
     async searchAddress(zip_code) {
       let self = this
-      let url = "http://zipcloud.ibsnet.co.jp/api/search?zipcode="+zip_code
+      let url = "https://zipcloud.ibsnet.co.jp/api/search?zipcode="+zip_code
       this.$jsonp(url)
       .then(res => {
         if (res.results == null) {
