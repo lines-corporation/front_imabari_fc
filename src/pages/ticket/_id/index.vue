@@ -491,8 +491,8 @@
                               <td>
                                 <br/>
                                 <span>{{ t.price_02 }}円</span> <br/>
-                                <span v-if="t.group_price > 0"> 有料会員限定の割引価格 {{ t.price_by_group.split(",")[0].split(":")[1] }}円</span><br/>
-                                <span v-if="t.group_price > 0"> 無料会員限定の割引価格 {{ t.price_by_group.split(",")[1].split(":")[1].split("}")[0] }}円</span>
+                                <span v-if="flag && t.group_price > 0"> 有料会員限定の割引価格 {{ t.price_by_group.split(",")[0].split(":")[1] }}円</span><br/>
+                                <span v-if="flag && t.group_price > 0"> 無料会員限定の割引価格 {{ t.price_by_group.split(",")[1].split(":")[1].split("}")[0] }}円</span>
                               </td>
                               <td>
                                 <v-select
@@ -718,6 +718,7 @@ export default {
     order_detail_id_no: 1,
     order_detail_id: 1,
     qrcode_type: 1,
+    flag: false,
     keyword: 0,
     item: [],
     seat_num: 0,
@@ -857,6 +858,11 @@ export default {
                 }
               }
             }
+          }
+          if(Object.values(JSON.parse(JSON.stringify(self.$auth.user.group_ids)))[0] == "無料会員"){
+            self.flag = false
+          } else {
+            self.flag = true
           }
           if((time - paymentTime > 0 && self.topics_id == "1036") || time - paymentTime <= 0){
             self.timeFlag = true
