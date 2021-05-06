@@ -87,10 +87,16 @@
                 </v-subheader>
               </v-col>
               <v-col cols="8">
-                <v-text-field
+                <v-select
                   v-model="tdfk_cd"
                   :rules="[rules.required]"
+                  :items="arrTdfk_cd"
+                  item-text="name"
+                  item-value="code"
+                  menu-props="auto"
                   label="都道府県"
+                  hide-details
+                  single-line
                   outlined
                 />
               </v-col>
@@ -291,6 +297,7 @@ export default {
       namekana2: "",
       zip_code: "",
       tdfk_cd: "",
+      tdfk: "",
       address1: "",
       address2: "",
       address3: "",
@@ -300,6 +307,55 @@ export default {
       login_pwd: "",
       menu: false,
       loading: false,
+      arrTdfk_cd: [
+        { code: "01", name: "北海道" },
+        { code: "02", name: "青森県" },
+        { code: "03", name: "岩手県" },
+        { code: "04", name: "宮城県" },
+        { code: "05", name: "秋田県" },
+        { code: "06", name: "山形県" },
+        { code: "07", name: "福島県" },
+        { code: "08", name: "茨城県" },
+        { code: "09", name: "栃木県" },
+        { code: "10", name: "群馬県" },
+        { code: "11", name: "埼玉県" },
+        { code: "12", name: "千葉県" },
+        { code: "13", name: "東京都" },
+        { code: "14", name: "神奈川県" },
+        { code: "15", name: "新潟県" },
+        { code: "16", name: "富山県" },
+        { code: "17", name: "石川県" },
+        { code: "18", name: "福井県" },
+        { code: "19", name: "山梨県" },
+        { code: "20", name: "長野県" },
+        { code: "21", name: "岐阜県" },
+        { code: "22", name: "静岡県" },
+        { code: "23", name: "愛知県" },
+        { code: "24", name: "三重県" },
+        { code: "25", name: "滋賀県" },
+        { code: "26", name: "京都府" },
+        { code: "27", name: "大阪府" },
+        { code: "28", name: "兵庫県" },
+        { code: "29", name: "奈良県" },
+        { code: "30", name: "和歌山県" },
+        { code: "31", name: "鳥取県" },
+        { code: "32", name: "島根県" },
+        { code: "33", name: "岡山県" },
+        { code: "34", name: "広島県" },
+        { code: "35", name: "山口県" },
+        { code: "36", name: "徳島県" },
+        { code: "37", name: "香川県" },
+        { code: "38", name: "愛媛県" },
+        { code: "39", name: "高知県" },
+        { code: "40", name: "福岡県" },
+        { code: "41", name: "佐賀県" },
+        { code: "42", name: "長崎県" },
+        { code: "43", name: "熊本県" },
+        { code: "44", name: "大分県" },
+        { code: "45", name: "宮崎県" },
+        { code: "46", name: "鹿児島県" },
+        { code: "47", name: "沖縄県" },
+      ],
       rules: {
         required: (value) => !!value || "この項目は必須入力です",
         password_min: (v) =>
@@ -324,27 +380,6 @@ export default {
   watch: {
     menu(val) {
       val && setTimeout(() => (this.$refs.picker.activePicker = "YEAR"))
-    },
-    zip: function (val) {
-      if (7 != val.length) {
-        this.tdfk_cd = ""
-        this.address1 = ""
-        this.address2 = ""
-      }
-
-      let self = this
-      let url = "https://api.zipaddress.net/?zipcode=" + val
-      axios.get(url).then(function (response) {
-        if (response.data.code == "200") {
-          self.tdfk_cd = response.data.data.pref
-          self.address1 = response.data.data.address
-          self.address2 = response.data.data.town
-        } else {
-          self.tdfk_cd = ""
-          self.address1 = ""
-          self.address2 = ""
-        }
-      })
     },
   },
   mounted() {
@@ -393,8 +428,103 @@ export default {
           self.loading = false
           return
         }
-        self.tdfk_cd = res.results[0]['address1']
+        self.tdfk = res.results[0]['address1']
         self.address1 = res.results[0]['address2'] + res.results[0]['address3']
+        if(self.tdfk == "北海道") {
+          self.tdfk_cd = "01"
+        } else if(self.tdfk == "青森県"){
+          self.tdfk_cd = "02"
+        } else if(self.tdfk == "岩手県"){
+          self.tdfk_cd = "03"
+        } else if(self.tdfk == "宮城県"){
+          self.tdfk_cd = "04"
+        } else if(self.tdfk == "秋田県"){
+          self.tdfk_cd = "05"
+        } else if(self.tdfk == "山形県"){
+          self.tdfk_cd = "06"
+        } else if(self.tdfk == "福島県"){
+          self.tdfk_cd = "07"
+        } else if(self.tdfk == "茨城県"){
+          self.tdfk_cd = "08"
+        } else if(self.tdfk == "栃木県"){
+          self.tdfk_cd = "09"
+        } else if(self.tdfk == "群馬県"){
+          self.tdfk_cd = "10"
+        } else if(self.tdfk == "埼玉県"){
+          self.tdfk_cd = "11"
+        } else if(self.tdfk == "千葉県"){
+          self.tdfk_cd = "12"
+        } else if(self.tdfk == "東京都"){
+          self.tdfk_cd = "13"
+        } else if(self.tdfk == "神奈川県"){
+          self.tdfk_cd = "14"
+        } else if(self.tdfk == "新潟県"){
+          self.tdfk_cd = "15"
+        } else if(self.tdfk == "富山県"){
+          self.tdfk_cd = "16"
+        } else if(self.tdfk == "石川県"){
+          self.tdfk_cd = "17"
+        } else if(self.tdfk == "福井県"){
+          self.tdfk_cd = "18"
+        } else if(self.tdfk == "山梨県"){
+          self.tdfk_cd = "19"
+        } else if(self.tdfk == "長野県"){
+          self.tdfk_cd = "20"
+        } else if(self.tdfk == "岐阜県"){
+          self.tdfk_cd = "21"
+        } else if(self.tdfk == "静岡県"){
+          self.tdfk_cd = "22"
+        } else if(self.tdfk == "愛知県"){
+          self.tdfk_cd = "23"
+        } else if(self.tdfk == "三重県"){
+          self.tdfk_cd = "24"
+        } else if(self.tdfk == "滋賀県"){
+          self.tdfk_cd = "25"
+        } else if(self.tdfk == "京都府"){
+          self.tdfk_cd = "26"
+        } else if(self.tdfk == "大阪府"){
+          self.tdfk_cd = "27"
+        } else if(self.tdfk == "兵庫県"){
+          self.tdfk_cd = "28"
+        } else if(self.tdfk == "奈良県"){
+          self.tdfk_cd = "29"
+        } else if(self.tdfk == "和歌山県"){
+          self.tdfk_cd = "30"
+        } else if(self.tdfk == "鳥取県"){
+          self.tdfk_cd = "31"
+        } else if(self.tdfk == "島根県"){
+          self.tdfk_cd = "32"
+        } else if(self.tdfk == "岡山県"){
+          self.tdfk_cd = "33"
+        } else if(self.tdfk == "広島県"){
+          self.tdfk_cd = "34"
+        } else if(self.tdfk == "山口県"){
+          self.tdfk_cd = "35"
+        } else if(self.tdfk == "徳島県"){
+          self.tdfk_cd = "36"
+        } else if(self.tdfk == "香川県"){
+          self.tdfk_cd = "37"
+        } else if(self.tdfk == "愛媛県"){
+          self.tdfk_cd = "38"
+        } else if(self.tdfk == "高知県"){
+          self.tdfk_cd = "39"
+        } else if(self.tdfk == "福岡県"){
+          self.tdfk_cd = "40"
+        } else if(self.tdfk == "佐賀県"){
+          self.tdfk_cd = "41"
+        } else if(self.tdfk == "長崎県"){
+          self.tdfk_cd = "42"
+        } else if(self.tdfk == "熊本県"){
+          self.tdfk_cd = "43"
+        } else if(self.tdfk == "大分県"){
+          self.tdfk_cd = "44"
+        } else if(self.tdfk == "宮崎県"){
+          self.tdfk_cd = "45"
+        } else if(self.tdfk == "鹿児島県"){
+          self.tdfk_cd = "46"
+        } else if(self.tdfk == "沖縄県"){
+          self.tdfk_cd = "47"
+        }
       })
       .catch(error => {
         console.log(error);
