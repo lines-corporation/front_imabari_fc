@@ -221,7 +221,6 @@
                   v-model="zip_code"
                   label="郵便番号"
                   @blur="searchAddress(zip_code)"
-                  type="number"
                   :rules="[rules.required, rules.zip_length]"
                   hint="ハイフンなしの半角数字7桁をご入力ください"
                   outlined
