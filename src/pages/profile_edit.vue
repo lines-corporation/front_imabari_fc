@@ -71,10 +71,8 @@
                   v-model="zip_code"
                   label="郵便番号"
                   @blur="searchAddress(zip_code)"
-                  type="number"
                   :rules="[rules.required, rules.zip_length]"
                   hint="ハイフンなしの半角数字7桁をご入力ください"
-                  counter
                   outlined
                 />
               </v-col>
@@ -156,7 +154,6 @@
                   type="tel"
                   :rules="[rules.required, rules.tel]"
                   hint="ハイフンなしの半角数字をご入力ください"
-                  counter
                   outlined
                 />
               </v-col>
@@ -172,7 +169,6 @@
                   type="m_tel"
                   :rules="[rules.m_tel]"
                   hint="ハイフンなしの半角数字をご入力ください"
-                  counter
                   outlined
                 />
               </v-col>
@@ -230,7 +226,6 @@
                   label="パスワード"
                   hint="8文字以上の半角英数字混在でご入力ください。記号を利用する場合は -_&=+%#@$*.!: が利用可能です。"
                   persistent-hint
-                  counter
                   @click:append="password_show = !password_show"
                 />
               </v-col>
@@ -271,7 +266,6 @@
 </template>
 
 <script>
-import axios from "axios"
 import Vue from 'vue'
 import { VueJsonp } from 'vue-jsonp'
 

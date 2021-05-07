@@ -16,37 +16,9 @@
       </v-carousel>
     </v-col>
    <!-- 購入履歴へ -->
-    <v-row class="shoplist">
-      <v-col align="left" cols="3">
+    <v-row class="d-msg float-sm-right">
+      <v-col cols="12">
         <v-btn to="/ec/histories" nuxt>購入履歴へ</v-btn>
-      </v-col>
-      <v-col align="center" cols="7">
-        <v-text-field
-          v-model="selectVal"
-          prepend-inner-icon="mdi-magnify"
-          class="content-border-redius head-border-redius"
-          label="商品検索"
-          @blur="getProducts"
-          @keyup.enter="getProducts"
-          centered
-          outlined
-          clearable
-        >
-        </v-text-field>
-      </v-col>
-      <v-col align="right" cols="2" @click="moveCart">
-        <v-badge
-          v-if="cartItems.length > 0"
-          color="green"
-          :content="total_quantity"
-        >
-          <v-icon large color="darken-2">
-            mdi-cart-variant
-          </v-icon>
-        </v-badge>
-        <v-icon v-else large color="darken-2">
-          mdi-cart-variant
-        </v-icon>
       </v-col>
     </v-row>
 
@@ -77,6 +49,7 @@
                       <v-list-item-action>
                         <v-checkbox :input-value="active" ></v-checkbox>
                       </v-list-item-action>
+  
                       <v-list-item-content>
                         <v-list-item-title>{{ category.title }}</v-list-item-title>
                         <v-list-item-subtitle></v-list-item-subtitle>
@@ -92,7 +65,38 @@
         <!-- 商品一覧 -->
         <v-col cols="8" class="brk2">
           <v-container class="grey lighten-5 mb-3">
-            
+            <v-row class="shoplist">
+              
+              <v-col cols="10" sm="6">
+                <v-text-field
+                  v-model="selectVal"
+                  prepend-inner-icon="mdi-magnify"
+                  class="content-border-redius head-border-redius"
+                  label="商品検索"
+                  @blur="getProducts"
+                  @keyup.enter="getProducts"
+                  centered
+                  outlined
+                  clearable
+                >
+                </v-text-field>
+              </v-col>
+           
+              <v-col cols="2" @click="moveCart">
+                <v-badge
+                  v-if="cartItems.length > 0"
+                  color="green"
+                  :content="total_quantity"
+                >
+                  <v-icon large color="darken-2">
+                    mdi-cart-variant
+                  </v-icon>
+                </v-badge>
+                <v-icon v-else large color="darken-2">
+                  mdi-cart-variant
+                </v-icon>
+              </v-col>
+            </v-row>
             <v-row v-if="displayLists && !isMobile()">
               <v-col v-for="(product, topics_id) in displayLists" :key="topics_id" cols="4" sm="12">
                 <v-card class="p-card">
