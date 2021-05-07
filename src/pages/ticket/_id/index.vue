@@ -561,7 +561,7 @@
                       <v-col cols="8">
                         <v-radio-group v-model="ec_payment_id">
                           <v-radio label="カード決済" value="61" />
-                          <v-radio label="銀行振り込み" value="60" />
+                          <v-radio v-if="bank_flag" label="銀行振り込み" value="60" />
                         </v-radio-group>
                         <p v-if="ec_payment_id == '60'" class="body-1">
                           振込先がメールで送信されますので、そちらで振込先をご確認ください。
@@ -771,7 +771,8 @@ export default {
     paymentTime: "",
     time: "",
     timeFlag: "",
-    todayTime: ""
+    todayTime: "",
+    bank_flag: ""
   }),
   mounted() {
     let self = this
@@ -838,6 +839,11 @@ export default {
         let paymentTime = parseInt(new Date(self.ymd).getTime());
         let todayTime = moment(new Date().getTime()).format('L');
         let time = parseInt(new Date(todayTime).getTime());
+        if(paymentTime - time <= 259200000) {
+          self.bank_flag = false
+        } else {
+          self.bank_flag = true
+        }
         self.topics_id = self.item.topics_id
         let url_p = "/rcms-api/1/product_list?topics_id=" + self.topics_id
         self.$auth.ctx.$axios.get(url_p).then(function (res_p) {
