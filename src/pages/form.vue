@@ -980,8 +980,9 @@ export default {
   watch: {
     menu(val) {
       val && setTimeout(() => (this.$refs.picker.activePicker = "YEAR"))
-    },
-    created() {
+    }
+  },
+  created() {
     if (this.$route.query.key) {
       this.email_hash = this.$route.query.key
       let self = this
