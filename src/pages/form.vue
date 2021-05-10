@@ -424,10 +424,9 @@
                   <v-text-field
                     v-model="zip_code"
                     label="郵便番号"
-                    type="number"
+                    @blur="searchAddress(zip_code)"
                     :rules="[rules.required, rules.zip_length]"
                     hint="ハイフンなしの半角数字7桁をご入力ください"
-                    counter
                     outlined
                   />
                 </v-col>
@@ -447,7 +446,7 @@
                     item-text="name"
                     item-value="code"
                     menu-props="auto"
-                    label="都道府県を選択してください"
+                    label="都道府県"
                     hide-details
                     single-line
                     outlined
@@ -509,7 +508,6 @@
                     type="tel"
                     :rules="[rules.required, rules.tel]"
                     hint="ハイフンなしの半角数字をご入力ください"
-                    counter
                     outlined
                   />
                 </v-col>
@@ -525,7 +523,6 @@
                     type="tel"
                     :rules="[rules.tel]"
                     hint="ハイフンなしの半角数字をご入力ください"
-                    counter
                     outlined
                   />
                 </v-col>
@@ -573,7 +570,6 @@
                     label="パスワード"
                     hint="8文字以上の半角英数字混在でご入力ください。記号を利用する場合は -_&=+%#@$*.!: が利用可能です。"
                     persistent-hint
-                    counter
                     @click:append="password_show = !password_show"
                   />
                 </v-col>
@@ -865,6 +861,10 @@
 
 <script>
 import axios from "axios"
+import Vue from 'vue'
+import { VueJsonp } from 'vue-jsonp'
+
+Vue.use(VueJsonp)
 
 export default {
   auth: false,
@@ -981,29 +981,7 @@ export default {
     menu(val) {
       val && setTimeout(() => (this.$refs.picker.activePicker = "YEAR"))
     },
-    zip: function (val) {
-      if (7 != val.length) {
-        this.tdfk_cd = ""
-        this.address1 = ""
-        this.address2 = ""
-      }
-
-      let self = this
-      let url = "https://api.zipaddress.net/?zipcode=" + val
-      axios.get(url).then(function (response) {
-        if (response.data.code == "200") {
-          self.tdfk_cd = response.data.data.pref
-          self.address1 = response.data.data.address
-          self.address2 = response.data.data.town
-        } else {
-          self.tdfk_cd = ""
-          self.address1 = ""
-          self.address2 = ""
-        }
-      })
-    },
-  },
-  created() {
+    created() {
     if (this.$route.query.key) {
       this.email_hash = this.$route.query.key
       let self = this
@@ -1041,6 +1019,30 @@ export default {
     //   }
     //   return this.question_8.length > 2 && this.question_8.indexOf(num) === -1
     // },
+    /**
+     * 郵便番号から入力
+     */
+    async searchAddress(zip_code) {
+      let self = this
+      let url = "https://zipcloud.ibsnet.co.jp/api/search?zipcode="+zip_code
+      this.$jsonp(url)
+      .then(res => {
+        if (res.results == null) {
+           self.$store.dispatch(
+           "snackbar/setError",
+           "郵便番号存在しません。"
+          )
+          self.$store.dispatch("snackbar/snackOn")
+          self.loading = false
+          return
+        }
+        self.tdfk_cd = res.results[0]['prefcode']
+        self.address1 = res.results[0]['address2'] + res.results[0]['address3']
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  　},
     send_email() {
       this.loading1 = true
       if (this.$refs.form1.validate()) {
