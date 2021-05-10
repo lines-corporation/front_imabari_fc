@@ -29,7 +29,28 @@
           <v-card class="d-flex flex-row mb-2" max-width="300">
             <v-list flat subheader three-line>
               <v-subheader>商品カテゴリー</v-subheader>
+              <v-list-item-group
+                v-if="!isMobile()"
+                v-model="selectedCategory"
+                multiple
+                active-class=""
+                @change="getProducts"
+              >
+                <v-list-item :disabled="flag" v-for="category in categories" :key="`category-${ category.id }`" :value="category.id">
+                  <template v-slot:default="{ active }">
+                    <v-list-item-action>
+                      <v-checkbox :input-value="active" ></v-checkbox>
+                    </v-list-item-action>
+
+                    <v-list-item-content>
+                      <v-list-item-title>{{ category.title }}</v-list-item-title>
+                      <v-list-item-subtitle></v-list-item-subtitle>
+                    </v-list-item-content>
+                  </template>
+                </v-list-item>
+              </v-list-item-group>
               <v-list-group
+                v-if="isMobile()"
                 no-action
                 sub-group
               >
