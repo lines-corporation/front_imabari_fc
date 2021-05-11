@@ -87,7 +87,7 @@
       v-model="snackbarVisible"
       top
       :color="snackbarColor"
-      timeout="10000"
+      timeout="8000"
     >
       {{ this.$store.getters["snackbar/message"] }}
 
