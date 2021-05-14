@@ -17,8 +17,22 @@
     </v-col>
    <!-- 購入履歴へ -->
     <v-row class="d-msg float-sm-right">
-      <v-col cols="12">
+      <v-col md="8">
         <v-btn to="/ec/histories" nuxt>購入履歴へ</v-btn>
+      </v-col>
+      <v-col md="4" @click="moveCart">
+        <v-badge
+          v-if="cartItems.length > 0"
+          color="green"
+          :content="total_quantity"
+        >
+          <v-icon large color="darken-2">
+            mdi-cart-variant
+          </v-icon>
+        </v-badge>
+        <v-icon v-else large color="darken-2">
+          mdi-cart-variant
+        </v-icon>
       </v-col>
     </v-row>
 
@@ -103,20 +117,7 @@
                 </v-text-field>
               </v-col>
            
-              <v-col cols="2" @click="moveCart">
-                <v-badge
-                  v-if="cartItems.length > 0"
-                  color="green"
-                  :content="total_quantity"
-                >
-                  <v-icon large color="darken-2">
-                    mdi-cart-variant
-                  </v-icon>
-                </v-badge>
-                <v-icon v-else large color="darken-2">
-                  mdi-cart-variant
-                </v-icon>
-              </v-col>
+
             </v-row>
             <v-row v-if="displayLists && !isMobile()">
               <v-col v-for="(product, topics_id) in displayLists" :key="topics_id" cols="4" sm="12">
