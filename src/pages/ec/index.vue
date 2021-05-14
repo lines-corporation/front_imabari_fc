@@ -246,7 +246,6 @@ export default {
         response.data.list.forEach( product => {
           let sell_time = product.product_data.ymd
           let result_time = new Date(sell_time).getTime() + product.product_data.topics_id
-          console.log(result_time)
           if(self.products[parseInt(result_time)]) {
             self.products[parseInt(result_time)].data.push(product)
           } else {

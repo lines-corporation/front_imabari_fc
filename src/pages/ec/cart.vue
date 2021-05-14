@@ -26,9 +26,9 @@
             <p v-if="product.quantity">{{ product.quantity }}個</p>
             </div>
           </v-col>
-		  <v-col class="d-flex flex-row-reverse c-del" >
-		    <v-btn @click="removeProduct(product.id)">削除</v-btn>
-		  </v-col>
+      <v-col class="d-flex flex-row-reverse c-del" >
+        <v-btn @click="removeProduct(product.id)">削除</v-btn>
+      </v-col>
         </v-row>
         <v-divider></v-divider>
       </div>
@@ -310,6 +310,7 @@
         <v-subheader>合計金額</v-subheader>
       </v-col>
       <v-col cols="8">
+        <p class="p-cell">割引額 -¥{{ sum }}</p>
         <p class="p-cell">¥ {{ totalPrice }} (送料 ¥{{ deliv_fee }} )</p>
       </v-col>
     </v-row>
@@ -418,6 +419,10 @@ export default {
       cardYear: "",
       cardCvv: "",
       totalPrice: 0,
+      discount_price: 0,
+      discounts: [],
+      result: [],
+      sum: 0,
       deliv_fee: 0, // 送料
       seasonPassFlg: false, // シーズンパスの場合には入力項目が少し変わる
       seasonPassBesidesFlg: false,// シーズンパス以外の場
@@ -452,44 +457,49 @@ export default {
     /**
      * 郵便番号から入力
      */
-    async searchAddress(zip_code) {
-      let self = this
-      let url = "https://zipcloud.ibsnet.co.jp/api/search?zipcode="+zip_code
-      this.$jsonp(url)
-      .then(res => {
-        if (res.results == null) {
-           self.$store.dispatch(
-           "snackbar/setError",
-           "郵便番号存在しません。"
-          )
-          self.$store.dispatch("snackbar/snackOn")
-          self.loading = false
-          return
-        }
-        self.tdfk_cd = res.results[0]['prefcode']
-        self.address1 = res.results[0]['address2'] + res.results[0]['address3']
-      })
-      .catch(error => {
+      searchAddress(zip_code) {
+        let self = this
+        let url = "https://zipcloud.ibsnet.co.jp/api/search?zipcode="+zip_code
+        this.$jsonp(url)
+        .then(res => {
+          if (res.results == null) {
+             self.$store.dispatch(
+             "snackbar/setError",
+             "郵便番号存在しません。"
+            )
+            self.$store.dispatch("snackbar/snackOn")
+            self.loading = false
+            return
+          }
+          self.tdfk_cd = res.results[0]['prefcode']
+          self.address1 = res.results[0]['address2'] + res.results[0]['address3']
+          self.cd = self.address_elected == 'new-address' ? self.tdfk_cd : self.$auth.user.tdfk_cd
+          self.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${self.$auth.user.ec_cart_id}?tdfk_cd=${self.cd}`).then(function (response) {
+          // 送料の設定
+          self.deliv_fee = parseInt(response.data.details.deliv_fee)
+          self.totalPrice = parseInt(response.data.details.total)
+          })
+         }).catch(error => {
         console.log(error);
       })
-  　},
+    },
     async getProductInfo() {
       let self = this
       // kurocoからデータを取得してみる
       self.products = []
+      self.discounts = []
       self.seasonPassFlg = false
       self.seasonPassBesidesFlg = false
       self.flag = Object.values(JSON.parse(JSON.stringify(self.$auth.user.group_ids)))[0] != "無料会員"
-      let tdfk_cd = self.address_elected == 'new-address' ? self.tdfk_cd : self.$auth.user.tdfk_cd
-      let response = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${self.$auth.user.ec_cart_id}?tdfk_cd=${tdfk_cd}`)
+      if(self.address_elected != 'new-address'){
+        self.tdfk_cd = self.$auth.user.tdfk_cd
+      }
+      let response = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${self.$auth.user.ec_cart_id}?tdfk_cd=${self.tdfk_cd}`)
       // 送料の設定
       self.deliv_fee = parseInt(response.data.details.deliv_fee)
       self.totalPrice = parseInt(response.data.details.total)
-      // let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
-      // 送料の設定
-      // this.deliv_fee = parseInt(response.data.details.deliv_fee)
       if(response.data.details.items) {
-        response.data.details.items.forEach((item, index) => {
+        response.data.details.items.forEach(item => {
           let self = this
           self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/${item.product_id}`).then((productInfoResponse) => {
             // シーズンパス稼働波の判定
@@ -498,16 +508,32 @@ export default {
             } else {
               self.seasonPassBesidesFlg = true
             }
-            console.log(productInfoResponse.data.details.product_data.contents_type)
             self.products.push({
               id:       item.product_id,
               quantity: item.quantity,
               discount: productInfoResponse.data.details.group_price,
+              discount_price: productInfoResponse.data.details.discount_price,
               title:    productInfoResponse.data.details.topics_name,
               price:    productInfoResponse.data.details.product_data.ext_col_04,
               size:     productInfoResponse.data.details.product_name,
               image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
             })
+            self.discounts.push({
+              discount_prices: parseInt(item.quantity)*parseInt(productInfoResponse.data.details.discount_price)
+            })
+            let result = JSON.parse(JSON.stringify(self.discounts)).slice(-1)
+            console.log(self.discounts)
+            console.log(result)
+            var values = []
+            for(var property of result){
+              for(var k in property)
+              values.push(property[k])
+            }
+            console.log(values)
+            for(var i=0; i < values.length; i++){
+              self.sum += values[i]
+            }
+            console.log(self.sum)
           })
         })
       }
@@ -796,6 +822,7 @@ export default {
       )
       this.$store.dispatch("snackbar/snackOn")
       this.getProductInfo()
+      window.location.reload()
     }
   },
   mounted() {
