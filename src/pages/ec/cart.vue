@@ -522,18 +522,14 @@ export default {
               discount_prices: parseInt(item.quantity)*parseInt(productInfoResponse.data.details.discount_price)
             })
             let result = JSON.parse(JSON.stringify(self.discounts)).slice(-1)
-            console.log(self.discounts)
-            console.log(result)
             var values = []
             for(var property of result){
               for(var k in property)
               values.push(property[k])
             }
-            console.log(values)
             for(var i=0; i < values.length; i++){
               self.sum += values[i]
             }
-            console.log(self.sum)
           })
         })
       }
