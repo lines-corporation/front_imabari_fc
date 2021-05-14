@@ -220,7 +220,7 @@ export default {
         self.products = {}
         let paramStr = '?cnt=999'
         if(self.selectedCategory.length > 0) {
-          self.selectedCategory.forEach((categoryId, index) => {
+          self.selectedCategory.forEach(categoryId => {
             paramStr += `&contents_type[]=${categoryId}`
           })
         }
@@ -242,17 +242,18 @@ export default {
         // 最初のページ response.data.pageInfo.firstIndex
         // 最後のページ response.data.pageInfo.lastIndex
         // 現在のページ response.data.pageInfo.pageNo
-        response.data.list.forEach((product, index) => {
-          let sell_time = product.product_data.ymd + product.product_data.inst_ymdhi.substring(10)
-          console.log(sell_time)
-          if(self.products[parseInt(new Date(sell_time).getTime())]) {
-            self.products[ parseInt(new Date(sell_time).getTime())].data.push(product)
+        response.data.list.forEach( product => {
+          let sell_time = product.product_data.ymd
+          let result_time = new Date(sell_time).getTime() + product.product_data.topics_id
+          console.log(result_time)
+          if(self.products[parseInt(result_time)]) {
+            self.products[parseInt(result_time)].data.push(product)
           } else {
-            self.$set(self.products, parseInt(new Date(sell_time).getTime()),
+            self.$set(self.products, parseInt(result_time),
               {
                 name:      product.topics_name,
                 price:     product.product_data.ext_col_04,
-                inst_ymdhi: parseInt(new Date(sell_time).getTime()),
+                inst_ymdhi: parseInt(result_time),
                 description: product.product_data.ext_col_01,
                 // 注意書き?
                 note: product.product_data.ext_col_02,
@@ -283,15 +284,16 @@ export default {
         let response = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list${paramStr}`)
         self.flag = false
         let result = response.data.list.filter(item =>item.topics_name.indexOf(self.selectVal) != -1)
-        result.forEach((product, index) => {
-          let sell_time = product.product_data.ymd + product.product_data.inst_ymdhi.substring(10)
-          if(self.products[parseInt(new Date(sell_time).getTime())]) {
-            self.products[parseInt(new Date(sell_time).getTime())].data.push(product)
+        result.forEach( product => {
+          let sell_time = product.product_data.ymd
+          let result_time = new Date(sell_time).getTime() + product.product_data.topics_id
+          if(self.products[parseInt(result_time)]) {
+            self.products[parseInt(result_time)].data.push(product)
           } else {
-            self.$set(self.products, parseInt(new Date(sell_time).getTime()),
+            self.$set(self.products, parseInt(result_time),
               {
                 name:      product.topics_name,
-                inst_ymdhi: parseInt(new Date(sell_time).getTime()),
+                inst_ymdhi: parseInt(result_time),
                 price:     product.product_data.ext_col_04,
                 description: product.product_data.ext_col_01,
                 // 注意書き?
@@ -320,7 +322,7 @@ export default {
     },
     async getCategories() {
       let response = await this.$auth.ctx.$axios.get("/rcms-api/1/shop/categories")
-      response.data.list.forEach((category, index) => {
+      response.data.list.forEach(category => {
         this.categories.push({
           id:    parseInt(category.topics_category_id),
           title: category.category_nm,

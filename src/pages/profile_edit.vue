@@ -387,7 +387,7 @@ export default {
           self.name2 = response.data.details.name2
           self.namekana1 = response.data.details.namekana1
           self.namekana2 = response.data.details.namekana2
-          self.sex = response.data.details.sex.label
+          self.sex = response.data.details.sex
           self.birth = response.data.details.birth
           self.email = response.data.details.email
           self.subemail = response.data.details.email2
