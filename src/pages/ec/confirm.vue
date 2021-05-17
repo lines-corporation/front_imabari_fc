@@ -3,7 +3,7 @@
     <v-container>
 	  <h2 class="shop-ttl">ご注文内容の確認</h2>
       <!-- ここをループさせる -->
-      <div v-for="product in products">
+      <div v-for="(product,id) in products" :key="id">
         <v-row no-gutters class="cart-list">
           <v-col class="c-img">
             <v-img
