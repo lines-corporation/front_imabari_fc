@@ -166,7 +166,6 @@
             <v-card class="mx-auto" outlined>
               <v-card-text>
                 <h4>お知らせ</h4>
-
                 <v-simple-table :fixed-header="false">
                   <template v-slot:default>
                     <tbody>
@@ -184,6 +183,12 @@
                           <v-btn icon :to="'/info/' + item.topics_id" nuxt>
                             <v-icon>mdi-chevron-right</v-icon>
                           </v-btn>
+                        </td>
+                      </router-link>
+                      <router-link tag="tr" :to="'/info/detail'" nuxt>
+                        <td></td>
+                        <td class="info-lag">
+                          もっと見る>>
                         </td>
                       </router-link>
                     </tbody>
@@ -400,7 +405,7 @@ export default {
         self.$auth.ctx.$axios
           .get("/rcms-api/1/infos")
           .then(function (response) {
-            self.topics_list1 = response.data.list
+            self.topics_list1 = response.data.list.slice(0,3)
           })
         self.my_order_ticket_list = []
         self.$auth.ctx.$axios
@@ -535,5 +540,11 @@ export default {
 .box {
   text-align: center;
   display:inline-block;
+}
+.info-lag{
+  font-weight: 1000;
+  text-align: right;
+  color: #171C61 ;
+  border: 10px
 }
 </style>
