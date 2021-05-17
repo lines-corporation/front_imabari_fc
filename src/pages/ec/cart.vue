@@ -183,7 +183,7 @@
         <v-subheader>配送先住所</v-subheader>
       </v-col>
       <v-col cols="8" class="translate">
-        <v-radio-group v-model="address_elected" @change=getProductInfo()>
+        <v-radio-group v-model="address_elected" @change="changeAddress()">
           <v-radio label="FC IMABARI Sailors' Clubにご登録の住所へ配送をご希望の場合" value="login-address" />
           <v-radio label="その他の住所へ配送をご希望の場合" value="new-address" />
         </v-radio-group>
@@ -480,6 +480,20 @@ export default {
           self.totalPrice = parseInt(response.data.details.total)
           })
          }).catch(error => {
+        console.log(error);
+      })
+    },
+     /**
+     * 配送先住所を変更
+     */
+      changeAddress() {
+        let self = this
+        self.cd = self.address_elected == 'new-address' ? self.tdfk_cd : self.$auth.user.tdfk_cd
+        self.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${self.$auth.user.ec_cart_id}?tdfk_cd=${self.cd}`).then(function (response) {
+        // 送料の設定
+        self.deliv_fee = parseInt(response.data.details.deliv_fee)
+        self.totalPrice = parseInt(response.data.details.total)
+        }).catch(error => {
         console.log(error);
       })
     },
