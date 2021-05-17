@@ -311,7 +311,8 @@
       </v-col>
       <v-col cols="8">
         <p class="p-cell">割引額 -¥{{ sum }}</p>
-        <p class="p-cell">¥ {{ totalPrice }} (送料 ¥{{ deliv_fee }} )</p>
+        <p class="p-cell" v-if="totalPrice > 5000"> ¥ {{ totalPrice }} (送料 ¥{{ 0 }} )</p>
+        <p class="p-cell" v-else > ¥ {{ totalPrice }} (送料 ¥{{ deliv_fee }} )</p>
       </v-col>
     </v-row>
 
