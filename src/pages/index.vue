@@ -189,8 +189,8 @@
                   </template>
                 </v-simple-table>
                 <v-divider></v-divider>
-                <h4>
-                  <v-btn icon :to="'/info/detail'" nuxt style="margin-left:535px;">
+                <h4 style="text-align: right;">
+                  <v-btn icon :to="'/info/detail'" nuxt style="padding-right: 80px;">
                     <td class="info-fond">もっと見る>></td>
                   </v-btn>
                 </h4>
