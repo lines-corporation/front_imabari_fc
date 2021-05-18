@@ -185,16 +185,15 @@
                           </v-btn>
                         </td>
                       </router-link>
-                      <router-link tag="tr" :to="'/info/detail'" nuxt>
-                        <td></td>
-                        <td class="info-fond">もっと見る</td>
-                        <td class="date">
-                          >>
-                        </td>
-                      </router-link>
                     </tbody>
                   </template>
                 </v-simple-table>
+                <v-divider></v-divider>
+                <h4>
+                  <v-btn icon :to="'/info/detail'" nuxt style="margin-left:535px;">
+                    <td class="info-fond">もっと見る>></td>
+                  </v-btn>
+                </h4>
               </v-card-text>
             </v-card>
             <v-card class="mx-auto" outlined>
@@ -545,7 +544,6 @@ export default {
 .info-fond{
   font-weight: bold;
   font-size: 18px !important ;
-  text-align: right;
   color: #171C61 ;
 }
 </style>
