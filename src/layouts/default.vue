@@ -58,6 +58,22 @@
       <v-btn icon to="/faq" nuxt>
         <v-icon>mdi-help</v-icon>
       </v-btn>
+
+      <v-col md="1" @click="moveCart">
+        <v-badge
+          v-if="cartItems.length > 0"
+          color="green"
+          :content="total_quantity"
+        >
+          <v-icon mid color="darken-2">
+            mdi-cart-variant
+          </v-icon>
+        </v-badge>
+        <v-icon v-else mid color="darken-2">
+          mdi-cart-variant
+        </v-icon>
+      </v-col>
+
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
     </v-app-bar>
     <v-main>
@@ -106,6 +122,7 @@ export default {
     return {
       inquiry_url: "https://docs.google.com/forms/d/e/1FAIpQLSdYPh3YEm5fzrCxBVnEd64xvSVpHBwpaeKan0ODSa8thr6Gtw/viewform",
       clipped: false,
+      cartItems: [],
       drawer: false,
       fixed: false,
       items: [
@@ -189,6 +206,23 @@ export default {
     },
   },
   methods: {
+    // TODO 商品詳細とかぶっているのでどこかで共通化したい
+    async getCartItems() {
+      if(!this.$auth.user || !this.$auth.user.ec_cart_id) {
+        return
+      }
+      this.cartItems = []
+      let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
+      this.total_quantity = response.data.details.total_quantity
+      if(response.data.details.items) {
+        response.data.details.items.forEach((item, index) => {
+          this.cartItems.push(item)
+        })
+      }
+    },
+    moveCart() {
+      this.$router.push("/ec/cart")
+    },
     async logout() {
       await this.$auth.logout().then((response) => {
         this.$store.dispatch("snackbar/setMessage", "ログアウトしました")
@@ -196,6 +230,9 @@ export default {
         this.$router.push("/")
       })
     },
+  },
+    mounted() {
+    this.getCartItems()
   },
 }
 </script>
