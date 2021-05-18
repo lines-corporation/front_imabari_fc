@@ -4,7 +4,7 @@
       <v-card class="mx-auto" outlined>
         <v-card-text>
           <h4>お知らせ一覧</h4>
-          <v-divider :inset="inset"></v-divider>
+          <v-divider></v-divider>
           <v-simple-table :fixed-header="false">
             <template v-slot:default>
               <tbody>

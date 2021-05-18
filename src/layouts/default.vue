@@ -59,7 +59,7 @@
         <v-icon>mdi-help</v-icon>
       </v-btn>
 
-      <v-col md="1" @click="moveCart">
+      <v-btn icon @click="moveCart">
         <v-badge
           v-if="cartItems.length > 0"
           color="green"
@@ -72,7 +72,7 @@
         <v-icon v-else mid color="darken-2">
           mdi-cart-variant
         </v-icon>
-      </v-col>
+      </v-btn>
 
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
     </v-app-bar>

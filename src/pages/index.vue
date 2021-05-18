@@ -187,8 +187,9 @@
                       </router-link>
                       <router-link tag="tr" :to="'/info/detail'" nuxt>
                         <td></td>
-                        <td class="info-lag">
-                          もっと見る>>
+                        <td class="info-fond">もっと見る</td>
+                        <td class="date">
+                          >>
                         </td>
                       </router-link>
                     </tbody>
@@ -541,10 +542,10 @@ export default {
   text-align: center;
   display:inline-block;
 }
-.info-lag{
-  font-weight: 1000;
+.info-fond{
+  font-weight: bold;
+  font-size: 18px !important ;
   text-align: right;
   color: #171C61 ;
-  border: 10px
 }
 </style>
