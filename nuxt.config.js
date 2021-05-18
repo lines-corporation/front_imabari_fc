@@ -22,48 +22,59 @@ export default {
     htmlAttrs: {
       lang: "ja",
     },
-    titleTemplate: "%s - ",
     title: envSettings.META_TITLE,
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
-        name: "twitter:image",
-        content: "https://firebasestorage.googleapis.com/v0/b/kuroco-member-imabari.appspot.com/o/share-photo.png?alt=media&token=02863866-11b3-4bb9-8aac-30a72bd422d2",
+        hid: "og:site_name",
+        property: "og:site_name",
+        content: envSettings.META_TITLE
       },
       {
+        hid: "og:title",
+        property: "og:title",
+        content: envSettings.META_TITLE
+      },
+      {
+        hid: "og:image",
         property: "og:image",
-        content: "https://firebasestorage.googleapis.com/v0/b/kuroco-member-imabari.appspot.com/o/share-photo.png?alt=media&token=02863866-11b3-4bb9-8aac-30a72bd422d2",
+        content: "https://firebasestorage.googleapis.com/v0/b/kuroco-member-imabari.appspot.com/o/share-photo.png?alt=media&token=02863866-11b3-4bb9-8aac-30a72bd422d2"
+      },
+      {
+        hid: "og:image:alt",
+        property: "og:image:alt",
+        content: envSettings.META_TITLE
+      },
+      {
+        hid: "twitter:title",
+        property: "twitter:title",
+        content: envSettings.META_TITLE
+      },
+      {
+        hid: "twitterCard",
+        property: "twitter:card",
+        content: "summary_large_image"
+      },
+      {
+        hid: "twitterImage",
+        property: "twitter:image",
+        content: "https://firebasestorage.googleapis.com/v0/b/kuroco-member-imabari.appspot.com/o/share-photo.png?alt=media&token=02863866-11b3-4bb9-8aac-30a72bd422d2"
       },
       {
         hid: "description",
         name: "description",
         content: envSettings.META_TITLE,
       },
+      {
+        name: "icon-apple",
+        content: "https://firebasestorage.googleapis.com/v0/b/kuroco-member-imabari.appspot.com/o/share-photo.png?alt=media&token=02863866-11b3-4bb9-8aac-30a72bd422d2"
+      },
+      {
+        name: "icon-google",
+        content: "https://firebasestorage.googleapis.com/v0/b/kuroco-member-imabari.appspot.com/o/share-photo.png?alt=media&token=02863866-11b3-4bb9-8aac-30a72bd422d2"
+      },
       { hid: "robots", name: "robots", content: envSettings.ROBOTS },
-      {
-        hid: "og:description",
-        property: "og:description",
-        content: envSettings.META_TITLE,
-      },
-      {
-        hid: "og:title",
-        name: "og:title",
-        property: "og:title",
-        content: envSettings.META_TITLE,
-      },
-      {
-        hid: "og:site_name",
-        name: "og:site_name",
-        property: "og:site_name",
-        content: envSettings.META_TITLE,
-      },
-      {
-        hid: "og:type",
-        name: "og:type",
-        property: "og:type",
-        content: envSettings.META_TITLE,
-      },
       {
         hid: "apple-mobile-web-app-title",
         name: "apple-mobile-web-app-title",
