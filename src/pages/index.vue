@@ -189,11 +189,12 @@
                   </template>
                 </v-simple-table>
                 <v-divider></v-divider>
-                <h4 style="text-align: right;">
-                  <v-btn icon :to="'/info/detail'" nuxt style="padding-right: 80px;">
+                <v-simple-table>
+                  <router-link :to="'/info/detail'" nuxt tag="tr">
                     <td class="info-fond">もっと見る>></td>
-                  </v-btn>
-                </h4>
+                    <td class="info-fond"></td>
+                  </router-link>
+                </v-simple-table>
               </v-card-text>
             </v-card>
             <v-card class="mx-auto" outlined>
@@ -542,8 +543,10 @@ export default {
   display:inline-block;
 }
 .info-fond{
+  text-align: right;
+  padding: 2px;
   font-weight: bold;
-  font-size: 18px !important ;
+  font-size: 16px !important ;
   color: #171C61 ;
 }
 </style>

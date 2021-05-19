@@ -1,6 +1,6 @@
 <template>
-  <div class="container fluid">
-    <v-col sm="12">
+  <div class="container mypage">
+    <v-col cols="12" sm="12">
       <v-card class="mx-auto" outlined>
         <v-card-text>
           <h4>お知らせ一覧</h4>
@@ -24,22 +24,25 @@
                     </v-btn>
                   </td>
                 </router-link>
-                <td>
-                  <br/>
-                  <v-btn class="detail-btn" to="/" nuxt>TOPへ</v-btn>
-                  <br/><br/>
-                </td>
-                <!-- ページネーション -->
-                <br/>
-                <div class="text-center">
-                  <v-pagination
-                  v-model="pageNumber"
-                  :length="page_length"
-                  @input = "getInfo"
-                  ></v-pagination>
-                </div>
               </tbody>
             </template>
+          </v-simple-table>
+          <v-divider></v-divider>
+          <v-simple-table>
+            <v-col>
+              <td>
+                <v-btn class="detail-btn" to="/" nuxt>TOPへ</v-btn>
+              </td>
+              <!-- ページネーション -->
+              <div class="shop-wrap">
+                <v-pagination
+                v-model="pageNumber"
+                :length="page_length"
+                :total-visible="4"
+                @input = "getInfo"
+                ></v-pagination>
+              </div>
+            </v-col>
           </v-simple-table>
         </v-card-text>
       </v-card>
