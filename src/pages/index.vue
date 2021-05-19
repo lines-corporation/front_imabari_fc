@@ -192,7 +192,7 @@
                 <div @mouseenter="enter()" @mouseleave="leave()">
                   <v-simple-table :class="{active: seen}">
                     <router-link :to="'/info/detail'" nuxt tag="tr" style="cursor:pointer">
-                      <td class="info-fond">もっと見る>></td>
+                      <td class="info-fond">もっと見る >></td>
                       <td class="info-fond"></td>
                     </router-link>
                   </v-simple-table>
@@ -563,7 +563,7 @@ export default {
   text-align: right;
   padding: 2px;
   font-weight: bold;
-  font-size: 16px !important ;
+  font-size: 14px !important ;
   color: #171C61 ;
 }
 </style>
