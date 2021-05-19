@@ -565,5 +565,7 @@ export default {
   font-weight: bold;
   font-size: 14px !important ;
   color: #171C61 ;
+  padding-top: 10px;
+  padding-bottom: 6px;
 }
 </style>
