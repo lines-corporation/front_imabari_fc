@@ -189,12 +189,14 @@
                   </template>
                 </v-simple-table>
                 <v-divider></v-divider>
-                <v-simple-table>
-                  <router-link :to="'/info/detail'" nuxt tag="tr">
-                    <td class="info-fond">もっと見る>></td>
-                    <td class="info-fond"></td>
-                  </router-link>
-                </v-simple-table>
+                <div @mouseenter="enter()" @mouseleave="leave()">
+                  <v-simple-table :class="{active: seen}">
+                    <router-link :to="'/info/detail'" nuxt tag="tr" style="cursor:pointer">
+                      <td class="info-fond">もっと見る>></td>
+                      <td class="info-fond"></td>
+                    </router-link>
+                  </v-simple-table>
+                </div>
               </v-card-text>
             </v-card>
             <v-card class="mx-auto" outlined>
@@ -313,6 +315,7 @@ export default {
     ticket_list:[],
     topics_name: "",
     ymd: 0,
+    seen: true,
     subject: "",
     place_name: [],
     id: 0,
@@ -379,11 +382,21 @@ export default {
   mounted() {
     this.getInfo()
     this.can_upgrade()
+    this.enter()
+    this.leave()
   },
   created () {
    this.getCookie()
   },
   methods: {
+     enter(){
+        let self = this
+        self.seen = true
+      },
+      leave(){
+        let self = this
+        self.seen = false
+      },
      can_upgrade() {
       let self = this
       if (self.$auth.loggedIn) {
@@ -541,6 +554,10 @@ export default {
 .box {
   text-align: center;
   display:inline-block;
+}
+.active {
+  background-color: #ddd;
+  box-shadow: none;
 }
 .info-fond{
   text-align: right;
