@@ -7,10 +7,7 @@
         hide-delimiters
         height="100%"
       >
-        <v-carousel-item
-          v-for="(item,i) in items"
-          :key="i"
-        >
+        <v-carousel-item v-for="(item,key) of bunner_list" :key="key">
         <img :src="item.url" width=100%>
         </v-carousel-item >
       </v-carousel>
@@ -116,8 +113,6 @@
                 >
                 </v-text-field>
               </v-col>
-           
-
             </v-row>
             <v-row v-if="displayLists && !isMobile()">
               <v-col v-for="(product, topics_id) in displayLists" :key="topics_id" cols="4" sm="12">
@@ -198,14 +193,7 @@ export default {
     cartItems: [],
     total_quantity: 0,
     onboarding: 0,
-    items: [
-      {
-        url: require('@/assets/images/uniform_img.jpg'),
-      },
-      {
-        url: require('@/assets/images/temp_banner.jpg'),
-      },
-    ],
+    bunner_list: [],
     selectedCategory: [],
     categories: [],
     products: {},
@@ -365,9 +353,21 @@ export default {
       this.$router.push(`/ec/${product_id}`)
     },
     isMobile() {
-	    let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
-	    return flag
+      let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+      return flag
     }
+  },
+  created() {
+    let bunner_list = []
+    let ids = [1079,1082,1083]
+    ids.forEach(item => {
+    let self = this
+    self.$auth.ctx.$axios.get(`/rcms-api/1/shop/topic/${item}`).then(response => {
+      self.bunner_list1 = response.data.details.ext_col_01
+      bunner_list.push(self.bunner_list1)
+      self.bunner_list = bunner_list
+      })
+    })
   },
   computed: {
     user() {
@@ -382,7 +382,7 @@ export default {
     this.getCategories()
     this.getCartItems()
     this.isMobile() 
-  },
+  }
 }
 </script>
 <style scoped>

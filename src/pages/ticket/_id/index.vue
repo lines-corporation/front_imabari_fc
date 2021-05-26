@@ -490,7 +490,7 @@
                               <td>{{ t.subject }}</td>
                               <td>
                                 <span>{{ t.price_02 }}円</span> <br/>
-                                <span v-if="flag && t.group_price > 0"> 有料会員限定の割引価格 {{ t.price_by_group.split(",")[0].split(":")[1] }}円</span>
+                                <span v-if="flag && t.group_price > 0"> 有料会員限定の割引価格 {{ t.price_by_group.split(",")[0].split(":")[1].split("}")[0] }}円</span>
                                 <span v-if="!flag && t.group_price > 0"> 無料会員限定の割引価格 {{ t.price_by_group.split(",")[1].split(":")[1].split("}")[0] }}円</span>
                               </td>
                               <td>
@@ -565,6 +565,9 @@
                         </v-radio-group>
                         <p v-if="ec_payment_id == '60'" class="body-1">
                           振込先がメールで送信されますので、そちらで振込先をご確認ください。
+                        </p>
+                        <p v-if="!bank_flag" class="body-1">
+                          銀行振込でのお申し込みは終了しました
                         </p>
                         <div v-if="ec_payment_id == '61'" class="card-wrapper">
                           <v-text-field
@@ -837,12 +840,11 @@ export default {
         self.item = response.data.details
         self.ymd = response.data.details.ymd.replaceAll("-","/")
         let paymentTime = parseInt(new Date(self.ymd).getTime());
-        let todayTime = moment(new Date().getTime()).format('L');
-        let time = parseInt(new Date(todayTime).getTime());
-        if(paymentTime - time <= 259200000) {
-          self.bank_flag = false
-        } else {
+        let todayTime = new Date().getTime();
+        if(paymentTime - todayTime > 223200000) {
           self.bank_flag = true
+        } else {
+          self.bank_flag = false
         }
         self.topics_id = self.item.topics_id
         let url_p = "/rcms-api/1/product_list?topics_id=" + self.topics_id
@@ -890,9 +892,6 @@ export default {
         })
 
       })
-
-      //self.product_id = response.data.details.product_id
-      //self.can_order = response.data.details.order_list.length ? false : true
     })
   },
   methods: {

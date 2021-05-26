@@ -295,11 +295,9 @@
 
 <script>
 import Vue from 'vue'
-import Qs from 'qs'
 import VueQrcode from "@chenfengyuan/vue-qrcode"
 import { Base64 } from 'js-base64'
 import CryptoJS from "crypto-js";
-import axios from '~/plugins/axios'
 Vue.use(CryptoJS)
 export default {
   components: {
@@ -419,7 +417,7 @@ export default {
         self.$auth.ctx.$axios
           .get("/rcms-api/1/infos")
           .then(function (response) {
-            self.topics_list1 = response.data.list.slice(0,3)
+            self.topics_list1 = response.data.list.slice(0,5)
           })
         self.my_order_ticket_list = []
         self.$auth.ctx.$axios
@@ -543,7 +541,7 @@ export default {
         self.loading = false
       })
     },
-  },
+  }
 }
 </script>
 <style scoped>

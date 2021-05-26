@@ -534,7 +534,7 @@ export default {
               image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
             })
             self.discounts.push({
-              discount_prices: parseInt(item.quantity)*parseInt(productInfoResponse.data.details.discount_price)
+              discount_prices: parseInt(item.quantity)*parseInt(productInfoResponse.data.details.group_price > 0 ? productInfoResponse.data.details.price_01- productInfoResponse.data.details.group_price : productInfoResponse.data.details.discount_price)
             })
             let result = JSON.parse(JSON.stringify(self.discounts)).slice(-1)
             var values = []
