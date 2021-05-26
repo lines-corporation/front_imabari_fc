@@ -490,8 +490,8 @@
                               <td>{{ t.subject }}</td>
                               <td>
                                 <span>{{ t.price_02 }}円</span> <br/>
-                                <span v-if="flag && t.group_price > 0"> 有料会員限定の割引価格 {{ t.price_by_group.split(",")[0].split(":")[1].split("}")[0] }}円</span>
-                                <span v-if="!flag && t.group_price > 0"> 無料会員限定の割引価格 {{ t.price_by_group.split(",")[1].split(":")[1].split("}")[0] }}円</span>
+                                <span v-if="flag && t.group_price > 0"> 割引価格 {{ t.price_by_group.split(",")[0].split(":")[1].split("}")[0] }}円</span>
+                                <span v-if="!flag && t.group_price > 0"> 割引価格 {{ t.price_by_group.split(",")[1].split(":")[1].split("}")[0] }}円</span>
                               </td>
                               <td>
                                 <v-select

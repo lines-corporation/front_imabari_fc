@@ -310,9 +310,9 @@
         <v-subheader>合計金額</v-subheader>
       </v-col>
       <v-col cols="8">
-        <p class="p-cell">割引額 -¥{{ sum }}</p>
-        <p class="p-cell" v-if="totalPrice > 5000"> ¥ {{ totalPrice }} (送料 ¥{{ 0 }} )</p>
-        <p class="p-cell" v-else > ¥ {{ totalPrice }} (送料 ¥{{ deliv_fee }} )</p>
+        <p class="p-cell"> {{ totalPrice }}円</p>
+        <p class="p-cell"  v-if="totalPrice > 5000">特別価格{{ sum }}円 (送料 ¥{{ 0 }} )</p>
+        <p class="p-cell" v-else>特別価格 {{ sum }}円 (送料 ¥{{ deliv_fee }} )</p>
       </v-col>
     </v-row>
 
