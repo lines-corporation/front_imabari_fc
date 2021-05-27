@@ -566,7 +566,7 @@
                         <p v-if="ec_payment_id == '60'" class="body-1">
                           振込先がメールで送信されますので、そちらで振込先をご確認ください。
                         </p>
-                        <p v-if="!bank_flag" class="body-1">
+                        <p v-if="!bank_flag" class="body-1" style="margin-top: -30px;">
                           銀行振込でのお申し込みは終了しました
                         </p>
                         <div v-if="ec_payment_id == '61'" class="card-wrapper">

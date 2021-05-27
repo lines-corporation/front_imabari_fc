@@ -256,11 +256,24 @@ export default {
       this.price = response.data.details.ext_col_04
       this.productName = response.data.details.subject
       this.category = response.data.details.contents_type
+
+      // カテゴリーIDを取得
+      let category_list = []
+      let response4 = await this.$auth.ctx.$axios.get(`rcms-api/1/shop/categories`)
+      // シーズンパスIDを取得
+      let seasonpass_list= response4.data.list.filter(item => item.category_nm == "年間パス")
+      let seasonpass_id = seasonpass_list[0].contents_type
+     // シーズンパス以外のIDを取得
+      let season_besides = response4.data.list.filter(item => item.category_nm != "年間パス")
+      season_besides.forEach(item => {
+      self.topics_category_id = parseInt(item.topics_category_id)
+      category_list.push(self.topics_category_id)
+      })
       // シーズンパス稼働波の判定
-      if(this.category == process.env.SEASON_PASS_CATEGORY_ID) {
+      if(this.category == seasonpass_id) {
         this.seasonPassFlg = true
       }
-      if(process.env.APPAREL_CATEGORY_IDS.includes(this.category)) {
+      if(category_list.includes(this.category)) {
         this.apparelFlg = true
       }
 
