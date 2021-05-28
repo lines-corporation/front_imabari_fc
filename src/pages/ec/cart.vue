@@ -513,12 +513,18 @@ export default {
       // 送料の設定
       self.deliv_fee = parseInt(response.data.details.deliv_fee)
       self.totalPrice = parseInt(response.data.details.total)
+
+      // カテゴリーIDを取得
+      let response4 = await self.$auth.ctx.$axios.get(`rcms-api/1/shop/categories`)
+      // シーズンパスIDを取得
+      let seasonpass_list= response4.data.list.filter(item => item.category_nm == "年間パス")
+      let seasonpass_id = seasonpass_list[0].contents_type
+
       if(response.data.details.items) {
         response.data.details.items.forEach(item => {
-          let self = this
           self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/${item.product_id}`).then((productInfoResponse) => {
             // シーズンパス稼働波の判定
-            if(productInfoResponse.data.details.product_data.contents_type == process.env.SEASON_PASS_CATEGORY_ID) {
+            if(productInfoResponse.data.details.product_data.contents_type == seasonpass_id) {
               self.seasonPassFlg = true
             } else {
               self.seasonPassBesidesFlg = true

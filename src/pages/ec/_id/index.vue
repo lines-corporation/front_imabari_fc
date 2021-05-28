@@ -341,11 +341,11 @@ export default {
       if(this.apparelFlg) {
         this.productId = this.productId
         let result = await this.$auth.ctx.$axios.get(`rcms-api/1/shop/product/list?topics_id=${this.$route.params.id}`)
-        let response3 = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
+        let response5 = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
         let stamp = result.data.list.filter(item =>
           this.productId == item.product_id
         )
-        let product_num = response3.data.details.items.filter(item =>
+        let product_num = response5.data.details.items.filter(item =>
           this.productId == item.product_id
         )
         if (stamp[0] != "" && stamp[0] != null &&  product_num[0] != "" && product_num[0] != null){
