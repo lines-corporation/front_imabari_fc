@@ -56,7 +56,7 @@
           <p v-if="flag">有料会員限定の割引価格 ¥ {{ discount }}</p>
           <!-- サイズ設定 -->
           <v-select
-            v-if="apparelFlg"
+            v-if="apparelFlg && !split_flag"
             v-model="productId"
             :items="sizes"
             label="選択"
@@ -64,10 +64,28 @@
             item-value="id"
             outlined
           ></v-select>
+          <v-select
+            v-if="apparelFlg && split_flag"
+            v-model="productId"
+            :items="sizes"
+            label="選択"
+            item-text="name1"
+            item-value="id"
+            outlined
+          ></v-select>
+          <v-select
+            v-if="apparelFlg && split_flag"
+            v-model="productId"
+            :items="sizes"
+            label="選択"
+            item-text="name2"
+            item-value="id"
+            outlined
+          ></v-select>
           <!-- /サイズ設定 -->
           <!-- シーズンパスの場合には種別を選択させる -->
           <v-select
-            v-if="seasonPassFlg"
+            v-if="seasonPassFlg && !split_flag"
             v-model="seasonPassKind"
             class="p-select"
             :ref="`${productId}_num`"
@@ -77,6 +95,29 @@
             label="選択"
             outlined
           ></v-select>
+          <v-select
+            v-if="seasonPassFlg && split_flag"
+            v-model="seasonPassKind"
+            class="p-select"
+            :ref="`${productId}_num`"
+            :items="passCategories"
+            item-text="name1"
+            item-value="id"
+            label="選択"
+            outlined
+          ></v-select>
+          <v-select
+            v-if="seasonPassFlg && split_flag"
+            v-model="seasonPassKind"
+            class="p-select"
+            :ref="`${productId}_num`"
+            :items="passCategories"
+            item-text="name2"
+            item-value="id"
+            label="選択"
+            outlined
+          ></v-select>
+
           <!-- 個数設定 -->
           <v-select
             v-if="apparelFlg && stock != 0 && stock != null"
@@ -196,6 +237,7 @@ export default {
     images: [],
     cartItems: [],
     description: "",
+    split_flag: true
   }),
   computed: {
     user() {
@@ -244,6 +286,7 @@ export default {
     },
     // 商品情報の取得
     async getProducts(topics_id) {
+      let self = this
       let paramStr = '?cnt=999'
       let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/topic/${topics_id}`)
       // id
@@ -282,24 +325,44 @@ export default {
       this.sizes = []
       this.passCategories = []
 
+
       response2.data.list.forEach((product, index) => {
-        if(!this.productId) {
-          this.productId = product.product_id
+        if(!self.productId) {
+          self.productId = product.product_id
         }
-        if(this.seasonPassFlg) {
+        let split_flag = product.product_name.split(",").length > 1 ? true : false
+        self.split_flag = split_flag
+        if(self.seasonPassFlg && product.product_name.split(",").length == 1) {
         // シーズンパスの場合
-          this.passCategories.push({
+          self.passCategories.push({
             id:   product.product_id,
             name: product.product_name
           })
         }
-        if(this.apparelFlg) {
-          this.sizes.push({
+        if(self.apparelFlg && product.product_name.split(",").length == 1) {
+          self.sizes.push({
             id:   product.product_id,
             name: product.product_name,
           })
         }
-        this.pickupImages(product.product_data)
+
+
+        if(self.seasonPassFlg && product.product_name.split(",").length > 1) {
+        // シーズンパスの場合
+          self.passCategories.push({
+            id:   product.product_id,
+            name1: product.product_name.split(",")[0],
+            name2: product.product_name.split(",")[1]
+          })
+        }
+        if(self.apparelFlg && product.product_name.split(",").length > 1 ) {
+          self.sizes.push({
+            id:   product.product_id,
+            name1: product.product_name.split(",")[0],
+            name2: product.product_name.split(",")[1]
+          })
+        }
+        self.pickupImages(product.product_data)
       })
     },
     async addCart() {
