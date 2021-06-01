@@ -562,6 +562,7 @@
                         <v-radio-group v-model="ec_payment_id">
                           <v-radio label="カード決済" value="61" />
                           <v-radio v-if="bank_flag" label="銀行振り込み" value="60" />
+                        <!-- 　<v-radio label="銀行振り込み" value="60" /> -->
                         </v-radio-group>
                         <p v-if="ec_payment_id == '60'" class="body-1">
                           振込先がメールで送信されますので、そちらで振込先をご確認ください。
@@ -871,7 +872,7 @@ export default {
           } else {
             self.flag = true
           }
-          if((time - paymentTime > 0 && self.topics_id == "1036") || time - paymentTime <= 0){
+          if((todayTime - paymentTime > 0 && self.topics_id == "1036") || todayTime - paymentTime <= 0){
             self.timeFlag = true
           } else {
             self.timeFlag = false

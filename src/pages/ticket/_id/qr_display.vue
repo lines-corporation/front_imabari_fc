@@ -64,6 +64,7 @@
 <script>
 import VueQrcode from "@chenfengyuan/vue-qrcode"
 import md5 from "js-md5"
+import moment from 'moment'
 export default {
   auth: false,
   components: {
@@ -80,7 +81,7 @@ export default {
     product_name: null,
     note: null,
     subject: null,
-    cnt: null
+    cnt: null,
   }),
   methods: {
     async hash_check(){
@@ -102,10 +103,19 @@ export default {
         } else {
           self.hash_code = self.qrcode_string
         }
-        let hash = `/rcms-api/1/qrcode/url?ec_order_id=${self.order_id}&order_detail_id=${self.order_detail_id}&no=${self.no}`
-         self.$auth.ctx.$axios.get(hash).then(function (response1) {
-           self.cnt = response1.data.data.cnt
-         })
+
+        let topic_transfer = `rcms-api/1/ticket_list`
+        self.$auth.ctx.$axios.get(topic_transfer).then(function (response){
+          let result_list = response.data.list.filter(item => parseInt(new Date(item.ymd.replaceAll("-","/")).getTime()) >= new Date(moment().format().substring(0,10).replaceAll("-","/")).getTime())
+          self.result = result_list.forEach(element => {
+            self.topic_id = element.topics_id,
+            self.ymd = element.ymd
+          })
+          let hash = `/rcms-api/1/qrcode/url?ec_order_id=${self.order_id}&order_detail_id=${self.order_detail_id}&no=${self.no}&topics_id=${self.topic_id}`
+          self.$auth.ctx.$axios.get(hash).then(function (response1) {
+          self.cnt = response1.data.data.cnt
+          })
+        })
       })
     },
     async reload(){
