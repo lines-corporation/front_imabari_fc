@@ -358,14 +358,19 @@ export default {
     }
   },
   created() {
-    let bunner_list = []
-    let ids = [1079,1082,1083]
-    ids.forEach(item => {
     let self = this
-    self.$auth.ctx.$axios.get(`/rcms-api/1/shop/topic/${item}`).then(response => {
-      self.bunner_list1 = response.data.details.ext_col_01
-      bunner_list.push(self.bunner_list1)
-      self.bunner_list = bunner_list
+    let bunner_list = []
+    let ids = []
+    self.$auth.ctx.$axios.get(`/rcms-api/1/topics/topimg`).then(response =>{
+    response.data.list.forEach(item => {
+      ids.push(item.topics_id)
+    })
+    ids.forEach(item => {
+      self.$auth.ctx.$axios.get(`/rcms-api/1/shop/topic/${item}`).then(response => {
+        self.bunner_list1 = response.data.details.ext_col_01
+        bunner_list.push(self.bunner_list1)
+        self.bunner_list = bunner_list
+        })
       })
     })
   },
