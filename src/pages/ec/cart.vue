@@ -22,8 +22,9 @@
             <h3>{{ product.title }}</h3>
             <p>¥ {{ product.price }}</p>
             <p v-if="flag && product.discount">有料会員限定の割引価格 ¥ {{ product.discount }}</p>
-            <p v-if="product.price_01 != null">通常価格 ￥{{product.price_01}}</p>
-            <p v-if="product.price_02 != null && product.discount_price != null">特別価格 ￥{{product.price_02}}</p>
+            <p v-if="product.price_01 != 0">通常価格 ￥{{product.price_01}}</p>
+            <p v-if="product.price_02 != 0 && product.discount_price != 0">特別価格 ￥{{product.price_02}}</p>
+            <p v-if="product.price_01 == 0">通常価格 ￥{{product.price_02}}</p>
             <p v-if="product.size">size : {{ product.size }}</p>
             <p v-if="product.quantity">{{ product.quantity }}個</p>
             </div>
@@ -70,7 +71,7 @@
         <v-radio-group v-model="ecPaymentId">
           <v-radio label="カード決済" value="61" />
           <v-radio label="銀行振り込み" value="60" />
-          <!-- <v-radio label="コンビニ払い" value="59" /> -->
+          <v-radio label="コンビニ払い" value="59" />
         </v-radio-group>
         <p v-if="ecPaymentId == '60'" class="body-1">
           ■振込先 <br>
