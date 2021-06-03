@@ -23,7 +23,7 @@
             <p>¥ {{ product.price }}</p>
             <p v-if="flag && product.discount">有料会員限定の割引価格 ¥ {{ product.discount }}</p>
             <p v-if="product.price_01 != null">通常価格 ￥{{product.price_01}}</p>
-            <p v-if="product.price_02 != null && product.discount_price != null">特別価格 ￥{{product.price_02}} 値引額 ￥{{product.discount_price}}</p>
+            <p v-if="product.price_02 != null && product.discount_price != null">特別価格 ￥{{product.price_02}}</p>
             <p v-if="product.size">size : {{ product.size }}</p>
             <p v-if="product.quantity">{{ product.quantity }}個</p>
             </div>
