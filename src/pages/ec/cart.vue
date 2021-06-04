@@ -18,15 +18,15 @@
             ></v-img>
           </v-col>
           <v-col class="c-txt">
-          	<div>
-            <h3>{{ product.title }}</h3>
-            <p>¥ {{ product.price }}</p>
-            <p v-if="flag && product.discount">有料会員限定の割引価格 ¥ {{ product.discount }}</p>
-            <p v-if="product.price_01 != 0">通常価格 ￥{{product.price_01}}</p>
-            <p v-if="product.price_02 != 0 && product.discount_price != 0">特別価格 ￥{{product.price_02}}</p>
-            <p v-if="product.price_01 == 0">通常価格 ￥{{product.price_02}}</p>
-            <p v-if="product.size">size : {{ product.size }}</p>
-            <p v-if="product.quantity">{{ product.quantity }}個</p>
+            <div>
+              <p style="font-weight: bold;font-size:20px">{{ product.title }}</p>
+              <!-- <p>¥ {{ product.price }}</p> -->
+              <p v-if="flag && product.discount">有料会員限定の割引価格 ¥ {{ product.discount }}</p>
+              <p v-if="product.price_02 != 0 && product.discount_price != 0" style="display:inline-block">特別価格 ￥{{product.price_02}}</p>
+              <p v-if="product.price_01 != 0" style="display:inline-block;font-size:13px;">(通常価格 ￥{{product.price_01}})</p>
+              <p v-if="product.price_01 == 0">通常価格 ￥{{product.price_02}}</p>
+              <p v-if="product.size">size : {{ product.size }}</p>
+              <p v-if="product.quantity">{{ product.quantity }}個</p>
             </div>
           </v-col>
       <v-col class="d-flex flex-row-reverse c-del" >
