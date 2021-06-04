@@ -71,7 +71,7 @@
         <v-radio-group v-model="ecPaymentId">
           <v-radio label="カード決済" value="61" />
           <v-radio label="銀行振り込み" value="60" />
-          <v-radio label="コンビニ払い" value="59" />
+          <v-radio @click="convenienceTo"  label="コンビニ払い" value="59" />
         </v-radio-group>
         <p v-if="ecPaymentId == '60'" class="body-1">
           ■振込先 <br>
@@ -458,6 +458,10 @@ export default {
     },
   },
   methods: {
+    //コンビニ支払う画面に遷移する
+    convenienceTo() {
+      this.$router.push("/ec/convenience")
+    },
     /**
      * 郵便番号から入力
      */
