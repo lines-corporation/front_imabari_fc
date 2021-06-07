@@ -16,7 +16,7 @@
                       <v-subheader>支払方法選択</v-subheader>
                       <v-radio-group>
                         <v-radio label="セブンイレブンでのお支払い"/>
-                        <v-radio label="ローソン・ミニストップでのお支払いの流れ"/>
+                        <v-radio label="ローソン・ミニストップでのお支払い"/>
                         <v-radio label="ファミリーマートでのお支払い"/>
                         <v-radio label="セイコーマートでのお支払い"/>
                         <v-radio label="デイリーヤマザキでのお支払い"/>
