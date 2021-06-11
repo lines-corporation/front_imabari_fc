@@ -54,38 +54,20 @@
           <h3>{{ productName }}</h3>
           <p>¥ {{ price }}</p>
           <p v-if="flag">有料会員限定の割引価格 ¥ {{ discount }}</p>
-          <!-- サイズ設定 -->
+
           <v-select
-            v-if="apparelFlg && !split_flag"
+            v-if="apparelFlg && first_flag == 1"
             v-model="productId"
             :items="sizes"
             label="選択"
             item-text="name"
-            item-value="id"
-            outlined
-          ></v-select>
-          <v-select
-            v-if="apparelFlg && split_flag"
-            v-model="productId"
-            :items="sizes"
-            label="選択"
-            item-text="name1"
-            item-value="id"
-            outlined
-          ></v-select>
-          <v-select
-            v-if="apparelFlg && split_flag"
-            v-model="productId"
-            :items="sizes"
-            label="選択"
-            item-text="name2"
             item-value="id"
             outlined
           ></v-select>
           <!-- /サイズ設定 -->
           <!-- シーズンパスの場合には種別を選択させる -->
           <v-select
-            v-if="seasonPassFlg && !split_flag"
+            v-if="seasonPassFlg && first_flag == 1"
             v-model="seasonPassKind"
             class="p-select"
             :ref="`${productId}_num`"
@@ -95,24 +77,60 @@
             label="選択"
             outlined
           ></v-select>
+
+          <!-- サイズ設定 -->
           <v-select
-            v-if="seasonPassFlg && split_flag"
-            v-model="seasonPassKind"
-            class="p-select"
+            v-if="apparelFlg && first_flag > 1"
+            v-model="apparelId"
             :ref="`${productId}_num`"
-            :items="passCategories"
-            item-text="name1"
-            item-value="id"
+            @change="getSelected(apparelId)"
+            :items="name1_list"
             label="選択"
             outlined
           ></v-select>
+
           <v-select
-            v-if="seasonPassFlg && split_flag"
+            v-if="apparelFlg && first_flag > 1"
+            v-model="productId"
+            :ref="`${productId}_num`"
+            @change="getThirdSelected(productId)"
+            label="選択"
+            :items="name_result"
+            item-text="name"
+            item-value="id"
+            outlined
+          ></v-select>
+
+
+          <v-select
+            v-if="apparelFlg  && result > 1 && first_flag > 1"
+            label="選択"
+            :items="name_third"
+            item-text="third_name"
+            outlined
+          ></v-select>
+
+          <!-- /サイズ設定 -->
+          <!-- シーズンパスの場合には種別を選択させる -->
+          <v-select
+            v-if="seasonPassFlg && first_flag > 1"
+            v-model="seasonId"
+            @change="getSelected(seasonId)"
+            class="p-select"
+            :items="name1_list"
+            :ref="`${productId}_num`"
+            label="選択"
+            single-line="true"
+            outlined
+          ></v-select>
+
+          <v-select
+            v-if="seasonPassFlg && first_flag > 1"
             v-model="seasonPassKind"
             class="p-select"
             :ref="`${productId}_num`"
-            :items="passCategories"
-            item-text="name2"
+            :items="name_result"
+            item-text="name"
             item-value="id"
             label="選択"
             outlined
@@ -168,6 +186,8 @@
             label="個数"
             outlined
           ></v-select>
+
+
           <!-- /シーズンパスの場合には売り切れ -->
           <v-btn
             v-if="seasonPassFlg && getStock(seasonPassKind) && stock == 0 && stock != null && stock_unlimited != 1"
@@ -237,7 +257,17 @@ export default {
     images: [],
     cartItems: [],
     description: "",
-    split_flag: true
+    split_flag: true,
+    name1_list: [],
+    name2_list: [],
+    name_result: [],
+    apparelId: 1111,
+    num_flag: true,
+    name_third: [],
+    result: null,
+    second_length: null,
+    seasonId: null,
+    first_flag: null
   }),
   computed: {
     user() {
@@ -323,48 +353,101 @@ export default {
       // サイズや写真などの複数商品データの取得
       let response2 = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list${paramStr}&topics_id=${topics_id}`)
       this.sizes = []
-      this.passCategories = []
-
-
-      response2.data.list.forEach((product, index) => {
-        if(!self.productId) {
-          self.productId = product.product_id
-        }
-        let split_flag = product.product_name.split(",").length > 1 ? true : false
-        self.split_flag = split_flag
-        if(self.seasonPassFlg && product.product_name.split(",").length == 1) {
-        // シーズンパスの場合
-          self.passCategories.push({
-            id:   product.product_id,
-            name: product.product_name
-          })
-        }
-        if(self.apparelFlg && product.product_name.split(",").length == 1) {
-          self.sizes.push({
-            id:   product.product_id,
-            name: product.product_name,
-          })
-        }
-
-
-        if(self.seasonPassFlg && product.product_name.split(",").length > 1) {
-        // シーズンパスの場合
-          self.passCategories.push({
-            id:   product.product_id,
-            name1: product.product_name.split(",")[0],
-            name2: product.product_name.split(",")[1]
-          })
-        }
-        if(self.apparelFlg && product.product_name.split(",").length > 1 ) {
-          self.sizes.push({
-            id:   product.product_id,
-            name1: product.product_name.split(",")[0],
-            name2: product.product_name.split(",")[1]
-          })
-        }
+      let name1 = []
+      self.first_flag =response2.data.list[0].combination_name.split(",").length
+      if(self.first_flag > 1) {
+        response2.data.list.forEach(product => {
+        name1.push(product.combination_name.split(",")[0])
         self.pickupImages(product.product_data)
       })
+      function unique (arr) {
+        return Array.from(new Set(arr))
+      }
+      self.name1_list = unique(name1)
+      } else {
+        response2.data.list.forEach(product => {
+         if(!this.productId) {
+           this.productId = product.product_id
+         }
+         self.pickupImages(product.product_data)
+         if(this.seasonPassFlg) {
+         // シーズンパスの場合
+           this.passCategories.push({
+             id:   product.product_id,
+             name: product.product_name
+           })
+         }
+         if(this.apparelFlg) {
+           this.sizes.push({
+             id:   product.product_id,
+             name: product.product_name,
+           })
+         }
+        })
+      }
     },
+
+    async getSelected(param) {
+      let self = this
+      let topics_id = this.$route.params.id
+      let paramStr = '?cnt=999'
+      let response2 = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list${paramStr}&topics_id=${topics_id}`)
+      let sizes = []
+      let name_result = []
+
+
+      response2.data.list.forEach(product => {
+        sizes.push({
+           id:product.product_id,
+           name_first:product.combination_name.split(",")[0],
+           name_second:product.combination_name.split(",")[1]
+        })
+      })
+      let selected_name = sizes.filter(item => item.name_first == param)
+
+      console.log(selected_name)
+
+      selected_name.forEach(item => {
+        if(item.name_second != undefined) {
+          name_result.push({
+            id: item.id,
+            name: item.name_second
+          })
+        } else {
+          name_result.push({
+            id: item.id,
+            name: "選択なし"
+          })
+        }
+
+      })
+      self.refer_name = name_result[0].name
+      self.name_result = name_result
+    },
+    async getThirdSelected(param) {
+      let self = this
+      let topics_id = this.$route.params.id
+      let paramStr = '?cnt=999'
+      let response2 = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list${paramStr}&topics_id=${topics_id}`)
+      let thirdList = []
+      let name_third = []
+      self.result =response2.data.list[0].combination_name.split(",").length
+      response2.data.list.forEach(product => {
+        thirdList.push({
+           id:product.product_id,
+           name_second:product.combination_name.split(",")[2]
+        })
+      })
+      let third_result = thirdList.filter(item => item.id == param)
+      third_result.forEach(item => {
+        name_third.push({
+          third_name: item.name_second
+        })
+      })
+      self.name_third = name_third
+      console.log(self.name_third )
+    },
+
     async addCart() {
       // 未ログインユーザーは購入できない
       if(!this.$auth.loggedIn) {
