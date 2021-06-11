@@ -65,8 +65,31 @@ export default {
       self.histories = {}
       let resumeResult = response.data.list.filter((item) => item.generic_payment_status.label == "注文済み" || item.generic_payment_status.label == "未入金状態" || item.generic_payment_status.label == "決済完了")
       let arr = [41441,41442,41443,41444,41445,41446,41613]
-      let history_filter = resumeResult.filter((res) => arr.includes(res.order_details[0].product_id) ==false)
-      history_filter.forEach((history, index) => {
+      let history_filter = resumeResult.filter((res) => arr.includes(res.order_details[0].product_id) == false)
+      // 公開するのEC商品Idを取得
+      let open1_ids = []
+      let paramStr = '?cnt=200'
+      await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list${paramStr}`).then(response =>{
+        response.data.list.forEach(item => {
+          open1_ids.push(item.product_id) 
+        })
+     })
+     // 公開するのチケットIdを取得
+      let open2_ids = []
+      await self.$auth.ctx.$axios.get("/rcms-api/1/product_list?my_order_flg=1").then(response1 => {
+        response1.data.list.forEach(item => {
+          open2_ids.push(item.product_id) 
+        })
+      })
+      //EC商品IdとチケットId合わせて
+     for(var i in open2_ids){
+         open1_ids.push(open2_ids[i]);
+     }
+      //未公開の商品を除く
+      console.log(history_filter)
+      let order_details = history_filter.filter(item => open1_ids.indexOf(item.order_details[0].product_id) > -1)
+      //購入履歴のデータを取得
+      order_details.forEach(history => {
         const date = history.inst_ymdhi.replace("+09:00", "").replace("T", " ").substring(0,16)
         if(self.histories[date]) {
           self.histories[date].ids.push(history.ec_order_id)
