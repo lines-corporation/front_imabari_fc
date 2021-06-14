@@ -27,7 +27,7 @@
             mdi-cart-variant
           </v-icon>
         </v-badge>
-        <v-icon v-else large color="darken-2">
+        <v-icon v-else large color="darken-2" style="float: right;">
           mdi-cart-variant
         </v-icon>
       </v-col>
