@@ -361,7 +361,7 @@
                 </v-card>
               </v-container>
 
-              <v-container v-if="quantity_list.length > 1 && product_list.length > 0" fluid>
+              <v-container fluid>
                 <v-card class="mx-auto" outlined>
                   <v-card-text>
                   <div class="center">
@@ -465,7 +465,7 @@
                 </v-card>
               </v-container>
 
-              <v-container v-if="quantity_list.length > 1 && product_list.length > 0" fluid>
+              <v-container fluid>
                 <v-card class="mx-auto" outlined>
                   <v-card-text>
                     <h3>チケットの購入</h3>
