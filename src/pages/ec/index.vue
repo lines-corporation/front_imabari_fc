@@ -7,7 +7,7 @@
         hide-delimiters
         height="100%"
       >
-        <v-carousel-item v-for="(item,key) of bunner_list" :key="key">
+        <v-carousel-item v-for="(item,key) of bunner_lists" :key="key">
         <img :src="item.url" width=100%>
         </v-carousel-item >
       </v-carousel>
@@ -194,6 +194,7 @@ export default {
     total_quantity: 0,
     onboarding: 0,
     bunner_list: [],
+    bunner_lists: [],
     selectedCategory: [],
     categories: [],
     products: {},
@@ -360,18 +361,17 @@ export default {
   created() {
     let self = this
     let bunner_list = []
-    let ids = []
+    let bunner_lists = []
     self.$auth.ctx.$axios.get(`/rcms-api/1/topics/topimg`).then(response =>{
     response.data.list.forEach(item => {
-      ids.push(item.topics_id)
+      bunner_list.push(item.ext_col_01)
     })
-    ids.forEach(item => {
-      self.$auth.ctx.$axios.get(`/rcms-api/1/shop/topic/${item}`).then(response => {
-        self.bunner_list1 = response.data.details.ext_col_01
-        bunner_list.push(self.bunner_list1)
-        self.bunner_list = bunner_list
-        })
-      })
+    for (let index = 0; index < bunner_list.length; index++) {
+      for (let j = 0; j < bunner_list[index].length; j++) {
+        bunner_lists.push(bunner_list[index][j])
+      }
+    }
+    self.bunner_lists = bunner_lists
     })
   },
   computed: {
