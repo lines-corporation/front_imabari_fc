@@ -527,6 +527,7 @@ export default {
           return
         }
       })
+      window.location.reload()
     },
     async getCartItems() {
       if(!this.$auth.user || !this.$auth.user.ec_cart_id) {
