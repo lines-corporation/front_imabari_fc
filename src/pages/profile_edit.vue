@@ -47,7 +47,11 @@
                 </v-subheader>
               </v-col>
               <v-col cols="8">
-                <p v-text="sex" />
+                <!-- <p v-text="sex" /> -->
+                <v-radio-group v-model="sex" row :rules="[rules.required]">
+                    <v-radio label="男性" value="m" />
+                    <v-radio label="女性" value="f" />
+                </v-radio-group>
               </v-col>
             </v-row>
             <v-row>
@@ -387,7 +391,7 @@ export default {
           self.name2 = response.data.details.name2
           self.namekana1 = response.data.details.namekana1
           self.namekana2 = response.data.details.namekana2
-          self.sex = response.data.details.sex
+          self.sex = response.data.details.sex.key
           self.birth = response.data.details.birth
           self.email = response.data.details.email
           self.subemail = response.data.details.email2
@@ -439,6 +443,7 @@ export default {
             tdfk_cd: this.tdfk_cd,
             address1: this.address1,
             address2: this.address2,
+            sex: this.sex,
             address3: this.address3 == null ? "" : this.address3,
             tel: this.tel,
             m_tel: this.m_tel,
