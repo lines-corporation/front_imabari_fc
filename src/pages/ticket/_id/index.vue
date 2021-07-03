@@ -361,7 +361,7 @@
                 </v-card>
               </v-container>
 
-              <v-container fluid>
+              <v-container v-if="topics_id != 1036" fluid>
                 <v-card class="mx-auto" outlined>
                   <v-card-text>
                   <div class="center">
@@ -465,7 +465,7 @@
                 </v-card>
               </v-container>
 
-              <v-container fluid>
+              <v-container v-if="topics_id != 1036" fluid>
                 <v-card class="mx-auto" outlined>
                   <v-card-text>
                     <h3>チケットの購入</h3>
@@ -504,9 +504,16 @@
                                   single-line
                                   outlined
                                 />
+                                <!--<p></p>-->
                                 <p v-if="t.stock == 0 && t.stock_unlimited == 0">
                                   完売
                                 </p>
+                                <!--<v-select
+                                  class="p-select"
+                                  label="クーポンコード"
+                                  outlined
+                                ></v-select>
+                                <p style="margin-top: -20px;">クーポンコードをお持ちの方は入力してください。</p>-->
                               </td>
                             </tr>
                             <template v-if="order_products[t.product_id] > 0 && seat_reserved_product.has(t.class_options[19].ec_class_option_id+'')">
@@ -840,8 +847,15 @@ export default {
       self.$auth.ctx.$axios.get(url).then(function (response) {
         self.item = response.data.details
         self.ymd = response.data.details.ymd.replaceAll("-","/")
-        let paymentTime = parseInt(new Date(self.ymd).getTime());
-        let todayTime = new Date().getTime();
+        let paymentTime = parseInt(new Date(self.ymd).getTime())
+        let todayTime = new Date().getTime()
+        let myDate = new Date()
+        let year = myDate.getFullYear()
+        let date = myDate.getDate()
+        let month = myDate.getMonth() + 1
+        let nowTime = parseInt(new Date(year + "/" + month + "/" + date).getTime())
+
+
         if(paymentTime - todayTime > 223200000) {
           self.bank_flag = true
         } else {
@@ -872,7 +886,7 @@ export default {
           } else {
             self.flag = true
           }
-          if((todayTime - paymentTime > 0 && self.topics_id == "1036") || todayTime - paymentTime <= 0){
+          if((nowTime - paymentTime > 0 && self.topics_id ==  1036) || (nowTime - paymentTime) <= 0){
             self.timeFlag = true
           } else {
             self.timeFlag = false
