@@ -110,8 +110,8 @@
                   </p>
                   <p>
                     <strong>有料会員の継続年数</strong>
-                    <span v-if="can_upgrade">{{ ""}}</span>
-                    <span v-else style="margin:100px"><br/>{{ reg_date }}年目</span>
+                    <span v-if="can_upgrade" style="vertical-align:middle;">&bull;年目</span>
+                    <span v-else style="vertical-align:middle;">{{ reg_date }}年目</span>
                   </p>
                 </div>
                 <!-- 無料会員 会員証 -->
