@@ -103,6 +103,7 @@ export default {
             self.topic_id = element.topics_id,
             self.ymd = element.ymd
           })
+          console.log(self.result)
           let hash = `/rcms-api/1/qrcode/url?ec_order_id=${self.order_id}&order_detail_id=${self.order_detail_id}&no=${self.no}&topics_id=${self.topic_id}`
           self.$auth.ctx.$axios.get(hash).then(function (response1) {
           self.cnt = response1.data.data.cnt
