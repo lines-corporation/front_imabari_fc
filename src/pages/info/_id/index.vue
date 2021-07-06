@@ -7,13 +7,14 @@
         </h2>
       </header>
      
-      <div class="theme--light v-stepper">
-        <div class="v-stepper__content">
-          <p>
-            {{ item.ymd }}
-          </p>
-          <p v-html="item.contents" />
-        </div>
+	  <div class="theme--light v-stepper">
+	  	<div class="v-stepper__content">
+	      <p>
+	        {{ item.ymd }}
+	      </p>
+
+	      <p v-html="item.contents" />
+	    </div>
       </div>
     </div>
   </div>

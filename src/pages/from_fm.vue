@@ -51,7 +51,6 @@ export default {
         })
         .then((response) => {
           if (response.data.data.login_ok) {
-            //const group_ids = JSON.parse(JSON.stringify(response.data.data.user.group_ids))
             this.$auth.ctx.$axios
               .get("/rcms-api/1/profile")
               .then((response) => {

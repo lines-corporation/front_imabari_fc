@@ -54,122 +54,29 @@
           <h3>{{ productName }}</h3>
           <p>¥ {{ price }}</p>
           <p v-if="flag">有料会員限定の割引価格 ¥ {{ discount }}</p>
-          <p v-if="discount_price > 0">特別価格 ¥ {{ special_price }}</p>
-          <!--シーズンパス以外及びSKU一つの場合-->
+          <!-- サイズ設定 -->
           <v-select
             v-if="apparelFlg"
-            v-model="productVal"
-            @change="getSelectedOne()"
-            :items="sku_one"
+            v-model="productId"
+            :items="sizes"
             label="選択"
+            item-text="name"
+            item-value="id"
             outlined
           ></v-select>
-
+          <!-- /サイズ設定 -->
           <!-- シーズンパスの場合には種別を選択させる -->
           <v-select
             v-if="seasonPassFlg"
-            v-model="seasonPassVal"
-            @change="getSelectedOne()"
-            class="p-select"
-            :ref="`${productId}_num`"
-            :items="sku_one"
-            label="選択"
-            outlined
-          ></v-select>
-
-          <v-select
-            v-if="apparelFlg && second_flag == 2"
-            v-model="productId"
-            :ref="`${productId}_num`"
-            label="選択"
-            :items="name_result"
-            item-text="name_second"
-            item-value="id"
-            outlined
-          ></v-select>
-
-
-          <v-select
-            v-if="seasonPassFlg && second_flag == 2"
             v-model="seasonPassKind"
             class="p-select"
             :ref="`${productId}_num`"
-            :items="name_result"
-            item-text="name_second"
+            :items="passCategories"
+            item-text="name"
             item-value="id"
             label="選択"
             outlined
           ></v-select>
-
-          <v-select
-            v-if="apparelFlg && second_flag == 3"
-            v-model="productVal2"
-            @change="getSelectedTwo()"
-            :ref="`${productId}_num`"
-            label="選択"
-            :items="sku_two"
-            outlined
-          ></v-select>
-
-          <v-select
-            v-if="seasonPassFlg && second_flag == 3"
-            v-model="seasonPassVal2"
-            @change="getSelectedTwo()"
-            class="p-select"
-            :ref="`${productId}_num`"
-            :items="sku_two"
-            label="選択"
-            outlined
-          ></v-select>
-
-           <v-select
-            v-if="apparelFlg && second_flag == 3"
-            v-model="productId"
-            :ref="`${productId}_num`"
-            label="選択"
-            :items="sku_three"
-            item-text="name_third"
-            item-value="id"
-            outlined
-          ></v-select>
-
-
-          <v-select
-            v-if="seasonPassFlg && second_flag == 3"
-            v-model="seasonPassKind"
-            class="p-select"
-            :ref="`${productId}_num`"
-            :items="sku_three"
-            item-text="name_third"
-            item-value="id"
-            label="選択"
-            outlined
-          ></v-select>
-
-          <v-select
-            v-if="apparelFlg && second_flag > 3"
-            v-model="productId"
-            :ref="`${productId}_num`"
-            label="選択"
-            :items="more_three"
-            item-text="name_last"
-            item-value="id"
-            outlined
-          ></v-select>
-
-          <v-select
-            v-if="seasonPassFlg && second_flag > 3"
-            v-model="seasonPassKind"
-            class="p-select"
-            :ref="`${productId}_num`"
-            :items="more_three"
-            item-text="name_last"
-            item-value="id"
-            label="選択"
-            outlined
-          ></v-select>
-
-
           <!-- 個数設定 -->
           <v-select
             v-if="apparelFlg && stock != 0 && stock != null"
@@ -190,7 +97,16 @@
             label="個数"
             outlined
           ></v-select>
-
+          <!-- シーズンパスのデフォルト場合には個数設定 -->
+          <v-select
+            v-if="seasonPassFlg && seasonPassKind == 0"
+            v-model="quantity"
+            class="p-select"
+            :ref="`${productId}_num`"
+            :items="items"
+            label="個数"
+            outlined
+          ></v-select>
           <!-- シーズンパスの在庫数「無制限」場合には個数設定 -->
           <v-select
             v-if="seasonPassFlg && stock_unlimited == 1"
@@ -211,8 +127,6 @@
             label="個数"
             outlined
           ></v-select>
-
-
           <!-- /シーズンパスの場合には売り切れ -->
           <v-btn
             v-if="seasonPassFlg && getStock(seasonPassKind) && stock == 0 && stock != null && stock_unlimited != 1"
@@ -233,12 +147,6 @@
           >
             売り切れ
           </v-btn>
-          <!--<v-select
-            class="p-select"
-            label="クーポンコード"
-            outlined
-          ></v-select>
-          <p style="margin-top: -20px;">クーポンコードをお持ちの方は入力してください。</p>-->
 
         </v-col>
       </v-row>
@@ -273,8 +181,6 @@ export default {
     sale_limit: null,
     stock_unlimited: null,
     total_quantity: 0,
-    discount_price: 0,
-    special_price: 0,
     productId: '',
     productName: '',
     price: 0,
@@ -290,23 +196,6 @@ export default {
     images: [],
     cartItems: [],
     description: "",
-    split_flag: true,
-    sku_one: [],
-    sku_two: [],
-    sku_three: [],
-    more_three: [],
-    productVal: null,
-    seasonPassVal: null,
-    productVal2: null,
-    seasonPassVal2: null,
-    apparelId: 1111,
-    num_flag: true,
-    name_third: [],
-    result: null,
-    second_length: null,
-    second_flag: true,
-    seasonId: null,
-    first_flag: null
   }),
   computed: {
     user() {
@@ -325,8 +214,6 @@ export default {
       )
       if (stamp[0] != "" && stamp[0] != null ){
         self.stock = stamp[0].stock
-        self.discount_price = stamp[0].discount_price
-        self.special_price = stamp[0].price_02
         self.stock_unlimited = stamp[0].stock_unlimited
         self.sale_limit = stamp[0].sale_limit
         self.discount = stamp[0].group_price
@@ -345,8 +232,6 @@ export default {
       )
       if (stamp[0] != "" && stamp[0] != null ){
         self.stock = stamp[0].stock
-        self.discount_price = stamp[0].discount_price
-        self.special_price = stamp[0].price_02
         self.stock_unlimited = stamp[0].stock_unlimited
         self.sale_limit = stamp[0].sale_limit
         self.discount = stamp[0].group_price
@@ -359,7 +244,6 @@ export default {
     },
     // 商品情報の取得
     async getProducts(topics_id) {
-      let self = this
       let paramStr = '?cnt=999'
       let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/topic/${topics_id}`)
       // id
@@ -372,15 +256,16 @@ export default {
       this.price = response.data.details.ext_col_04
       this.productName = response.data.details.subject
       this.category = response.data.details.contents_type
-
       // カテゴリーIDを取得
       let category_list = []
       let response4 = await this.$auth.ctx.$axios.get(`rcms-api/1/shop/categories`)
+      console.log(response4)
       // シーズンパスIDを取得
-      let seasonpass_list= response4.data.list.filter(item => item.category_nm == "年間パス")
+      let seasonpass_list= response4.data.list.filter(item => item.category_nm == "シーズンチケット")
+      
       let seasonpass_id = seasonpass_list[0].contents_type
-      // シーズンパス以外のIDを取得
-      let season_besides = response4.data.list.filter(item => item.category_nm != "年間パス")
+     // シーズンパス以外のIDを取得
+      let season_besides = response4.data.list.filter(item => item.category_nm != "シーズンチケット")
       season_besides.forEach(item => {
       self.topics_category_id = parseInt(item.topics_category_id)
       category_list.push(self.topics_category_id)
@@ -395,117 +280,29 @@ export default {
 
       // サイズや写真などの複数商品データの取得
       let response2 = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list${paramStr}&topics_id=${topics_id}`)
+      this.sizes = []
+      this.passCategories = []
 
-      let name_list = []
-      response2.data.list.forEach(product => {
-        self.pickupImages(product.product_data)
-        name_list.push(product.combination_name.split(",")[0])
-        function unique (arr) {
-          return Array.from(new Set(arr))
+      response2.data.list.forEach((product, index) => {
+        if(!this.productId) {
+          this.productId = product.product_id
         }
-        self.sku_one = unique(name_list)
+        if(this.seasonPassFlg) {
+        // シーズンパスの場合
+          this.passCategories.push({
+            id:   product.product_id,
+            name: product.product_name
+          })
+        }
+        if(this.apparelFlg) {
+          this.sizes.push({
+            id:   product.product_id,
+            name: product.product_name,
+          })
+        }
+        this.pickupImages(product.product_data)
       })
     },
-
-    //SKUの判断
-    async getSelectedOne() {
-        let self = this
-        let paramStr = '?cnt=999'
-        let sizes = []
-        let name_result = []
-        let name_list = []
-        let more_three = []
-        let response2 = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list${paramStr}&topics_id=${self.$route.params.id}`)
-        if(self.seasonPassFlg) {
-          self.seasonPassKind = ""
-          self.seasonPassVal2 = ""
-          sizes = response2.data.list.filter(item => item.combination_name.split(",")[0] == self.seasonPassVal)
-          sizes.forEach(item => {
-            self.second_flag = item.combination_name.split(",").length
-            if(self.second_flag == 1) {
-              self.seasonPassKind = sizes[0].product_id
-            } else if(self.second_flag == 2) {
-              name_result.push({
-                 id:item.product_id,
-                 name_second:item.combination_name.split(",")[1]
-              })
-              self.name_result = name_result
-            } else if (self.second_flag == 3) {
-              name_list.push(item.combination_name.split(",")[1])
-              function unique (arr) {
-                return Array.from(new Set(arr))
-              }
-              self.sku_two = unique(name_list)
-            } else if(self.second_flag > 3) {
-              more_three.push({
-                id: item.product_id,
-                name_last: item.combination_name.substring(item.combination_name.indexOf(",") + 1)
-              })
-              self.more_three = more_three
-            }
-          })
-        }
-        if(self.apparelFlg) {
-          self.productId = ""
-          self.productVal2 = ""
-          
-          sizes = response2.data.list.filter(item => item.combination_name.split(",")[0] == self.productVal)
-          sizes.forEach(item => {
-            self.second_flag = item.combination_name.split(",").length
-            if(self.second_flag == 1) {
-              self.productId = sizes[0].product_id
-            } else if(self.second_flag == 2) {
-              name_result.push({
-                 id:item.product_id,
-                 name_second:item.combination_name.split(",")[1]
-              })
-              self.name_result = name_result
-            } else if (self.second_flag == 3) {
-              name_list.push(item.combination_name.split(",")[1])
-              function unique (arr) {
-                return Array.from(new Set(arr))
-              }
-              self.sku_two = unique(name_list)
-            } else if(self.second_flag > 3) {
-              more_three.push({
-                id: item.product_id,
-                name_last: item.combination_name.substring(item.combination_name.indexOf(",") + 1)
-              })
-              self.more_three = more_three
-            }
-          })
-        }
-    },
-
-    async getSelectedTwo() {
-        let self = this
-        let paramStr = '?cnt=999'
-        let name_third = []
-        let sku_three = []
-        let response2 = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/list${paramStr}&topics_id=${self.$route.params.id}`)
-        if(self.apparelFlg) {
-          self.productId = ""
-          name_third = response2.data.list.filter(item => item.combination_name.split(",")[0] == self.productVal && item.combination_name.split(",")[1] == self.productVal2)
-          name_third.forEach(item => {
-            sku_three.push({
-              id: item.product_id,
-              name_third: item.combination_name.split(",")[2]
-            })
-          })
-          self.sku_three = sku_three
-        } else if(self.seasonPassFlg) {
-          self.seasonPassKind = ""
-          name_third = response2.data.list.filter(item => item.combination_name.split(",")[0] == self.seasonPassVal && item.combination_name.split(",")[1] == self.seasonPassVal2)
-          name_third.forEach(item => {
-            sku_three.push({
-              id: item.product_id,
-              name_third: item.combination_name.split(",")[2]
-            })
-          })
-          self.sku_three = sku_three
-        }
-    },
-
     async addCart() {
       // 未ログインユーザーは購入できない
       if(!this.$auth.loggedIn) {
@@ -545,11 +342,11 @@ export default {
       if(this.apparelFlg) {
         this.productId = this.productId
         let result = await this.$auth.ctx.$axios.get(`rcms-api/1/shop/product/list?topics_id=${this.$route.params.id}`)
-        let response5 = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
+        let response3 = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
         let stamp = result.data.list.filter(item =>
           this.productId == item.product_id
         )
-        let product_num = response5.data.details.items.filter(item =>
+        let product_num = response3.data.details.items.filter(item =>
           this.productId == item.product_id
         )
         if (stamp[0] != "" && stamp[0] != null &&  product_num[0] != "" && product_num[0] != null){
@@ -577,19 +374,15 @@ export default {
         )
         this.$store.dispatch("snackbar/snackOn")
         this.getCartItems()
-        this.$router.go(0)
       }).catch((error) => {
-        // self.$store.dispatch("snackbar/setError", "商品を選択下さい。")
-        if(error.response.status === 400){
-          this.$store.dispatch("snackbar/setError", "商品を選択下さい。")
-          this.$store.dispatch("snackbar/snackOn")
-          return
-        } else if (error.response.status === 422) {
-          this.$store.dispatch("snackbar/setError", "在庫がありません")
-          this.$store.dispatch("snackbar/snackOn")
+        if(error.response.status === 422){
+          console.log(this.$store)
+          // this.$store.dispatch("snackbar/setError", "在庫がありません")
+          // this.$store.dispatch("snackbar/snackOn")
           return
         }
       })
+      window.location.reload()
     },
     async getCartItems() {
       if(!this.$auth.user || !this.$auth.user.ec_cart_id) {

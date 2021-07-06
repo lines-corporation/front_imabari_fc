@@ -69,14 +69,14 @@ export default {
           title: "",
           active: false,
           items: [],
-          category_id: 38,
+          category_id: 31,
         },
         {
           action: "グッズ購入について",
           title: "",
           active: false,
           items: [],
-          category_id: 39,
+          category_id: 32,
         }
       ],
     }

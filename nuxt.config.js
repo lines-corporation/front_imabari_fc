@@ -18,7 +18,7 @@ export default {
    ** Headers of the page
    ** See https://nuxtjs.org/api/configuration-head
    */
-  head: {
+   head: {
     htmlAttrs: {
       lang: "ja",
     },
@@ -143,91 +143,12 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/axios", "@nuxtjs/auth",  'nuxt-client-init-module'],
-  // pwa: {
-  //   manifest: {
-  //     "name": envSettings.META_TITLE,
-  //     "lang": 'ja',
-  //     "useWebmanifestExtension": true,
-  //     "short_name": envSettings.META_TITLE,
-  //     "description": envSettings.META_TITLE,
-  //     "icons": [{
-  //       "src": "/android-chrome-36x36.png",
-  //       "type": "image/png",
-  //       "sizes": "36x36",
-       
-  //       },
-  //       {
-  //       "src": "/android-chrome-48x48.png",
-  //       "type": "image/png",
-  //       "sizes": "48x48",
-       
-  //       },
-  //       {
-  //         "src": "/android-chrome-72x72.png",
-  //         "type": "image/png",
-  //         "sizes": "72x72",
-          
-  //       },
-  //       {
-  //         "src": "/android-chrome-96x96.png",
-  //         "type": "image/png",
-  //         "sizes": "96x96",
-         
-  //       },
-  //       {
-  //         "src": "/android-chrome-128x128.png",
-  //         "type": "image/png",
-  //         "sizes": "128x128",
-          
-  //       },
-  //       {
-  //         "src": "/android-chrome-144x144.png",
-  //         "type": "image/png",
-  //         "sizes": "144x144",
-          
-  //       },
-  //       {
-  //         "src": "/android-chrome-152x152.png",
-  //         "type": "image/png",
-  //         "sizes": "152x152",
-          
-  //       },
-  //       {
-  //         "src": "/android-chrome-192x192.png",
-  //         "type": "image/png",
-  //         "sizes": "192x192",
-          
-  //       },
-  //       {
-  //         "src": "/android-chrome-192x192.png",
-  //         "type": "image/png",
-  //         "sizes": "192x192",
-          
-  //       },
-  //       {
-  //         "src": "/android-chrome-256x256.png",
-  //         "type": "image/png",
-  //         "sizes": "256x256",
-          
-  //       },
-  //       {
-  //         "src": "/android-chrome-384x384.png",
-  //         "type": "image/png",
-  //         "sizes": "384x384",
-  //       },
-  //       {
-  //         "src": "/android-chrome-512x512.png",
-  //         "type": "image/png",
-  //         "sizes": "512x512",
-  //       },
-  //       {
-  //       "src": "/favicon.ico",
-  //       "type": "image/x-icon",
-  //       },
-  //   ],
-  //   }
-  // },
+  modules: [
+    "@nuxtjs/axios",
+    "@nuxtjs/auth", 
+    //"@nuxtjs/pwa", 
+    'nuxt-client-init-module'
+    ],
   /*
    ** vuetify module configuration
    ** https://github.com/nuxt-community/vuetify-module

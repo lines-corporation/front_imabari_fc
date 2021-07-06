@@ -122,8 +122,8 @@ export default {
     return {
       inquiry_url: "https://docs.google.com/forms/d/e/1FAIpQLSdYPh3YEm5fzrCxBVnEd64xvSVpHBwpaeKan0ODSa8thr6Gtw/viewform",
       clipped: false,
-      cartItems: [],
       drawer: false,
+      cartItems: [],
       fixed: false,
       items: [
         {
@@ -231,7 +231,7 @@ export default {
       })
     },
   },
-    mounted() {
+  mounted() {
     this.getCartItems()
   },
 }

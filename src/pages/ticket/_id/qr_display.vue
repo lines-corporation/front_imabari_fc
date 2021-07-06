@@ -116,6 +116,23 @@ export default {
           self.cnt = response1.data.data.cnt
           })
         })
+        
+        // let hash = `/rcms-api/1/qrcode/url?ec_order_id=${self.order_id}&order_detail_id=${self.order_detail_id}&no=${self.no}&topics_id=${self.topics_id}`
+        // self.$auth.ctx.$axios.get(hash).then(function (response1) {
+        // self.cnt = response1.data.data.cnt
+        // })
+        // if (self.topics_id == 1204) {
+        //   self.topics_id = 1252
+        //   let hash = `/rcms-api/1/qrcode/url?ec_order_id=${self.order_id}&order_detail_id=${self.order_detail_id}&no=${self.no}&topics_id=${self.topics_id}`
+        //   self.$auth.ctx.$axios.get(hash).then(function (response1) {
+        //   self.cnt = response1.data.data.cnt
+        //   })
+        // } else {
+        //   let hash = `/rcms-api/1/qrcode/url?ec_order_id=${self.order_id}&order_detail_id=${self.order_detail_id}&no=${self.no}&topics_id=${self.topics_id}`
+        //   self.$auth.ctx.$axios.get(hash).then(function (response1) {
+        //   self.cnt = response1.data.data.cnt
+        //   })
+        // }
       })
     },
     async reload(){

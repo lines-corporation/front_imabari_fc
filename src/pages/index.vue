@@ -108,11 +108,6 @@
                   <p>
                     <strong>会員種別</strong><span>{{ group_nm }}</span>
                   </p>
-                  <p>
-                    <strong>有料会員の継続年数</strong>
-                    <span v-if="can_upgrade" style="vertical-align:middle;">&bull;年目</span>
-                    <span v-else style="vertical-align:middle;">{{ reg_date }}年目</span>
-                  </p>
                 </div>
                 <!-- 無料会員 会員証 -->
                 <v-img v-if="can_upgrade" :src="require('@/assets/images/free_member_card.png')"></v-img>
@@ -274,12 +269,12 @@
                         :to="'/ticket/' + item.topics_id"
                         tag="tr"
                       >
-                        <td v-if="item.topics_id != 1036" class="date">
+                        <td v-if="item.topics_id != 1204" class="date">
                           {{ item.ymd }}
                         </td>
-                        <td v-if="item.topics_id != 1036">{{ item.subject }}</td>
-                        <td v-if="item.topics_id != 1036">{{ item.ext_col_01 }}</td>
-                        <td v-if="item.topics_id != 1036" class="arw">
+                        <td v-if="item.topics_id != 1204">{{ item.subject }}</td>
+                        <td v-if="item.topics_id != 1204">{{ item.ext_col_01 }}</td>
+                        <td v-if="item.topics_id != 1204" class="arw">
                           <v-btn icon :to="'/ticket/' + item.topics_id" nuxt>
                             <v-icon>mdi-chevron-right</v-icon>
                           </v-btn>

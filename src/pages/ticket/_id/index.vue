@@ -63,7 +63,7 @@
                   <v-subheader>注意事項</v-subheader>
                 </v-col>
                 <v-col cols="8">
-                  <p class="p-label" v-html="item.ext_col_07" />
+                 <p class="p-label" v-html="item.ext_col_07" />
                 </v-col>
               </v-row>
               <v-row>
@@ -361,7 +361,7 @@
                 </v-card>
               </v-container>
 
-              <v-container v-if="topics_id != 1036" fluid>
+              <v-container v-if="topics_id != 1204" fluid>
                 <v-card class="mx-auto" outlined>
                   <v-card-text>
                   <div class="center">
@@ -465,7 +465,7 @@
                 </v-card>
               </v-container>
 
-              <v-container v-if="topics_id != 1036" fluid>
+              <v-container v-if="topics_id != 1204" fluid>
                 <v-card class="mx-auto" outlined>
                   <v-card-text>
                     <h3>チケットの購入</h3>
@@ -490,8 +490,8 @@
                               <td>{{ t.subject }}</td>
                               <td>
                                 <span>{{ t.price_02 }}円</span> <br/>
-                                <span v-if="flag && t.group_price > 0"> 割引価格 {{ t.price_by_group.split(",")[0].split(":")[1].split("}")[0] }}円</span>
-                                <span v-if="!flag && t.group_price > 0"> 割引価格 {{ t.price_by_group.split(",")[1].split(":")[1].split("}")[0] }}円</span>
+                                <span v-if="flag && t.group_price > 0"> 有料会員限定の割引価格 {{ t.price_by_group.split(",")[0].split(":")[1] }}円</span>
+                                <span v-if="!flag && t.group_price > 0"> 無料会員限定の割引価格 {{ t.price_by_group.split(",")[1].split(":")[1].split("}")[0] }}円</span>
                               </td>
                               <td>
                                 <v-select
@@ -504,16 +504,9 @@
                                   single-line
                                   outlined
                                 />
-                                <!--<p></p>-->
                                 <p v-if="t.stock == 0 && t.stock_unlimited == 0">
                                   完売
                                 </p>
-                                <!--<v-select
-                                  class="p-select"
-                                  label="クーポンコード"
-                                  outlined
-                                ></v-select>
-                                <p style="margin-top: -20px;">クーポンコードをお持ちの方は入力してください。</p>-->
                               </td>
                             </tr>
                             <template v-if="order_products[t.product_id] > 0 && seat_reserved_product.has(t.class_options[19].ec_class_option_id+'')">
@@ -569,8 +562,8 @@
                         <v-radio-group v-model="ec_payment_id">
                           <v-radio label="カード決済" value="61" />
                           <v-radio v-if="bank_flag" label="銀行振り込み" value="60" />
-                        <!-- 　<v-radio label="銀行振り込み" value="60" /> -->
                         </v-radio-group>
+
                         <p v-if="ec_payment_id == '60'" class="body-1">
                           振込先がメールで送信されますので、そちらで振込先をご確認ください。
                         </p>
@@ -728,8 +721,8 @@ export default {
     order_detail_id_no: 1,
     order_detail_id: 1,
     qrcode_type: 1,
-    flag: false,
     keyword: 0,
+    flag: false,
     item: [],
     seat_num: 0,
     product_list: [],
@@ -783,6 +776,8 @@ export default {
     time: "",
     timeFlag: "",
     todayTime: "",
+    cnt: 0,
+    cnt1: 0,
     bank_flag: ""
   }),
   mounted() {
@@ -838,7 +833,7 @@ export default {
       self.seat_blackAndSaved_list.forEach(blackAndSaved => {
         self.seat_reserved_list = self.seat_reserved_list.filter(reserved => {
           if (blackAndSaved.seat == reserved.seat) {
-            return false   
+            return false
           }
           return true
         })
@@ -854,7 +849,6 @@ export default {
         let date = myDate.getDate()
         let month = myDate.getMonth() + 1
         let nowTime = parseInt(new Date(year + "/" + month + "/" + date).getTime())
-
 
         if(paymentTime - todayTime > 223200000) {
           self.bank_flag = true
@@ -886,7 +880,7 @@ export default {
           } else {
             self.flag = true
           }
-          if((nowTime - paymentTime > 0 && self.topics_id ==  1036) || (nowTime - paymentTime) <= 0){
+          if((nowTime - paymentTime > 0 && self.topics_id == 1204) || (nowTime - paymentTime) <= 0){
             self.timeFlag = true
           } else {
             self.timeFlag = false
@@ -907,6 +901,9 @@ export default {
         })
 
       })
+
+      //self.product_id = response.data.details.product_id
+      //self.can_order = response.data.details.order_list.length ? false : true
     })
   },
   methods: {
@@ -914,7 +911,7 @@ export default {
       let self = this
       let topic_id = this.$route.params.id
       let url_o = "/rcms-api/1/order_list?is_canceled=0&without_payment_error=1&topics_id=" + topic_id
-      self.$auth.ctx.$axios.get(url_o).then(function (res_o) {
+      await self.$auth.ctx.$axios.get(url_o).then(function (res_o) {
         self.hash_list = res_o.data.hash_list
       })
     },
@@ -1093,7 +1090,6 @@ export default {
           rtn += "(決済失敗)"
         }
       }
-      
       return rtn
     },
     purchase() {

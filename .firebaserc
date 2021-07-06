@@ -5,18 +5,14 @@
   "targets": {
     "kuroco-member-necsports": {
       "hosting": {
-        "production": [
-          "member-necsports"
-        ],
         "development": [
-          "kuroco-member-imabari",
           "stg-member-necsports"
         ]
       }
     },
     "kuroco-member-imabari": {
       "hosting": {
-        "development": [
+        "production": [
           "kuroco-member-imabari"
         ]
       }
