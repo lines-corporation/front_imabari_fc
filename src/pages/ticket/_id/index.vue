@@ -558,7 +558,21 @@
                         </tbody>
                       </template>
                     </v-simple-table>
-
+                    <v-simple-table>
+                    <br/>
+                    <div style="width:50%;text-align:right;">
+                      <v-text-field
+                        id="serial_code"
+                        v-model="serial_code"
+                        label="クーポンコード入力"
+                        outlined
+                      />
+                    </div>
+                       <p style="width:50%;margin-top: -30px;">
+                       クーポンコードをお持ちの方は入力してください。
+                      </p>
+                    </v-simple-table>
+                    
                     <v-row>
                       <v-col cols="4">
                         <v-subheader>
@@ -783,7 +797,9 @@ export default {
     time: "",
     timeFlag: "",
     todayTime: "",
-    bank_flag: ""
+    bank_flag: "",
+    serial_code: "",
+    payObj: {}
   }),
   mounted() {
     let self = this
@@ -865,7 +881,7 @@ export default {
         let url_p = "/rcms-api/1/product_list?topics_id=" + self.topics_id
         self.$auth.ctx.$axios.get(url_p).then(function (res_p) {
           for (const p_list of res_p.data.list) {
-            if(p_list.open_flg){
+            if(p_list.open_flg >= 0){
               self.product_list.push(p_list)   
               p_list.zone_list = []
               for(const reserved of self.seat_reserved_list) {
@@ -886,7 +902,8 @@ export default {
           } else {
             self.flag = true
           }
-          if((nowTime - paymentTime > 0 && self.topics_id ==  1036) || (nowTime - paymentTime) <= 0){
+          // if((nowTime - paymentTime > 0 && self.topics_id ==  1036) || (nowTime - paymentTime) <= 0){
+          if(nowTime - paymentTime <= 0 && self.topics_id != 1036){
             self.timeFlag = true
           } else {
             self.timeFlag = false
@@ -1161,13 +1178,26 @@ export default {
             },
             function (response) {
               if (response.result == "0000") {
-                self.$auth.ctx.$axios
-                  .post("/rcms-api/1/ec/purchase", {
+                if(self.serial_code != ""){
+                  self.payObj = {
                     ec_payment_id: parseInt(self.ec_payment_id),
                     order_products: from_order_products,
                     card_token: response.tokenizedCardObject.token,
-                    order_note: from_order_note
-                  })
+                    order_note: from_order_note,
+                    discount: {
+                      serial_code: self.serial_code
+                    },
+                  }
+                } else {
+                  self.payObj = {
+                    ec_payment_id: parseInt(self.ec_payment_id),
+                    order_products: from_order_products,
+                    card_token: response.tokenizedCardObject.token,
+                    order_note: from_order_note,
+                  }
+                }
+                self.$auth.ctx.$axios
+                  .post("/rcms-api/1/ec/purchase", self.payObj)
                   .then(() => {
                     self.$store.dispatch(
                       "snackbar/setMessage",
@@ -1201,12 +1231,24 @@ export default {
             }
           )
         } else {
-          self.$auth.ctx.$axios
-            .post("/rcms-api/1/ec/purchase", {
+          if(self.serial_code != ""){
+            self.payObj = {
               ec_payment_id: parseInt(self.ec_payment_id),
               order_products: from_order_products,
-              order_note: from_order_note
-            })
+              order_note: from_order_note,
+              discount: {
+                serial_code: self.serial_code
+              },
+            }
+          } else {
+            self.payObj = {
+              ec_payment_id: parseInt(self.ec_payment_id),
+              order_products: from_order_products,
+              order_note: from_order_note,
+            }
+          }
+          self.$auth.ctx.$axios
+            .post("/rcms-api/1/ec/purchase", obj)
             .then(() => {
               self.$store.dispatch(
                 "snackbar/setMessage",

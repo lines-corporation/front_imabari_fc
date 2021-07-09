@@ -577,7 +577,8 @@ export default {
         )
         this.$store.dispatch("snackbar/snackOn")
         this.getCartItems()
-        this.$router.go(0)
+        // this.$router.go(0)
+
       }).catch((error) => {
         // self.$store.dispatch("snackbar/setError", "商品を選択下さい。")
         if(error.response.status === 400){
@@ -598,6 +599,7 @@ export default {
       this.cartItems = []
       let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
       this.total_quantity = response.data.details.total_quantity
+      this.$store.commit('addCount', response.data.details.total_quantity)
       if(response.data.details.items) {
         response.data.details.items.forEach((item, index) => {
           this.cartItems.push(item)

@@ -61,9 +61,9 @@
 
       <v-btn icon @click="moveCart">
         <v-badge
-          v-if="cartItems.length > 0"
+          v-if="$store.state.total_quantity > 0"
           color="green"
-          :content="total_quantity"
+          :content="$store.state.total_quantity"
         >
           <v-icon mid color="darken-2">
             mdi-cart-variant
@@ -122,7 +122,7 @@ export default {
     return {
       inquiry_url: "https://docs.google.com/forms/d/e/1FAIpQLSdYPh3YEm5fzrCxBVnEd64xvSVpHBwpaeKan0ODSa8thr6Gtw/viewform",
       clipped: false,
-      cartItems: [],
+      total_quantity: 0,
       drawer: false,
       fixed: false,
       items: [
@@ -211,14 +211,8 @@ export default {
       if(!this.$auth.user || !this.$auth.user.ec_cart_id) {
         return
       }
-      this.cartItems = []
       let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
-      this.total_quantity = response.data.details.total_quantity
-      if(response.data.details.items) {
-        response.data.details.items.forEach((item, index) => {
-          this.cartItems.push(item)
-        })
-      }
+      this.$store.commit('addCount', response.data.details.total_quantity)
     },
     moveCart() {
       this.$router.push("/ec/cart")
