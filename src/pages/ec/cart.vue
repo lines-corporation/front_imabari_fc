@@ -535,6 +535,8 @@ export default {
     },
     async getProductInfo() {
       let self = this
+      //合計金額初期化
+      self.total_normal_prices = 0
       // kurocoからデータを取得してみる
       self.products = []
       self.discounts = []
@@ -1049,7 +1051,6 @@ export default {
       this.$store.dispatch("snackbar/snackOn")
       this.getProductInfo()
       this.getCardNum()
-      // window.location.reload()
     },
     async getCardNum() {
       let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
