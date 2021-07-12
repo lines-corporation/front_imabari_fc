@@ -19,7 +19,11 @@
           <v-col class="c-txt">
             <div>
               <h3>{{ product.title }}</h3>
-              <p>¥ {{ product.price }}</p>
+              <p v-if="product.group_price > 0">¥ {{ product.group_price*product.quantity }}</p>
+              <p v-else-if="product.discount_price > 0">¥ {{ product.price_02*product.quantity }}</p>
+              <p v-else-if="product.discount_price == 0 && product.price_01 == 0">¥ {{ product.price_02*product.quantity }}</p>
+              <p v-else>¥ {{ product.price }}</p>
+              <p >¥ {{ product.price }}</p>
               <p>{{ product.size }}</p>
               <p>個数 {{ product.quantity }}個</p>
               <p v-if="product.size.search('自由席') == -1">{{ note }}</p>
@@ -132,6 +136,10 @@ export default {
                       quantity: order.quantity,
                       title: productInfoResponse.data.details.topics_name,
                       price: response.data.details.payment_total,
+                      group_price: productInfoResponse.data.details.group_price,
+                      price_01: productInfoResponse.data.details.price_01,
+                      price_02: productInfoResponse.data.details.price_02,
+                      discount_price: productInfoResponse.data.details.discount_price,
                       size: productInfoResponse.data.details.product_name,
                       image:
                         productInfoResponse.data.details.product_data
@@ -143,6 +151,10 @@ export default {
                       quantity: order.quantity,
                       title: productInfoResponse.data.details.topics_name,
                       price: response.data.details.payment_total,
+                      group_price: productInfoResponse.data.details.group_price,
+                      price_01: productInfoResponse.data.details.price_01,
+                      price_02: productInfoResponse.data.details.price_02,
+                      discount_price: productInfoResponse.data.details.discount_price,
                       size: productInfoResponse.data.details.product_name,
                     });
                   }
