@@ -54,6 +54,7 @@
           <h3>{{ productName }}</h3>
           <p>¥ {{ price }}</p>
           <p v-if="flag">有料会員限定の割引価格 ¥ {{ discount }}</p>
+          <p v-if="!flag && discount > 0">無料会員限定の割引価格 ¥ {{ discount }}</p>
           <p v-if="discount_price > 0">特別価格 ¥ {{ special_price }}</p>
           <!--シーズンパス以外及びSKU一つの場合-->
           <v-select

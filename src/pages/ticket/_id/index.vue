@@ -1185,6 +1185,7 @@ export default {
                     card_token: response.tokenizedCardObject.token,
                     order_note: from_order_note,
                     discount: {
+                      point: 0,
                       serial_code: self.serial_code
                     },
                   }
@@ -1237,6 +1238,7 @@ export default {
               order_products: from_order_products,
               order_note: from_order_note,
               discount: {
+                point: 0,
                 serial_code: self.serial_code
               },
             }

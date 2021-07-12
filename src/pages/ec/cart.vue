@@ -22,6 +22,7 @@
               <p style="font-weight: bold;font-size:20px">{{ product.title }}</p>
               <!-- <p>¥ {{ product.price }}</p> -->
               <p v-if="flag && product.discount">有料会員限定の割引価格 ¥ {{ product.discount }}</p>
+              <p v-if="!flag && product.discount">無料会員限定の割引価格 ¥ {{ product.discount }}</p>
               <p v-if="product.price_02 != 0 && product.discount_price != 0">特別価格 ￥{{product.price_02}}</p>
               <p v-if="product.price_01 != 0"> 通常価格 ￥{{product.price_01}}</p>
               <p v-if="product.price_01 == 0">通常価格 ￥{{product.price_02}}</p>
@@ -329,14 +330,8 @@
         <div v-if="total_discounts > 0">
           <p class="p-cell" v-if="total_normal_prices - total_discounts > 5000"> {{ total_normal_prices - total_discounts }}円 (送料 ¥{{ 0 }} )</p>
           <p class="p-cell" v-else> {{ total_normal_prices - total_discounts + deliv_fee }}円 (送料 ¥{{ deliv_fee }} )</p>
-          <!-- <p class="p-cell">通常価格{{ total_normal_prices  }}円 (割引額 -{{ total_discounts }}円)</p> -->
         </div>
-        <!-- <div v-if="total_discounts > 0 && group_price != undefined">
-          <p class="p-cell" v-if="total_discounts > 5000"> {{ total_normal_prices - total_discounts }}円 (送料 ¥{{ 0 }} )</p>
-          <p class="p-cell" v-else> {{ total_normal_prices - total_discounts + deliv_fee }}円 (送料 ¥{{ deliv_fee }} )</p>
-          <p class="p-cell">通常価格{{ total_normal_prices  }}円 (割引額 -{{ total_discounts  }}円)</p>
-        </div> -->
-        <div v-if="total_discounts == 0">
+        <div v-if="total_discounts <= 0">
           <p class="p-cell"> {{ total_normal_prices + deliv_fee }}円 (送料 ¥{{ deliv_fee }} )</p>
         </div>
       </v-col>
@@ -695,7 +690,8 @@ export default {
               name:         self.cardName,
             },
             function(response) {
-              if(response.result != "0000" || self.cardYear == "" || self.cardMonth == "" || self.cardCvv == "" || self.cardName =="") {
+                // if(response.result != "0000" || self.cardYear == "" || self.cardMonth == "" || self.cardCvv == "" || self.cardName =="") {
+                if(self.cardYear == "" || self.cardMonth == "" || self.cardCvv == "" || self.cardName =="") {
                 // paygentのエラーコードの種類が判明したらハンドリングする
                 self.$store.dispatch(
                   "snackbar/setError",
@@ -713,6 +709,7 @@ export default {
                   card_token:    response.tokenizedCardObject.token,
                   order_note:    self.order_note,
                   discount: {
+                    point: 0,
                     serial_code: self.serial_code
                   },
                   shipping_address: {
@@ -776,6 +773,7 @@ export default {
                 ec_cart_id:    self.$auth.user.ec_cart_id,
                 order_note:    self.order_note,
                 discount: {
+                  point: 0,
                   serial_code: self.serial_code
                 },
                 shipping_address: {
@@ -836,6 +834,7 @@ export default {
                ec_cart_id:    self.$auth.user.ec_cart_id,
                order_note:    self.order_note,
                discount: {
+                 point: 0,
                  serial_code: self.serial_code
                },
                shipping_address: {
@@ -902,7 +901,9 @@ export default {
                name:         self.cardName,
              },
              function(response) {
-               if(response.result != "0000" || self.cardYear == "" || self.cardMonth == "" || self.cardCvv == "" || self.cardName =="") {
+              //  if(response.result != "0000" || self.cardYear == "" || self.cardMonth == "" || self.cardCvv == "" || self.cardName =="") {
+              if(self.cardYear == "" || self.cardMonth == "" || self.cardCvv == "" || self.cardName =="") {
+
                  // paygentのエラーコードの種類が判明したらハンドリングする
                  self.$store.dispatch(
                    "snackbar/setError",
@@ -920,6 +921,7 @@ export default {
                    card_token:    response.tokenizedCardObject.token,
                    order_note:    self.order_note,
                    discount: {
+                     point: 0,
                      serial_code: self.serial_code
                    },
                  }
@@ -962,6 +964,7 @@ export default {
                ec_cart_id:    self.$auth.user.ec_cart_id,
                order_note:    self.order_note,
                discount: {
+                point: 0,
                 serial_code: self.serial_code
                },
              }
@@ -1001,6 +1004,7 @@ export default {
                ec_cart_id:    self.$auth.user.ec_cart_id,
                order_note:    self.order_note,
                discount: {
+                 point: 0,
                  serial_code: self.serial_code
                },
              }
@@ -1051,6 +1055,7 @@ export default {
       this.$store.dispatch("snackbar/snackOn")
       this.getProductInfo()
       this.getCardNum()
+      this.$router.go(0)
     },
     async getCardNum() {
       let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
