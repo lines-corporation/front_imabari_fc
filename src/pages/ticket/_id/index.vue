@@ -63,7 +63,7 @@
                   <v-subheader>注意事項</v-subheader>
                 </v-col>
                 <v-col cols="8">
-                 <p class="p-label" v-html="item.ext_col_07" />
+                  <p class="p-label" v-html="item.ext_col_07" />
                 </v-col>
               </v-row>
               <v-row>
@@ -128,6 +128,7 @@
                             </td>
                             <td>
                               <div v-if="order.payment_status == 450 || order.payment_status == 150 || order.payment_status == 1350">
+                                <div  v-if="topics_id != 1204">
                                 <tr
                                   v-for="order_detail in order.order_details"
                                   :key="order_detail.product_id"
@@ -317,9 +318,23 @@
                                     </v-dialog>
                                   </td>
                                 </tr>
+                                </div>
+                                  <tr v-else>
+                                    <td style="display: block;">
+                                      <br/>
+                                      <p style="margin: 0px; padding: 0px;">
+                                        <span>
+                                        QRコードの表示は停止しております。入場には郵送済みのQRコードが印字されたカードをご利用ください。
+                                        <br>
+                                      </span>
+                                    </p>
+                                    </td>
+                                  </tr>
+                                
                               </div>
                               
                               <div v-else-if="order.payment_status == 410">
+                                <div v-if="topics_id != 1204">
                                 <tr
                                   v-for="order_detail in order.order_details"
                                   :key="order_detail.product_id"
@@ -334,6 +349,19 @@
                                     <br/><br/><p>決済お手続き完了後に表示されます。</p>
                                   </div>
                                 </tr>
+                                </div>
+                                <div v-else>
+                                  <tr>
+                                    <td style="display:block">
+                                      <br/>
+                                      <p style="margin:0;padding:0;">
+                                        <span>
+                                        QRコードの表示は停止しております。入場には郵送済みのQRコードが印字されたカードをご利用ください。
+                                        </span>
+                                    </p>
+                                    </td>
+                                  </tr>
+                                </div>
                               </div>
 
                               <div v-else>
