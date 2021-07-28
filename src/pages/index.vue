@@ -108,6 +108,11 @@
                   <p>
                     <strong>会員種別</strong><span>{{ group_nm }}</span>
                   </p>
+                  <p>
+                    <strong>有料会員の継続年数</strong>
+                    <span v-if="can_upgrade" style="vertical-align:middle;">有料会員のみ表示されます</span>
+                    <span v-else style="vertical-align:middle;">{{ cont_Years }}年目</span>
+                  </p>
                 </div>
                 <!-- 無料会員 会員証 -->
                 <v-img v-if="can_upgrade" :src="require('@/assets/images/free_member_card.png')"></v-img>
@@ -330,7 +335,8 @@ export default {
     login_save: 0,
     login_flag: false,
     join_renew_url:"https://www.fcimabari.com/support/FISC.html",
-    reg_date: 0
+    reg_date: 0,
+    cont_Years: 0  //継続年数
   }),
   computed: {
     user() {
@@ -388,6 +394,10 @@ export default {
    this.getCookie()
    if(this.$auth.user != null) {
     this.reg_date = this.$auth.user.reg_date
+    if (this.reg_date != null) {
+      this.cont_Years = (new Date()).getFullYear() - parseInt(this.reg_date.substr(0, 4))
+      this.cont_Years = this.cont_Years + 1
+    }
    }
   },
   methods: {
