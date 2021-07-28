@@ -18,17 +18,21 @@
             ></v-img>
           </v-col>
           <v-col class="c-txt">
-          	<div>
-            <h3>{{ product.title }}</h3>
-            <p>¥ {{ product.price }}</p>
-            <p v-if="flag && product.discount">有料会員限定の割引価格 ¥ {{ product.discount }}</p>
-            <p v-if="product.size">size : {{ product.size }}</p>
-            <p v-if="product.quantity">{{ product.quantity }}個</p>
+            <div>
+              <p style="font-weight: bold;font-size:20px">{{ product.title }}</p>
+              <!-- <p>¥ {{ product.price }}</p> -->
+              <p v-if="flag && product.discount">有料会員限定の割引価格 ¥ {{ product.discount }}</p>
+              <p v-if="!flag && product.discount">無料会員限定の割引価格 ¥ {{ product.discount }}</p>
+              <p v-if="product.price_02 != 0 && product.discount_price != 0">特別価格 ￥{{product.price_02}}</p>
+              <p v-if="product.price_01 != 0"> 通常価格 ￥{{product.price_01}}</p>
+              <p v-if="product.price_01 == 0">通常価格 ￥{{product.price_02}}</p>
+              <p v-if="product.size">{{ product.size }}</p>
+              <p v-if="product.quantity">{{ product.quantity }}個</p>
             </div>
           </v-col>
-		  <v-col class="d-flex flex-row-reverse c-del" >
-		    <v-btn @click="removeProduct(product.id)">削除</v-btn>
-		  </v-col>
+      <v-col class="d-flex flex-row-reverse c-del" >
+        <v-btn @click="removeProduct(product.id)">削除</v-btn>
+      </v-col>
         </v-row>
         <v-divider></v-divider>
       </div>
@@ -183,7 +187,7 @@
         <v-subheader>配送先住所</v-subheader>
       </v-col>
       <v-col cols="8" class="translate">
-        <v-radio-group v-model="address_elected" @change=getProductInfo()>
+        <v-radio-group v-model="address_elected" @change="changeAddress()">
           <v-radio label="FC IMABARI Sailors' Clubにご登録の住所へ配送をご希望の場合" value="login-address" />
           <v-radio label="その他の住所へ配送をご希望の場合" value="new-address" />
         </v-radio-group>
@@ -221,7 +225,6 @@
                   v-model="zip_code"
                   label="郵便番号"
                   @blur="searchAddress(zip_code)"
-                  type="number"
                   :rules="[rules.required, rules.zip_length]"
                   hint="ハイフンなしの半角数字7桁をご入力ください"
                   outlined
@@ -311,7 +314,13 @@
         <v-subheader>合計金額</v-subheader>
       </v-col>
       <v-col cols="8">
-        <p class="p-cell">¥ {{ totalPrice }} (送料 ¥{{ deliv_fee }} )</p>
+        <div v-if="total_discounts > 0">
+          <p class="p-cell" v-if="total_normal_prices - total_discounts > 5000"> {{ total_normal_prices - total_discounts }}円 (送料 ¥{{ 0 }} )</p>
+          <p class="p-cell" v-else> {{ total_normal_prices - total_discounts + deliv_fee }}円 (送料 ¥{{ deliv_fee }} )</p>
+        </div>
+        <div v-if="total_discounts <= 0">
+          <p class="p-cell"> {{ total_normal_prices + deliv_fee }}円 (送料 ¥{{ deliv_fee }} )</p>
+        </div>
       </v-col>
     </v-row>
 
@@ -357,10 +366,6 @@ export default {
       name2: "",
       zip_code: "",
       tdfk_cd: "",
-      address1: "",
-      address2: "",
-      address3: "",
-      tel: "",
       arrTdfk_cd: [
         { code: "01", name: "北海道" },
         { code: "02", name: "青森県" },
@@ -410,6 +415,10 @@ export default {
         { code: "46", name: "鹿児島県" },
         { code: "47", name: "沖縄県" },
       ],
+      address1: "",
+      address2: "",
+      address3: "",
+      tel: "",
       selectedBox: [],
       address_elected: "login-address",
       ecPaymentId: "61",
@@ -420,6 +429,13 @@ export default {
       cardYear: "",
       cardCvv: "",
       totalPrice: 0,
+      discount_price: 0,
+      discounts: [],
+      result: [],
+      total_discounts: 0,
+      total_normal_prices: 0,
+      nomal_prices: 0,
+      group_price: 0,
       deliv_fee: 0, // 送料
       seasonPassFlg: false, // シーズンパスの場合には入力項目が少し変わる
       seasonPassBesidesFlg: false,// シーズンパス以外の場
@@ -496,13 +512,18 @@ export default {
     },
     async getProductInfo() {
       let self = this
+      //合計金額初期化
+      self.total_normal_prices = 0
       // kurocoからデータを取得してみる
       self.products = []
+      self.discounts = []
       self.seasonPassFlg = false
       self.seasonPassBesidesFlg = false
       self.flag = Object.values(JSON.parse(JSON.stringify(self.$auth.user.group_ids)))[0] != "無料会員"
-      let tdfk_cd = self.address_elected == 'new-address' ? self.tdfk_cd : self.$auth.user.tdfk_cd
-      let response = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${self.$auth.user.ec_cart_id}?tdfk_cd=${tdfk_cd}`)
+      if(self.address_elected != 'new-address'){
+        self.tdfk_cd = self.$auth.user.tdfk_cd
+      }
+      let response = await self.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${self.$auth.user.ec_cart_id}?tdfk_cd=${self.tdfk_cd}`)
       // 送料の設定
       self.deliv_fee = parseInt(response.data.details.deliv_fee)
       self.totalPrice = parseInt(response.data.details.total)
@@ -513,28 +534,92 @@ export default {
       let seasonpass_list= response4.data.list.filter(item => item.category_nm == "シーズンチケット")
       let seasonpass_id = seasonpass_list[0].contents_type
 
-      // let response = await this.$auth.ctx.$axios.get(`/rcms-api/1/shop/cart/${this.$auth.user.ec_cart_id}`)
-      // 送料の設定
-      // this.deliv_fee = parseInt(response.data.details.deliv_fee)
       if(response.data.details.items) {
-        response.data.details.items.forEach((item, index) => {
-          let self = this
+        response.data.details.items.forEach(item => {
           self.$auth.ctx.$axios.get(`/rcms-api/1/shop/product/${item.product_id}`).then((productInfoResponse) => {
+            //グループ別価格
+            self.group_price = productInfoResponse.data.details.group_price
             // シーズンパス稼働波の判定
             if(productInfoResponse.data.details.product_data.contents_type == seasonpass_id) {
               self.seasonPassFlg = true
             } else {
               self.seasonPassBesidesFlg = true
             }
-            self.products.push({
-              id:       item.product_id,
-              quantity: item.quantity,
-              discount: productInfoResponse.data.details.group_price,
-              title:    productInfoResponse.data.details.topics_name,
-              price:    productInfoResponse.data.details.product_data.ext_col_04,
-              size:     productInfoResponse.data.details.product_name,
-              image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
+            if(productInfoResponse.data.details.product_data.ext_columns.straight[0] != null) {
+              self.products.push({
+                id:       item.product_id,
+                quantity: item.quantity,
+                discount: productInfoResponse.data.details.group_price,
+                discount_price: productInfoResponse.data.details.discount_price,
+                price_01: productInfoResponse.data.details.price_01,
+                price_02: productInfoResponse.data.details.price_02,
+                title:    productInfoResponse.data.details.topics_name,
+                price:    productInfoResponse.data.details.product_data.ext_col_04,
+                size:     productInfoResponse.data.details.product_name,
+                image:    productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url,
+              })
+            } else {
+              self.products.push({
+                id:       item.product_id,
+                quantity: item.quantity,
+                discount: productInfoResponse.data.details.group_price,
+                discount_price: productInfoResponse.data.details.discount_price,
+                price_01: productInfoResponse.data.details.price_01,
+                price_02: productInfoResponse.data.details.price_02,
+                title:    productInfoResponse.data.details.topics_name,
+                price:    productInfoResponse.data.details.product_data.ext_col_04,
+                size:     productInfoResponse.data.details.product_name,
+              })              
+            }
+
+            //割引価格を計算
+            let normal_prices = []
+            self.discounts.push({
+              discount_prices: parseInt(item.quantity)*parseInt(productInfoResponse.data.details.group_price > 0 ? (productInfoResponse.data.details.price_01 == 0 ? (productInfoResponse.data.details.price_02 - productInfoResponse.data.details.group_price) : (productInfoResponse.data.details.price_01 - productInfoResponse.data.details.group_price)) : productInfoResponse.data.details.discount_price)
             })
+            let result = JSON.parse(JSON.stringify(self.discounts)).slice(-1)
+            var values = []
+            for(var property of result){
+              for(var k in property)
+              values.push(property[k])
+            }
+            for(var i=0; i < values.length; i++){
+              self.total_discounts += values[i]
+            }
+             //全部通常価格を計算
+             //割引設定あり場合
+             let normal_price1 = []
+             let normal_condition = self.products.slice(-1).filter(item => item.price_01 != 0)
+             normal_condition.forEach(item => {
+               normal_price1.push({
+                 price : item.price_01,
+                 quantity: item.quantity
+               })
+             })
+             normal_prices.push(normal_price1)
+             
+             // 割引設定なし場合
+             // 割引設定なしのデータを取得
+             let normal_price2 = []
+             let discount_condition = self.products.slice(-1).filter(item => item.price_01 == 0)
+             discount_condition.forEach(item => {
+               normal_price2.push({
+                 price : item.price_02,
+                 quantity: item.quantity
+               })
+             })
+             normal_prices.push(normal_price2)
+            //  console.log(normal_prices)
+             // 通常価格を設定
+             let total_normal_prices = []
+             for(var i = 0;i < normal_prices.length;i++) {
+               for(var j = 0;j < normal_prices[i].length;j++) {
+                 if(normal_prices[i].length != 0) {
+                   total_normal_prices.push(parseInt(normal_prices[i][j].price)*parseInt(normal_prices[i][j].quantity))
+                 }
+               }
+             }
+             self.total_normal_prices += total_normal_prices[0]
           })
         })
       }
@@ -614,7 +699,7 @@ export default {
                 },
               }).then((response) => {
                 console.warn("成功!!!!!")
-                console.warn(response)
+                // console.warn(response)
                 self.$store.dispatch(
                   "snackbar/setMessage",
                   "購入完了メールをご確認の上、決済手続きをお願いいたします。"
