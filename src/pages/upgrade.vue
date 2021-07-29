@@ -29,6 +29,7 @@
                  </p>
               </v-col>
             </v-row>
+            <!--
             <v-row>
               <span>購入者様以外の方の分をご購入の場合は、ご利用される方の①お名前②年齢③性別④電話番号をご記入ください。</span>
             </v-row>
@@ -39,6 +40,7 @@
                 v-model="order_note"
               ></v-textarea>
             </v-row>
+            -->
             <v-row>
               <v-col cols="4">
                 <v-subheader>料金プラン</v-subheader>
