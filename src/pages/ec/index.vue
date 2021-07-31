@@ -7,11 +7,9 @@
         hide-delimiters
         height="100%"
       >
-        <v-carousel-item
-          v-for="(item,i) in items"
-          :key="i"
-        >
-        <img :src="item.url" width=100%>
+        <v-carousel-item v-for="(item,key) of bunner_lists" :key="key" :href="item.link">
+        <img :src="item.photo" width=100%>
+        
         </v-carousel-item >
       </v-carousel>
     </v-col>
@@ -198,14 +196,8 @@ export default {
     cartItems: [],
     total_quantity: 0,
     onboarding: 0,
-    items: [
-      {
-        url: require('@/assets/images/uniform_img.jpg'),
-      },
-      {
-        url: require('@/assets/images/temp_banner.jpg'),
-      },
-    ],
+    bunner_list: [],
+    bunner_lists: [],
     selectedCategory: [],
     categories: [],
     products: {},
@@ -370,6 +362,29 @@ export default {
 	    return flag
     }
   },
+  created() {
+    let self = this
+    let bunner_list = []
+    let bunner_lists = []
+    self.$auth.ctx.$axios.get(`/rcms-api/1/topics/topimg`).then(response =>{
+    response.data.list.forEach(item => {
+      bunner_list.push({
+        link : item.ext_col_02,
+        photo: item.ext_col_01
+      })
+    })
+    // console.log(bunner_list)
+    for (let index = 0; index < bunner_list.length; index++) {
+      for (let j = 0; j < bunner_list[index].photo.length; j++) {
+        bunner_lists.push({
+          link: bunner_list[index].link,
+          photo: bunner_list[index].photo[j].url
+        })
+      }
+    }
+    self.bunner_lists = bunner_lists
+    })
+  },
   computed: {
     user() {
       return this.$auth.user
@@ -383,7 +398,7 @@ export default {
     this.getCategories()
     this.getCartItems()
     this.isMobile() 
-  },
+  }
 }
 </script>
 <style scoped>
