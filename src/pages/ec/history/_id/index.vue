@@ -19,13 +19,14 @@
           <v-col class="c-txt">
             <div>
               <h3>{{ product.title }}</h3>
-              <p v-if="product.group_price > 0">¥ {{ product.group_price*product.quantity }}</p>
+              <!-- <p v-if="product.group_price > 0">¥ {{ product.group_price*product.quantity }}</p>
               <p v-else-if="product.discount_price > 0">¥ {{ product.price_02*product.quantity }}</p>
               <p v-else-if="product.discount_price == 0 && product.price_01 == 0">¥ {{ product.price_02*product.quantity }}</p>
-              <p v-else>¥ {{ product.price }}</p>
+              <p v-else>¥ {{ product.price }}</p> -->
+              <p>¥ {{ product.price }}</p>
               <p>{{ product.size }}</p>
               <p>個数 {{ product.quantity }}個</p>
-              <p v-if="product.size.search('自由席') == -1">{{ note }}</p>
+              <p v-if="product.size != null && product.size.search('自由席') == -1">{{ note }}</p>
               <p>お支払い状態： {{ generic_payment_status }}</p>
             </div>
           </v-col>
@@ -36,7 +37,7 @@
           <v-row>
           <v-col>
             <h3>合計金額</h3>
-            <p>{{ total_price1 + deliv_fee }}円(送料 ¥{{ deliv_fee }})</p>
+            <p>{{ sum_total }}円(送料 ¥{{ sum_deliv_fee }})</p>
           </v-col>
         </v-row>
       </div>
@@ -57,11 +58,9 @@ export default {
   auth: false,
   data: () => ({
     purchaseDate: "",
-    totalPaymentPrice: 0,
     note: "",
-    deliv_fee: 0,
-    total_price: 0,
-    total_price1: 0,
+    sum_deliv_fee: 0,
+    sum_total: 0,
     products: [],
     generic_payment_status: "",
     file_url: "",
@@ -78,6 +77,7 @@ export default {
     async getHistory() {
       const ids = this.$route.params.id.split(",");
       let self = this;
+      let products = []
       ids.forEach(async (id) => {
         const response = await self.$auth.ctx.$axios.get(
           `/rcms-api/1/shop/history/${id}`
@@ -90,12 +90,13 @@ export default {
             .replace("T", " ")
             .substring(0, 16);
           self.note = response.data.details.note;
-          self.deliv_fee = response.data.details.deliv_fee
+          self.sum_deliv_fee = self.sum_deliv_fee + response.data.details.deliv_fee
           self.generic_payment_status =
             response.data.details.generic_payment_status.label;
-          self.totalPaymentPrice = parseInt(response.data.details.total);
+          self.sum_total = self.sum_total + parseInt(response.data.details.total);
 
           // 公開するのEC商品Idを取得
+          /*
           let open1_ids = [];
           let paramStr = "?cnt=999";
           await self.$auth.ctx.$axios
@@ -132,60 +133,72 @@ export default {
           for (var i in result) {
             open1_ids.push(result[i]);
           }
-          let products = []
-          let total_price = []
-          let _this = this
+          */
+
+          //let total_price = []
           response.data.details.order_details.forEach((order) => {
-            if (open1_ids.indexOf(order.product_id) >= 0) {
+            // if (open1_ids.indexOf(order.product_id) >= 0) {
               self.$auth.ctx.$axios
                 .get(`/rcms-api/1/shop/product/${order.product_id}`)
                 .then((productInfoResponse) => {
-                  if (productInfoResponse.data.details.product_data.ext_columns.straight[0] != undefined) {
+                   let image1 = ""
+                   if (productInfoResponse.data.details.product_data.ext_columns.straight[0] != undefined) {
+                      image1 = productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url
+                    }
                     products.push({
                       id: order.product_id,
                       quantity: order.quantity,
+                      price: order.price,
                       title: productInfoResponse.data.details.topics_name,
-                      group_price: productInfoResponse.data.details.group_price,
-                      price_01: productInfoResponse.data.details.price_01,
-                      price_02: productInfoResponse.data.details.price_02,
-                      discount_price: productInfoResponse.data.details.discount_price,
                       size: productInfoResponse.data.details.product_name,
-                      image:
-                        productInfoResponse.data.details.product_data
-                          .ext_columns.straight[0].file_url,
+                      image: image1
                     })
-                    products.forEach(item => {
-                      if(item.group_price != undefined) {
-                        total_price.push(parseInt(item.group_price)*parseInt(item.quantity))
-                      } else if(item.group_price == undefined && item.discount_price > 0) {
-                        total_price.push(parseInt(item.price_02)*parseInt(item.quantity))
-                      } else if(item.discount_price == 0 && item.price_01 == 0) {
-                        total_price.push(parseInt(item.price_02)*parseInt(item.quantity))
-                      }
-                    })
-                    self.total_price1 += total_price[total_price.length-1]
-                  } else {
-                    products.push({
-                      id: order.product_id,
-                      quantity: order.quantity,
-                      title: productInfoResponse.data.details.topics_name,
-                      group_price: productInfoResponse.data.details.group_price,
-                      price_01: productInfoResponse.data.details.price_01,
-                      price_02: productInfoResponse.data.details.price_02,
-                      discount_price: productInfoResponse.data.details.discount_price,
-                      size: productInfoResponse.data.details.product_name,
-                    })
-                    products.forEach(item => {
-                      if(item.group_price != undefined) {
-                        total_price.push(parseInt(item.group_price)*parseInt(item.quantity))
-                      } else if(item.group_price == undefined && item.discount_price > 0) {
-                        total_price.push(parseInt(item.price_02)*parseInt(item.quantity))
-                      } else if(item.discount_price == 0 && item.price_01 == 0) {
-                        total_price.push(parseInt(item.price_02)*parseInt(item.quantity))
-                      }
-                    })
-                    self.total_price1 += total_price[total_price.length-1]
-                  }
+                //   if (productInfoResponse.data.details.product_data.ext_columns.straight[0] != undefined) {
+                //     products.push({
+                //       id: order.product_id,
+                //       quantity: order.quantity,
+                //       title: productInfoResponse.data.details.topics_name,
+                //       group_price: productInfoResponse.data.details.group_price,
+                //       price_01: productInfoResponse.data.details.price_01,
+                //       price_02: productInfoResponse.data.details.price_02,
+                //       discount_price: productInfoResponse.data.details.discount_price,
+                //       size: productInfoResponse.data.details.product_name,
+                //       image:
+                //         productInfoResponse.data.details.product_data
+                //           .ext_columns.straight[0].file_url,
+                //     })
+                //     products.forEach(item => {
+                //       if(item.group_price != undefined) {
+                //         total_price.push(parseInt(item.group_price)*parseInt(item.quantity))
+                //       } else if(item.group_price == undefined && item.discount_price > 0) {
+                //         total_price.push(parseInt(item.price_02)*parseInt(item.quantity))
+                //       } else if(item.discount_price == 0 && item.price_01 == 0) {
+                //         total_price.push(parseInt(item.price_02)*parseInt(item.quantity))
+                //       }
+                //     })
+                //     self.total_price1 += total_price[total_price.length-1]
+                //   } else {
+                //     products.push({
+                //       id: order.product_id,
+                //       quantity: order.quantity,
+                //       title: productInfoResponse.data.details.topics_name,
+                //       group_price: productInfoResponse.data.details.group_price,
+                //       price_01: productInfoResponse.data.details.price_01,
+                //       price_02: productInfoResponse.data.details.price_02,
+                //       discount_price: productInfoResponse.data.details.discount_price,
+                //       size: productInfoResponse.data.details.product_name,
+                //     })
+                //     products.forEach(item => {
+                //       if(item.group_price != undefined) {
+                //         total_price.push(parseInt(item.group_price)*parseInt(item.quantity))
+                //       } else if(item.group_price == undefined && item.discount_price > 0) {
+                //         total_price.push(parseInt(item.price_02)*parseInt(item.quantity))
+                //       } else if(item.discount_price == 0 && item.price_01 == 0) {
+                //         total_price.push(parseInt(item.price_02)*parseInt(item.quantity))
+                //       }
+                //     })
+                //     self.total_price1 += total_price[total_price.length-1]
+                //   }
                 })
                 // .catch(function (error) {
                 //   self.$store.dispatch(
@@ -195,13 +208,13 @@ export default {
                 //   self.$store.dispatch("snackbar/snackOn");
                 //   self.loading2 = false;
                 // });
-            } else {
-              products.push({
-                id: order.product_id,
-                size: "一覧画面非表示の商品",
-                quantity: order.quantity
-              })
-            }
+            // } else {
+            //   products.push({
+            //     id: order.product_id,
+            //     size: "一覧画面非表示の商品",
+            //     quantity: order.quantity
+            //   })
+            // }
           })
         self.products = products
         }
