@@ -26,8 +26,8 @@
               <p>¥ {{ product.price }}</p>
               <p>{{ product.size }}</p>
               <p>個数 {{ product.quantity }}個</p>
-              <p v-if="product.size != null && product.size.search('自由席') == -1">{{ note }}</p>
-              <p>お支払い状態： {{ generic_payment_status }}</p>
+              <p v-if="product.size != null && product.size.search('自由席') == -1">{{ product.note }}</p>
+              <p>お支払い状態： {{ product.payment_status }}</p>
             </div>
           </v-col>
         </v-row>
@@ -58,12 +58,9 @@ export default {
   auth: false,
   data: () => ({
     purchaseDate: "",
-    note: "",
     sum_deliv_fee: 0,
     sum_total: 0,
-    products: [],
-    generic_payment_status: "",
-    file_url: "",
+    products: []
   }),
   computed: {
     user() {
@@ -89,9 +86,9 @@ export default {
             .replace("+09:00", "")
             .replace("T", " ")
             .substring(0, 16);
-          self.note = response.data.details.note;
+          let his_note = response.data.details.note;
           self.sum_deliv_fee = self.sum_deliv_fee + response.data.details.deliv_fee
-          self.generic_payment_status =
+          let his_payment_status =
             response.data.details.generic_payment_status.label;
           self.sum_total = self.sum_total + parseInt(response.data.details.total);
 
@@ -134,14 +131,13 @@ export default {
             open1_ids.push(result[i]);
           }
           */
-
+          let image1 = ""
           //let total_price = []
           response.data.details.order_details.forEach((order) => {
             // if (open1_ids.indexOf(order.product_id) >= 0) {
               self.$auth.ctx.$axios
                 .get(`/rcms-api/1/shop/product/${order.product_id}`)
                 .then((productInfoResponse) => {
-                   let image1 = ""
                    if (productInfoResponse.data.details.product_data.ext_columns.straight[0] != undefined) {
                       image1 = productInfoResponse.data.details.product_data.ext_columns.straight[0].file_url
                     }
@@ -149,8 +145,10 @@ export default {
                       id: order.product_id,
                       quantity: order.quantity,
                       price: order.price,
+                      note: his_note,
                       title: productInfoResponse.data.details.topics_name,
                       size: productInfoResponse.data.details.product_name,
+                      payment_status: his_payment_status,
                       image: image1
                     })
                 //   if (productInfoResponse.data.details.product_data.ext_columns.straight[0] != undefined) {
@@ -199,6 +197,19 @@ export default {
                 //     })
                 //     self.total_price1 += total_price[total_price.length-1]
                 //   }
+                })
+                .catch(error => {
+                   products.push({
+                      id: order.product_id,
+                      quantity: order.quantity,
+                      price: order.price,
+                      note: his_note,
+                      title: "",
+                      size: "",
+                      payment_status: his_payment_status,
+                      image: image1
+                    })
+
                 })
                 // .catch(function (error) {
                 //   self.$store.dispatch(
