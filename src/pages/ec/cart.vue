@@ -550,7 +550,10 @@ export default {
       let response4 = await self.$auth.ctx.$axios.get(`rcms-api/1/shop/categories`)
       // シーズンパスIDを取得
       let seasonpass_list= response4.data.list.filter(item => item.category_nm == "年間パス")
-      let seasonpass_id = seasonpass_list?seasonpass_list[0].contents_type:""
+      let seasonpass_id = ""
+      if (seasonpass_list && seasonpass_list.length>0 ){
+        let seasonpass_id = seasonpass_list[0].contents_type
+      }
 
       if(response.data.details.items) {
         response.data.details.items.forEach(item => {
