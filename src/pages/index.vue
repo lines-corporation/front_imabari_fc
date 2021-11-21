@@ -142,21 +142,16 @@
               </v-card-actions>
             </v-card>
 
-            <v-card v-if="can_upgrade" class="mx-auto" outlined>
+            <!--v-card v-if="can_upgrade" class="mx-auto" outlined>
               <v-card-text>
                 <h4>アップグレードのご案内</h4>
                 <p class="body-1 ug-p fnt-w">
                   <NuxtLink to="/upgrade">
                     有料への種別変更はこちら
                   </NuxtLink>
-                  <!--
-                  <NuxtLink to="/ec">
-                    グッズ販売はこちら
-                  </NuxtLink>
-                -->
                 </p>
               </v-card-text>
-            </v-card>
+            </v-card-->
             <v-card class="mx-auto" outlined>
               <v-card-text>
                 <NuxtLink to="/ec">
