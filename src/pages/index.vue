@@ -19,9 +19,9 @@
             </p>
             <p v-if="this.close_flag() ==2" class="fnt-w col-xl-auto">
               <strong>
-                2020シーズンFC IMABARI Sailors‘ Club 会員の皆さまへご連絡<br />
+                2021シーズンFC IMABARI Sailors‘ Club 会員の皆さまへご連絡<br />
               </strong><br />
-              <span>2022年1月1日以降こちらへのログインができなくなります。予めご承知おきください。</span>
+              <span>2021年12月24日以降こちらへのログインができなくなります。予めご承知おきください。</span>
             </p>
           </v-row>
           <v-row>
