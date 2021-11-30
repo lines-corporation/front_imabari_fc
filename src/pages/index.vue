@@ -4,7 +4,7 @@
       <div v-if="!auth.loggedIn">
         <form class="login-page" @submit.prevent="login">
           <v-row>
-            <p class="fnt-w col-xl-auto">
+            <p v-if="this.close_flag() ==0" class="fnt-w col-xl-auto">
               <strong>
                 FC IMABARI Sailors' Club 更新・新規入会方法の詳細は下記をご確認ください。<br />
               </strong><br />
@@ -14,6 +14,14 @@
               <a :href="join_renew_url">
                 FC IMABARI Sailors' Club 更新・新規入会方法
               </a>
+            </p>
+            <p v-if="this.close_flag() ==1" class="fnt-w col-xl-auto">
+            </p>
+            <p v-if="this.close_flag() ==2" class="fnt-w col-xl-auto">
+              <strong>
+                2020シーズンFC IMABARI Sailors‘ Club 会員の皆さまへご連絡<br />
+              </strong><br />
+              <span>2022年1月1日以降こちらへのログインができなくなります。予めご承知おきください。</span>
             </p>
           </v-row>
           <v-row>
@@ -80,10 +88,14 @@
                 FC IMABARI Sailors'Club 新規入会はこちら
               </h3>
               <div class="inner">
-                <p class="body-1 new-btn">
+                <p v-if="this.close_flag() ==0" class="body-1 new-btn">
                   <NuxtLink to="/form">
                     FC IMABARI Sailors'Club 新規入会登録
                   </NuxtLink>
+                </p>
+                <p v-if="this.close_flag() >=1" style="color:red;">
+                  FC IMABARI Sailors'Club<br>
+                  2020シーズン新規入会は終了しました
                 </p>
                 <p class="body-1 nec-btn">
                 </p>
@@ -303,6 +315,7 @@ import Vue from 'vue'
 import VueQrcode from "@chenfengyuan/vue-qrcode"
 import { Base64 } from 'js-base64'
 import CryptoJS from "crypto-js";
+import moment from 'moment'
 Vue.use(CryptoJS)
 export default {
   components: {
@@ -554,6 +567,20 @@ export default {
         self.$store.dispatch("snackbar/snackOn")
         self.loading = false
       })
+    },
+    close_flag() {
+      let ret_flag = 0
+      let date_20211101 = moment('2021-11-01 00:00:00')
+      let date_20211201 = moment('2021-12-01 00:00:00')
+      let now = moment()
+      if (now.isAfter(date_20211101)){
+        ret_flag=1
+      }
+      if (now.isAfter(date_20211201)){
+        ret_flag=2
+      }
+      console.log('ret_flag:'+ret_flag)
+      return ret_flag
     },
   }
 }
