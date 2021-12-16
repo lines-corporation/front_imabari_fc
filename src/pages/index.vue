@@ -29,7 +29,7 @@
               <h3 class="subtitle mb-3">
                 FC IMABARI Sailors'Club 会員ログイン
               </h3>
-              <div class="inner">
+              <div v-if="this.close_flag() !=3" class="inner">
                 <form @submit.prevent="login">
                   <p class="pm">
                     <strong>メールアドレスとパスワードを<br
@@ -80,6 +80,25 @@
                     仮パスワード発行<br />
                     (パスワードを忘れた場合もこちらからお手続きください)
                   </NuxtLink>
+                </p>
+              </div>
+              <div v-else-if="this.close_flag() == 3" class="inner">
+                <p style="color:red;text-align: left;">
+                  2021FC IMABARI Sailors Clubのマイページアクセスのサービスは終了致しました。今までご利用ありがとうございました。
+                  オフィシャルWEBショップは、Jリーグオンラインストアに移行致しますのでそちらをご利用くださいませ。
+                </p>
+                <p style="color:red;text-align: left;word-break: break-all;">
+                  Jリーグオンラインストア
+                  <br>
+                  <a href="https://store.jleague.jp/club/imabari/" style="color: red !important;">
+                  https://store.jleague.jp/club/imabari/
+                  </a>
+                  <br>
+                  2022シーズンのFC IMABARI Sailors‘ Club入会のご案内はこちらをご覧ください。
+                  <br>
+                  <a href="https://www.fcimabari.com/news/2021/004248.html" style="color: red !important;">
+                   https://www.fcimabari.com/news/2021/004248.html
+                  </a>
                 </p>
               </div>
             </div>
@@ -567,6 +586,7 @@ export default {
       let ret_flag = 0
       let date_20211101 = moment('2021-11-01 00:00:00')
       let date_20211201 = moment('2021-12-01 00:00:00')
+      let date_20211224 = moment('2021-12-24 00:00:00')
       let now = moment()
       if (now.isAfter(date_20211101)){
         ret_flag=1
@@ -574,6 +594,11 @@ export default {
       if (now.isAfter(date_20211201)){
         ret_flag=2
       }
+       if (now.isAfter(date_20211224)){
+        ret_flag=3
+      }
+      //開発環境のみ
+      ret_flag=3
       console.log('ret_flag:'+ret_flag)
       return ret_flag
     },
