@@ -19,9 +19,9 @@
             </p>
             <p v-if="this.close_flag() ==2" class="fnt-w col-xl-auto">
               <strong>
-                2020シーズンFC IMABARI Sailors‘ Club 会員の皆さまへご連絡<br />
+                2021シーズンFC IMABARI Sailors‘ Club 会員の皆さまへご連絡<br />
               </strong><br />
-              <span>2022年1月1日以降こちらへのログインができなくなります。予めご承知おきください。</span>
+              <span>2021年12月24日以降こちらへのログインができなくなります。予めご承知おきください。</span>
             </p>
           </v-row>
           <v-row>
@@ -29,7 +29,7 @@
               <h3 class="subtitle mb-3">
                 FC IMABARI Sailors'Club 会員ログイン
               </h3>
-              <div class="inner">
+              <div v-if="this.close_flag() !=3" class="inner">
                 <form @submit.prevent="login">
                   <p class="pm">
                     <strong>メールアドレスとパスワードを<br
@@ -82,6 +82,25 @@
                   </NuxtLink>
                 </p>
               </div>
+              <div v-else-if="this.close_flag() == 3" class="inner">
+                <p style="text-align: left;">
+                  2021FC IMABARI Sailors Clubのマイページアクセスのサービスは終了致しました。今までご利用ありがとうございました。
+                  オフィシャルWEBショップは、Jリーグオンラインストアに移行致しますのでそちらをご利用くださいませ。
+                </p>
+                <p style="text-align: left;word-break: break-all;">
+                  Jリーグオンラインストア
+                  <br>
+                  <a href="https://store.jleague.jp/club/imabari/" style="color:black !important;">
+                  https://store.jleague.jp/club/imabari/
+                  </a>
+                  <br>
+                  2022シーズンのFC IMABARI Sailors‘ Club入会のご案内はこちらをご覧ください。
+                  <br>
+                  <a href="https://www.fcimabari.com/news/2021/004248.html" style="color:black !important;">
+                   https://www.fcimabari.com/news/2021/004248.html
+                  </a>
+                </p>
+              </div>
             </div>
             <div class="login-screen lgn-right">
               <h3 class="subtitle mb-3">
@@ -93,7 +112,7 @@
                     FC IMABARI Sailors'Club 新規入会登録
                   </NuxtLink>
                 </p>
-                <p v-if="this.close_flag() >=1" style="color:red;">
+                <p v-if="this.close_flag() >=1" style="color:black;">
                   FC IMABARI Sailors'Club<br>
                   2020シーズン新規入会は終了しました
                 </p>
@@ -567,12 +586,16 @@ export default {
       let ret_flag = 0
       let date_20211101 = moment('2021-11-01 00:00:00')
       let date_20211201 = moment('2021-12-01 00:00:00')
+      let date_20211224 = moment('2021-12-24 00:00:00')
       let now = moment()
       if (now.isAfter(date_20211101)){
         ret_flag=1
       }
       if (now.isAfter(date_20211201)){
         ret_flag=2
+      }
+       if (now.isAfter(date_20211224)){
+        ret_flag=3
       }
       console.log('ret_flag:'+ret_flag)
       return ret_flag
