@@ -83,20 +83,20 @@
                 </p>
               </div>
               <div v-else-if="this.close_flag() == 3" class="inner">
-                <p style="color:red;text-align: left;">
+                <p style="text-align: left;">
                   2021FC IMABARI Sailors Clubのマイページアクセスのサービスは終了致しました。今までご利用ありがとうございました。
                   オフィシャルWEBショップは、Jリーグオンラインストアに移行致しますのでそちらをご利用くださいませ。
                 </p>
-                <p style="color:red;text-align: left;word-break: break-all;">
+                <p style="text-align: left;word-break: break-all;">
                   Jリーグオンラインストア
                   <br>
-                  <a href="https://store.jleague.jp/club/imabari/" style="color: red !important;">
+                  <a href="https://store.jleague.jp/club/imabari/" style="color:black !important;">
                   https://store.jleague.jp/club/imabari/
                   </a>
                   <br>
                   2022シーズンのFC IMABARI Sailors‘ Club入会のご案内はこちらをご覧ください。
                   <br>
-                  <a href="https://www.fcimabari.com/news/2021/004248.html" style="color: red !important;">
+                  <a href="https://www.fcimabari.com/news/2021/004248.html" style="color:black !important;">
                    https://www.fcimabari.com/news/2021/004248.html
                   </a>
                 </p>
@@ -112,7 +112,7 @@
                     FC IMABARI Sailors'Club 新規入会登録
                   </NuxtLink>
                 </p>
-                <p v-if="this.close_flag() >=1" style="color:red;">
+                <p v-if="this.close_flag() >=1" style="color:black;">
                   FC IMABARI Sailors'Club<br>
                   2020シーズン新規入会は終了しました
                 </p>
